@@ -58,11 +58,11 @@ let links: NavBarLink[] = navBarConfig.links.map(
 </div>
 
 <script>
-function loadButtonScript() {
-    let menuBtn = document.getElementById("nav-menu-switch");
+function loadButtonScript(): void {
+    const menuBtn = document.getElementById("nav-menu-switch");
     if (menuBtn) {
-        menuBtn.onclick = function () {
-            let menuPanel = document.getElementById("nav-menu-panel");
+        menuBtn.onclick = (): void => {
+            const menuPanel = document.getElementById("nav-menu-panel");
             if (menuPanel) {
                 menuPanel.classList.toggle("float-panel-closed");
             }
@@ -74,6 +74,7 @@ loadButtonScript();
 </script>
 
 {import.meta.env.PROD && <script is:inline define:vars={{scriptUrl: url('/pagefind/pagefind.js')}}>
+// is:inline — emitted verbatim, so this must stay plain JS
 async function loadPagefind() {
     try {
         const response = await fetch(scriptUrl, { method: 'HEAD' });
