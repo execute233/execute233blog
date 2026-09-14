@@ -1,0 +1,42 @@
+---
+import { appearanceOptions } from "@/data/appearance";
+---
+<details id="appearance-settings">
+ <summary class="cursor-pointer rounded-lg p-3 text-90 font-bold">背景 · 样式</summary>
+ <div class="px-3 pb-3">
+  {appearanceOptions.map(option => (
+   <div class="appearance-row" data-appearance={option.key}>
+    <div class="appearance-caption">
+     <span>{option.label}</span>
+     <button type="button" class="appearance-swatch" aria-label={`调整${option.label}`} aria-expanded="false" aria-controls={`palette-${option.key}`}>
+      <span style={`background:${option.defaultValue}`}></span>
+     </button>
+    </div>
+    <div id={`palette-${option.key}`} class="appearance-palette" hidden>
+     <hex-alpha-color-picker color={option.defaultValue} aria-label={`${option.label}调色板`}></hex-alpha-color-picker>
+     <label class="appearance-caption">颜色值
+      <input class="appearance-hex" aria-label={`${option.label}颜色值`} value={option.defaultValue} pattern="#[0-9a-fA-F]{8}" maxlength="9" spellcheck="false" />
+     </label>
+     <label class="appearance-caption" for={`opacity-${option.key}`}>不透明度 <output></output></label>
+     <input id={`opacity-${option.key}`} class="appearance-opacity" aria-label={`${option.label}不透明度`} type="range" min="0" max="100" step="1" />
+    </div>
+   </div>
+  ))}
+  <button id="appearance-reset" type="button" class="btn-regular rounded-lg px-3 py-2 mt-3">恢复默认样式</button>
+ </div>
+</details>
+<script>
+ import { initAppearanceSettings } from "@/scripts/appearance";
+ initAppearanceSettings();
+</script>
+<style>
+ .appearance-row { margin-top: .75rem; }
+ .appearance-caption { display:flex; align-items:center; justify-content:space-between; gap:.75rem; font-size:.875rem; color:var(--primary); }
+ .appearance-swatch { width:2.75rem; height:1.75rem; padding:0; border:1px solid #94a3b855; border-radius:.4rem; overflow:hidden; background:repeating-conic-gradient(#808080 0% 25%, #ddd 0% 50%) 0 / 12px 12px; }
+ .appearance-swatch span { display:block; width:100%; height:100%; }
+ .appearance-palette { margin-top:.75rem; padding:.75rem; border:1px solid var(--line-color); border-radius:.75rem; }
+ hex-alpha-color-picker { width:100%; height:170px; margin-bottom:1rem; }
+ .appearance-hex { width:7rem; padding:.25rem; border:1px solid var(--line-color); border-radius:.25rem; background:transparent; color:inherit; font-family:monospace; }
+ .appearance-opacity { width:100%; accent-color:var(--primary); }
+ .appearance-palette label + label { margin-top:.75rem; }
+</style>
