@@ -1,0 +1,30 @@
+---
+import { Icon } from "astro-icon/components";
+import AppearanceSettings from "./AppearanceSettings.astro";
+---
+<details id="site-settings" class="relative" data-pagefind-ignore>
+ <summary aria-label="设置" title="设置" class="btn-plain rounded-lg w-11 h-11 cursor-pointer list-none"><Icon name="material-symbols:settings-outline-rounded" class="text-xl" /></summary>
+ <div class="settings-menu rounded-2xl border border-[var(--line-color)] shadow-xl p-3">
+  <details id="background-settings">
+   <summary class="cursor-pointer rounded-lg p-3 text-90 font-bold">背景 · 星空控制</summary>
+   <div class="px-3 pb-3">
+    <div id="background-sliders"></div>
+    <div class="flex flex-wrap gap-2 mt-4">
+     <button id="background-pause" type="button" class="btn-regular rounded-lg px-3 py-2">暂停动画</button>
+     <button id="background-reset" type="button" class="btn-regular rounded-lg px-3 py-2">恢复默认</button>
+     <button id="background-view" type="button" aria-pressed="false" class="btn-regular rounded-lg px-3 py-2">只看星空</button>
+    </div>
+   </div>
+  </details>
+  <AppearanceSettings />
+ </div>
+</details>
+<style is:global>
+ #site-settings > summary::-webkit-details-marker { display:none; }
+ .settings-menu { position:absolute; right:0; top:calc(100% + 1rem); width:320px; max-width:calc(100vw - 2rem); max-height:calc(100dvh - 7rem); overflow:auto; background:var(--float-panel-bg); }
+ .background-control { margin-top:14px; }
+ .background-control label { display:flex; justify-content:space-between; color:var(--primary); font-size:13px; }
+ .background-control output { font-family:monospace; }
+ .background-control input { width:100%; accent-color:var(--primary); }
+ #site-settings :focus-visible { outline:2px solid var(--primary); outline-offset:3px; }
+</style>
