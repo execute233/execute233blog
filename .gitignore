@@ -29,3 +29,13 @@ yarn.lock
 # ide
 .idea
 *.iml
+
+# 本地调试临时文件与缓存
+/tmp/
+/.playwright-mcp/
+
+# 个人工具配置与本地索引（AGENTS.md、根 CLAUDE.md 仍随仓库维护）
+/.claude/
+/.codex/
+/opencode.jsonc
+/.codegraph/
