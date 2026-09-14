@@ -61,15 +61,60 @@ export function initAppearanceSettings(): void {
 			sync();
 			save();
 		};
-		swatch.addEventListener("click", () => {
-			palette.hidden = !palette.hidden;
-			swatch.setAttribute("aria-expanded", String(!palette.hidden));
-		});
+		let heightAnimation: Animation | undefined;
+		let fadeAnimation: Animation | undefined;
+		const setPaletteOpen = (open: boolean) => {
+			const startHeight = row.getBoundingClientRect().height;
+			const startOpacity = palette.hidden
+				? "0"
+				: getComputedStyle(palette).opacity;
+			heightAnimation?.cancel();
+			fadeAnimation?.cancel();
+			swatch.setAttribute("aria-expanded", String(open));
+			palette.hidden = !open;
+			const endHeight = row.getBoundingClientRect().height;
+			palette.hidden = false;
+			palette.inert = !open;
+			const timing = {
+				duration: matchMedia("(prefers-reduced-motion: reduce)").matches
+					? 0
+					: 320,
+				easing: "ease-in-out",
+			};
+			// 先为调色板腾出空间，再显示内容；收起时顺序相反。
+			heightAnimation = row.animate(
+				[
+					{ height: `${startHeight}px`, overflow: "hidden" },
+					{
+						height: `${open ? endHeight : startHeight}px`,
+						overflow: "hidden",
+						offset: open ? 0.65 : 0.35,
+					},
+					{ height: `${endHeight}px`, overflow: "hidden" },
+				],
+				timing,
+			);
+			fadeAnimation = palette.animate(
+				[
+					{ opacity: startOpacity },
+					{ opacity: open ? startOpacity : 0, offset: open ? 0.65 : 0.35 },
+					{ opacity: open ? 1 : 0 },
+				],
+				timing,
+			);
+			heightAnimation.onfinish = () => {
+				palette.hidden = !open;
+				heightAnimation = undefined;
+				fadeAnimation = undefined;
+			};
+		};
+		swatch.addEventListener("click", () =>
+			setPaletteOpen(swatch.getAttribute("aria-expanded") !== "true"),
+		);
 		palette.addEventListener("keydown", (event) => {
 			if (event.key !== "Escape") return;
 			event.stopPropagation();
-			palette.hidden = true;
-			swatch.setAttribute("aria-expanded", "false");
+			setPaletteOpen(false);
 			swatch.focus();
 		});
 		picker.addEventListener("color-changed", (event) =>
