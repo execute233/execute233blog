@@ -1,0 +1,22 @@
+---
+import type { CollectionEntry } from "astro:content";
+import Pagination from "@components/control/Pagination.astro";
+import PostPage from "@components/PostPage.astro";
+import { url } from "@utils/url-utils";
+import type { Page } from "astro";
+
+interface Props {
+	page: Page<CollectionEntry<"posts">>;
+	title: string;
+	description: string;
+}
+const { page, title, description } = Astro.props;
+---
+<header class="card-base p-6 md:p-9 mb-4">
+ <h1 class="text-3xl font-bold text-90 mb-3">{title}</h1>
+ <p class="text-75">{description}</p>
+ <a class="inline-block mt-4 text-[var(--primary)]" href={url("/archive/")}>查看全部归档 →</a>
+</header>
+<PostPage page={page} />
+{page.data.length === 0 && <p class="card-base p-8 text-75">还没有文章，新的记录正在路上。</p>}
+<Pagination class="mx-auto onload-animation" page={page} />
