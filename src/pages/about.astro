@@ -1,25 +1,14 @@
 ---
-
-import { getEntry, render } from "astro:content";
-import Markdown from "@components/misc/Markdown.astro";
-import I18nKey from "../i18n/i18nKey";
-import { i18n } from "../i18n/translation";
-import MainGridLayout from "../layouts/MainGridLayout.astro";
-
-const aboutPost = await getEntry("spec", "about");
-
-if (!aboutPost) {
-	throw new Error("About page content not found");
-}
-
-const { Content } = await render(aboutPost);
+import MainGridLayout from "@layouts/MainGridLayout.astro";
+import { milestones } from "@/data/milestones";
 ---
-<MainGridLayout title={i18n(I18nKey.about)} description={i18n(I18nKey.about)}>
-    <div class="flex w-full rounded-[var(--radius-large)] overflow-hidden relative min-h-32">
-        <div class="card-base z-10 px-9 py-6 relative w-full ">
-            <Markdown class="mt-2">
-                <Content />
-            </Markdown>
-        </div>
-    </div>
+<MainGridLayout hideSidebar title="关于 · 里程碑">
+ <section class="card-base p-6 md:p-9">
+  <h1 class="text-3xl font-bold text-90 mb-3">一路走来</h1>
+  <p class="text-75 mb-10">用一些重要的瞬间，记录自己的成长。</p>
+  <p class="text-sm text-50 mb-8">以下为里程碑示例，日期与经历待补充。</p>
+  <ol class="ml-2 border-l border-[var(--primary)] pl-7 space-y-10">
+   {milestones.map(item => <li class="relative"><span class="absolute w-3 h-3 rounded-full bg-[var(--primary)] -left-[2.15rem] top-1" aria-hidden="true"></span><p class="text-sm text-[var(--primary)] mb-2">{item.date}</p><h2 class="text-xl font-bold text-90 mb-2">{item.title}</h2><p class="text-75">{item.description}</p></li>)}
+  </ol>
+ </section>
 </MainGridLayout>
