@@ -4,9 +4,14 @@ import { i18n } from "@i18n/translation";
 import { getCategoryUrl } from "@utils/url-utils.ts";
 
 // // Retrieve posts and sort them by publication date
-async function getRawSortedPosts() {
+export type PostSection = "blog" | "learning";
+
+async function getRawSortedPosts(section?: PostSection) {
 	const allBlogPosts = await getCollection("posts", ({ data }) => {
-		return import.meta.env.PROD ? data.draft !== true : true;
+		return (
+			(!import.meta.env.PROD || !data.draft) &&
+			(!section || data.section === section)
+		);
 	});
 
 	const sorted = allBlogPosts.sort((a, b) => {
@@ -17,16 +22,20 @@ async function getRawSortedPosts() {
 	return sorted;
 }
 
-export async function getSortedPosts() {
-	const sorted = await getRawSortedPosts();
+export async function getSortedPosts(section?: PostSection) {
+	const sorted = await getRawSortedPosts(section);
 
-	for (let i = 1; i < sorted.length; i++) {
-		sorted[i].data.nextSlug = sorted[i - 1].slug;
-		sorted[i].data.nextTitle = sorted[i - 1].data.title;
-	}
-	for (let i = 0; i < sorted.length - 1; i++) {
-		sorted[i].data.prevSlug = sorted[i + 1].slug;
-		sorted[i].data.prevTitle = sorted[i + 1].data.title;
+	// 详情页仍使用原 URL，但上一篇／下一篇只在同一栏目内关联。
+	for (const name of ["blog", "learning"] as const) {
+		const entries = sorted.filter((entry) => entry.data.section === name);
+		for (const [index, entry] of entries.entries()) {
+			const newer = entries[index - 1];
+			const older = entries[index + 1];
+			entry.data.nextSlug = newer?.slug ?? "";
+			entry.data.nextTitle = newer?.data.title ?? "";
+			entry.data.prevSlug = older?.slug ?? "";
+			entry.data.prevTitle = older?.data.title ?? "";
+		}
 	}
 
 	return sorted;
