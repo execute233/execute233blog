@@ -40,22 +40,19 @@ export const siteConfig: SiteConfig = {
 };
 
 export const navBarConfig: NavBarConfig = {
-	links: [
-		LinkPreset.Home,
-		LinkPreset.Archive,
-		LinkPreset.About,
-		{
-			name: "GitHub",
-			url: "https://github.com/saicaca/fuwari", // Internal links should not include the base path, as it is automatically added
-			external: true, // Show an external link icon and will open in a new tab
-		},
-	],
+ links: [
+  LinkPreset.Home,
+  { name: "博客", url: "/blog/" },
+  { name: "学习记录", url: "/learning/" },
+  { name: "工具", url: "/tools/" },
+  LinkPreset.About,
+ ],
 };
 
 export const profileConfig: ProfileConfig = {
 	avatar: "assets/images/avatar.png", // Relative to the /src directory. Relative to the /public directory if it starts with '/'
 	name: "execute233",
-	bio: "Lorem ipsum dolor sit amet, consectetur adipiscing elit.",
+	bio: "大学生 · 边查文档，边写代码，边探索未知。",
 	links: [
         {
            name: "QQ",
