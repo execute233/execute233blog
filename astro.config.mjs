@@ -28,7 +28,7 @@ import vue from "@astrojs/vue";
 
 // https://astro.build/config
 export default defineConfig({
-    site: "https://fuwari.vercel.app/",
+    site: "https://www.execute233.top/",
     base: "/",
     trailingSlash: "always",
     integrations: [tailwind({

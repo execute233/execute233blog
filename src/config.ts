@@ -30,12 +30,13 @@ export const siteConfig: SiteConfig = {
 		depth: 2, // Maximum heading depth to show in the table, from 1 to 3
 	},
 	favicon: [
-		// Leave this array empty to use the default favicon
-		// {
-		//   src: '/favicon/icon.png',    // Path of the favicon, relative to the /public directory
-		//   theme: 'light',              // (Optional) Either 'light' or 'dark', set only if you have different favicons for light and dark mode
-		//   sizes: '32x32',              // (Optional) Size of the favicon, set only if you have favicons of different sizes
-		// }
+		// 图标名描述图形/前景色：light 为白图形配黑底，用于深色界面；dark 为黑图形配白底，用于浅色界面
+		{ src: "/favicon/favicon-dark-16.png", theme: "dark", sizes: "16x16" },
+		{ src: "/favicon/favicon-dark-32.png", theme: "dark", sizes: "32x32" },
+		{ src: "/favicon/favicon-light-16.png", theme: "light", sizes: "16x16" },
+		{ src: "/favicon/favicon-light-32.png", theme: "light", sizes: "32x32" },
+		{ src: "/favicon/favicon-dark.svg", theme: "dark", sizes: "any" },
+		{ src: "/favicon/favicon-light.svg", theme: "light", sizes: "any" },
 	],
 };
 
