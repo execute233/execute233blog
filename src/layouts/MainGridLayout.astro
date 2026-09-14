@@ -22,6 +22,7 @@ interface Props {
 	lang?: string;
 	setOGTypeArticle?: boolean;
 	headings?: MarkdownHeading[];
+	hideSidebar?: boolean;
 }
 
 const {
@@ -31,6 +32,7 @@ const {
 	lang,
 	setOGTypeArticle,
 	headings = [],
+	hideSidebar = false,
 } = Astro.props;
 const hasBannerCredit =
 	siteConfig.banner.enable && siteConfig.banner.credit.enable;
@@ -45,7 +47,7 @@ const mainPanelTop = siteConfig.banner.enable
 
 <!-- Navbar -->
 <slot slot="head" name="head"></slot>
-<div id="top-row" class="z-50 pointer-events-none relative transition-all duration-700 max-w-[var(--page-width)] px-0 md:px-4 mx-auto" class:list={[""]}>
+<div id="top-row" class="z-50 pointer-events-none relative transition-all duration-700 w-full" class:list={[""]}>
     <div id="navbar-wrapper" class="pointer-events-auto sticky top-0 transition-all">
         <Navbar></Navbar>
     </div>
@@ -83,7 +85,7 @@ const mainPanelTop = siteConfig.banner.enable
             <SideBar class="mb-4 row-start-2 row-end-3 col-span-2 lg:row-start-1 lg:row-end-2 lg:col-span-1 lg:max-w-[17.5rem] onload-animation" headings={headings}></SideBar>
 
             <main id="swup-container" class="transition-swup-fade col-span-2 lg:col-span-1 overflow-hidden">
-                <div id="content-wrapper" class="onload-animation">
+                <div id="content-wrapper" class="onload-animation" data-hide-sidebar={hideSidebar || undefined}>
                     <!-- the overflow-hidden here prevent long text break the layout-->
                     <!-- make id different from windows.swup global property -->
                     <slot></slot>
@@ -123,3 +125,11 @@ const mainPanelTop = siteConfig.banner.enable
     </div>
 </div>
 </Layout>
+
+<style is:global>
+ /* 以替换后的页面内容决定布局，兼容 Swup 导航及浏览器前进、后退。 */
+ #main-grid:has([data-landing], [data-hide-sidebar]) { grid-template-columns: minmax(0, 1fr); }
+ #main-grid:has([data-landing], [data-hide-sidebar]) #sidebar { display: none; }
+ #main-grid:has([data-landing], [data-hide-sidebar]) main,
+ #main-grid:has([data-landing], [data-hide-sidebar]) > .footer { grid-column: 1 / -1; }
+</style>
