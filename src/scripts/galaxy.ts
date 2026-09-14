@@ -1,3 +1,4 @@
+import { setDetailsOpen } from "@/utils/disclosure-animation";
 import { readStoredJson, writeStoredJson } from "@/utils/local-storage";
 
 // 银河粒子、视差和鼠标交互来自用户提供的 background.html。
@@ -398,20 +399,20 @@ export function initGalaxy(): void {
 	});
 	document.addEventListener("pointerdown", (event) => {
 		if (event.target instanceof Node && !menu.contains(event.target)) {
-			menu.open = false;
+			setDetailsOpen(menu, false);
 			exitPreview();
 		}
 	});
 	document.addEventListener("keydown", (event) => {
 		if (event.key === "Escape" && menu.open) {
-			menu.open = false;
+			setDetailsOpen(menu, false);
 			exitPreview();
 			menu.querySelector("summary")?.focus();
 		}
 	});
 	document.addEventListener("click", (event) => {
 		if (event.target instanceof Element && event.target.closest("a[href]")) {
-			menu.open = false;
+			setDetailsOpen(menu, false);
 			exitPreview();
 		}
 	});
