@@ -2,6 +2,16 @@ import Key from "../i18nKey";
 import type { Translation } from "../translation";
 
 export const zh_CN: Translation = {
+	[Key.colorValue]: "颜色值",
+	[Key.colorOpacity]: "不透明度",
+	[Key.cursor]: "光标",
+	[Key.cursorGlow]: "背景发光色",
+	[Key.cursorBorder]: "边界色",
+	[Key.cursorFill]: "底色",
+	[Key.cursorSize]: "大小",
+	[Key.cursorSizeNote]:
+		"默认 24 CSS px。浏览器无法读取系统实际光标大小，可在此手动调整匹配。",
+	[Key.cursorReset]: "恢复默认光标",
 	[Key.home]: "主页",
 	[Key.about]: "关于",
 	[Key.archive]: "归档",

@@ -16,6 +16,4 @@ export const appearanceOptions = [
 
 export const APPEARANCE_STORAGE_KEY = "execute233.appearance.v1";
 
-export function isAppearanceColor(value: unknown): value is string {
-	return typeof value === "string" && /^#[\da-f]{8}$/i.test(value);
-}
+export { isHexAlphaColor as isAppearanceColor } from "@/utils/color";

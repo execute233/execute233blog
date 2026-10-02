@@ -2,6 +2,16 @@ import Key from "../i18nKey";
 import type { Translation } from "../translation";
 
 export const th: Translation = {
+	[Key.colorValue]: "ค่าสี",
+	[Key.colorOpacity]: "ความทึบ",
+	[Key.cursor]: "เคอร์เซอร์",
+	[Key.cursorGlow]: "สีเรืองแสง",
+	[Key.cursorBorder]: "สีเส้นขอบ",
+	[Key.cursorFill]: "สีพื้น",
+	[Key.cursorSize]: "ขนาด",
+	[Key.cursorSizeNote]:
+		"ค่าเริ่มต้น: 24 CSS px เบราว์เซอร์ไม่สามารถอ่านขนาดเคอร์เซอร์ของระบบได้ โปรดปรับด้วยตนเองที่นี่",
+	[Key.cursorReset]: "คืนค่าเคอร์เซอร์เริ่มต้น",
 	[Key.home]: "หน้าแรก",
 	[Key.about]: "เกี่ยวกับ",
 	[Key.archive]: "คลัง",

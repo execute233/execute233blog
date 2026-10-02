@@ -2,6 +2,16 @@ import Key from "../i18nKey";
 import type { Translation } from "../translation";
 
 export const tr: Translation = {
+	[Key.colorValue]: "Renk değeri",
+	[Key.colorOpacity]: "Opaklık",
+	[Key.cursor]: "İmleç",
+	[Key.cursorGlow]: "Parlama rengi",
+	[Key.cursorBorder]: "Kenarlık rengi",
+	[Key.cursorFill]: "Dolgu rengi",
+	[Key.cursorSize]: "Boyut",
+	[Key.cursorSizeNote]:
+		"Varsayılan: 24 CSS px. Tarayıcı sistem imleci boyutunu okuyamaz; buradan elle ayarlayın.",
+	[Key.cursorReset]: "İmleci sıfırla",
 	[Key.home]: "Anasayfa",
 	[Key.about]: "Hakkında",
 	[Key.archive]: "Arşiv",

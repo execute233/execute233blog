@@ -2,6 +2,16 @@ import Key from "../i18nKey";
 import type { Translation } from "../translation";
 
 export const ja: Translation = {
+	[Key.colorValue]: "カラー値",
+	[Key.colorOpacity]: "不透明度",
+	[Key.cursor]: "カーソル",
+	[Key.cursorGlow]: "発光色",
+	[Key.cursorBorder]: "輪郭色",
+	[Key.cursorFill]: "塗りつぶし色",
+	[Key.cursorSize]: "サイズ",
+	[Key.cursorSizeNote]:
+		"既定は24 CSS pxです。ブラウザーはシステムのカーソルサイズを取得できないため、手動で調整してください。",
+	[Key.cursorReset]: "既定のカーソルに戻す",
 	[Key.home]: "Home",
 	[Key.about]: "About",
 	[Key.archive]: "Archive",

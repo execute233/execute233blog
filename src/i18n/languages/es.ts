@@ -2,6 +2,16 @@ import Key from "../i18nKey";
 import type { Translation } from "../translation";
 
 export const es: Translation = {
+	[Key.colorValue]: "Valor del color",
+	[Key.colorOpacity]: "Opacidad",
+	[Key.cursor]: "Cursor",
+	[Key.cursorGlow]: "Color del brillo",
+	[Key.cursorBorder]: "Color del borde",
+	[Key.cursorFill]: "Color de relleno",
+	[Key.cursorSize]: "Tamaño",
+	[Key.cursorSizeNote]:
+		"Predeterminado: 24 CSS px. El navegador no puede leer el tamaño del cursor del sistema; ajústalo aquí.",
+	[Key.cursorReset]: "Restablecer cursor",
 	[Key.home]: "Inicio",
 	[Key.about]: "Sobre mí",
 	[Key.archive]: "Archivo",

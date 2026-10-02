@@ -1,4 +1,13 @@
 enum I18nKey {
+	colorValue = "colorValue",
+	colorOpacity = "colorOpacity",
+	cursor = "cursor",
+	cursorGlow = "cursorGlow",
+	cursorBorder = "cursorBorder",
+	cursorFill = "cursorFill",
+	cursorSize = "cursorSize",
+	cursorSizeNote = "cursorSizeNote",
+	cursorReset = "cursorReset",
 	home = "home",
 	about = "about",
 	archive = "archive",
