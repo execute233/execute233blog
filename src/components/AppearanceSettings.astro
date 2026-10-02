@@ -1,17 +1,18 @@
 ---
-import { appearanceOptions } from "@/data/appearance";
+import {appearanceOptions} from "@/data/appearance";
 import ColorSetting from "./ColorSetting.astro";
 ---
 <details id="appearance-settings">
- <summary class="cursor-pointer rounded-lg p-3 text-90 font-bold">背景 · 样式</summary>
- <div class="settings-submenu px-3 pb-3">
-  {appearanceOptions.map(option => (
-   <ColorSetting id={option.key} label={option.label} value={option.defaultValue} />
-  ))}
-  <button id="appearance-reset" type="button" class="btn-regular rounded-lg px-3 py-2 mt-3">恢复默认样式</button>
- </div>
+    <summary class="cursor-pointer rounded-lg p-3 text-90 font-bold">背景 · 样式</summary>
+    <div class="settings-submenu px-3 pb-3">
+        {appearanceOptions.map(option => (
+                <ColorSetting id={option.key} label={option.label} value={option.defaultValue}/>
+        ))}
+        <button id="appearance-reset" type="button" class="btn-regular rounded-lg px-3 py-2 mt-3">恢复默认样式</button>
+    </div>
 </details>
 <script>
- import { initAppearanceSettings } from "@/scripts/appearance";
- initAppearanceSettings();
+    import {initAppearanceSettings} from "@/scripts/appearance";
+
+    initAppearanceSettings();
 </script>

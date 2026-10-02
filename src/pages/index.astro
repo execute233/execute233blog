@@ -1,69 +1,123 @@
 ---
 import ImageWrapper from "@components/misc/ImageWrapper.astro";
 import MainGridLayout from "@layouts/MainGridLayout.astro";
-import { url } from "@utils/url-utils";
-import { Icon } from "astro-icon/components";
-import { profileConfig } from "@/config";
+import {url} from "@utils/url-utils";
+import {Icon} from "astro-icon/components";
+import {profileConfig} from "@/config";
 
 const entries = [
-	{
-		name: "博客",
-		path: "/blog/",
-		label: "01 / ARTICLES",
-		description: "把想法写下来，让经验有迹可循。",
-	},
-	{
-		name: "学习记录",
-		path: "/learning/",
-		label: "02 / LEARNING",
-		description: "记录理解一个问题、跑通一段代码的瞬间。",
-	},
-	{
-		name: "工具",
-		path: "/tools/",
-		label: "03 / TOOLBOX",
-		description: "收集顺手的工具，留出更多探索的时间。",
-	},
-	{
-		name: "关于",
-		path: "/about/",
-		label: "04 / MILESTONES",
-		description: "一些重要的节点，一段持续更新的旅程。",
-	},
+    {
+        name: "博客",
+        path: "/blog/",
+        label: "01 / ARTICLES",
+        description: "把想法写下来，让经验有迹可循。",
+    },
+    {
+        name: "学习记录",
+        path: "/learning/",
+        label: "02 / LEARNING",
+        description: "记录理解一个问题、跑通一段代码的瞬间。",
+    },
+    {
+        name: "工具",
+        path: "/tools/",
+        label: "03 / TOOLBOX",
+        description: "收集顺手的工具，留出更多探索的时间。",
+    },
+    {
+        name: "关于",
+        path: "/about/",
+        label: "04 / MILESTONES",
+        description: "一些重要的节点，一段持续更新的旅程。",
+    },
 ];
 ---
 <MainGridLayout description="大学生，喜欢编程、科学探索与 AI。边查文档，边写代码，边探索未知。">
- <div data-landing class="landing">
-  <section class="intro card-base">
-   <div class="text-[var(--primary)] font-mono text-xs tracking-[0.25em] mb-8"><span class="status-dot"></span> EXECUTE233 / EXPLORING THE UNKNOWN</div>
-   <div class="flex items-center gap-5 mb-7">
-    <ImageWrapper src={profileConfig.avatar || ""} alt="execute233 的头像" class="w-20 h-20 rounded-full shrink-0" />
-    <p class="text-75">你好，世界。<br /><span class="font-mono text-sm text-50">Hello, World<span class="cursor">_</span></span></p>
-   </div>
-   <h1 class="text-90 font-bold">I'm <span class="text-[var(--primary)]">execute233</span></h1>
-   <p class="text-75 text-lg leading-relaxed mt-6 max-w-2xl">一名来自广东的大学生。喜欢编程开发、科学探索，也对 AI 保持兴趣。<br />边查文档，边写代码，把一点点好奇变成能运行的东西。</p>
-   <p class="text-50 mt-4">会一点点，学一点点。Hello World 之后，还有很多世界。</p>
-   <div class="flex flex-wrap gap-3 mt-8">
-    {profileConfig.links.map(link => <a class="btn-regular rounded-lg px-4 py-2 gap-2" href={link.url} target="_blank" rel="noopener noreferrer"><Icon name={link.icon} /><span>{link.name}</span></a>)}
-   </div>
-  </section>
-  <nav aria-label="探索栏目" class="grid sm:grid-cols-2 gap-4 mt-4">
-   {entries.map(entry => <a href={url(entry.path)} class="entry card-base p-7 block">
-    <span class="font-mono text-xs tracking-widest text-[var(--primary)]">{entry.label}</span>
-    <h2 class="text-90 text-2xl font-bold mt-3 mb-2">{entry.name} <span class="arrow">↗</span></h2>
-    <p class="text-75">{entry.description}</p>
-   </a>)}
-  </nav>
- </div>
+    <div data-landing class="landing">
+        <section class="intro card-base">
+            <div class="text-[var(--primary)] font-mono text-xs tracking-[0.25em] mb-8"><span class="status-dot"></span>
+                EXECUTE233 / EXPLORING THE UNKNOWN
+            </div>
+            <div class="flex items-center gap-5 mb-7">
+                <ImageWrapper src={profileConfig.avatar || ""} alt="execute233 的头像"
+                              class="w-20 h-20 rounded-full shrink-0"/>
+                <p class="text-75">你好，世界。<br/><span class="font-mono text-sm text-50">Hello, World<span
+                        class="cursor">_</span></span></p>
+            </div>
+            <h1 class="text-90 font-bold">I'm <span class="text-[var(--primary)]">execute233</span></h1>
+            <p class="text-75 text-lg leading-relaxed mt-6 max-w-2xl">一名来自广东的大学生。喜欢编程开发、科学探索，也对 AI
+                保持兴趣。<br/>边查文档，边写代码，把一点点好奇变成能运行的东西。</p>
+            <p class="text-50 mt-4">会一点点，学一点点。Hello World 之后，还有很多世界。</p>
+            <div class="flex flex-wrap gap-3 mt-8">
+                {profileConfig.links.map(link => <a class="btn-regular rounded-lg px-4 py-2 gap-2" href={link.url}
+                                                    target="_blank" rel="noopener noreferrer">
+                    <Icon name={link.icon}/>
+                    <span>{link.name}</span></a>)}
+            </div>
+        </section>
+        <nav aria-label="探索栏目" class="grid sm:grid-cols-2 gap-4 mt-4">
+            {entries.map(entry => <a href={url(entry.path)} class="entry card-base p-7 block">
+                <span class="font-mono text-xs tracking-widest text-[var(--primary)]">{entry.label}</span>
+                <h2 class="text-90 text-2xl font-bold mt-3 mb-2">{entry.name} <span class="arrow">↗</span></h2>
+                <p class="text-75">{entry.description}</p>
+            </a>)}
+        </nav>
+    </div>
 </MainGridLayout>
 <style>
- .intro { padding: clamp(2rem, 6vw, 5rem); }
- h1 { font-size: clamp(2.5rem, 6vw, 4.5rem); line-height: 1.15; letter-spacing: -0.04em; }
- .status-dot { display:inline-block; width:7px; height:7px; background:var(--primary); border-radius:50%; margin-right:10px; box-shadow:0 0 16px var(--primary); animation:pulse 3s ease-in-out infinite; }
- .cursor { animation:pulse 1.5s steps(2) infinite; }
- .entry { border:1px solid transparent; transition:transform .25s, border-color .25s; }
- .entry:hover { transform:translateY(-4px); border-color:var(--primary); }
- .arrow { float:right; color:var(--primary); }
- @keyframes pulse { 50% { opacity:.3; } }
- @media(prefers-reduced-motion:reduce) { .status-dot,.cursor { animation:none; } .entry:hover { transform:none; } }
+    .intro {
+        padding: clamp(2rem, 6vw, 5rem);
+    }
+
+    h1 {
+        font-size: clamp(2.5rem, 6vw, 4.5rem);
+        line-height: 1.15;
+        letter-spacing: -0.04em;
+    }
+
+    .status-dot {
+        display: inline-block;
+        width: 7px;
+        height: 7px;
+        background: var(--primary);
+        border-radius: 50%;
+        margin-right: 10px;
+        box-shadow: 0 0 16px var(--primary);
+        animation: pulse 3s ease-in-out infinite;
+    }
+
+    .cursor {
+        animation: pulse 1.5s steps(2) infinite;
+    }
+
+    .entry {
+        border: 1px solid transparent;
+        transition: transform .25s, border-color .25s;
+    }
+
+    .entry:hover {
+        transform: translateY(-4px);
+        border-color: var(--primary);
+    }
+
+    .arrow {
+        float: right;
+        color: var(--primary);
+    }
+
+    @keyframes pulse {
+        50% {
+            opacity: .3;
+        }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+        .status-dot, .cursor {
+            animation: none;
+        }
+
+        .entry:hover {
+            transform: none;
+        }
+    }
 </style>

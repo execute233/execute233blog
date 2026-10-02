@@ -1,31 +1,50 @@
 ---
-import { cursorColors, cursorDefaults } from "@/data/cursor";
+import {cursorColors, cursorDefaults} from "@/data/cursor";
 import Key from "@/i18n/i18nKey";
-import { i18n } from "@/i18n/translation";
+import {i18n} from "@/i18n/translation";
 import ColorSetting from "./ColorSetting.astro";
 
-const labels = { glow: Key.cursorGlow, border: Key.cursorBorder, fill: Key.cursorFill };
+const labels = {glow: Key.cursorGlow, border: Key.cursorBorder, fill: Key.cursorFill};
 ---
 <details id="cursor-settings">
-	<summary class="cursor-pointer rounded-lg p-3 text-90 font-bold">{i18n(Key.cursor)}</summary>
-	<div class="settings-submenu px-3 pb-3">
-		{cursorColors.map(key => (
-				<ColorSetting id={`cursor-${key}`} label={i18n(labels[key])} value={cursorDefaults[key]} />
-		))}
-		<label class="cursor-setting-row" for="cursor-size">
-			<span>{i18n(Key.cursorSize)}</span><output id="cursor-size-value">24 px</output>
-		</label>
-		<input id="cursor-size" type="range" min="16" max="64" step="1" value={cursorDefaults.size} aria-describedby="cursor-size-note" />
-		<p id="cursor-size-note" class="text-xs text-75 mt-2">{i18n(Key.cursorSizeNote)}</p>
-		<button id="cursor-reset" type="button" class="btn-regular rounded-lg px-3 py-2 mt-3">{i18n(Key.cursorReset)}</button>
-	</div>
+    <summary class="cursor-pointer rounded-lg p-3 text-90 font-bold">{i18n(Key.cursor)}</summary>
+    <div class="settings-submenu px-3 pb-3">
+        {cursorColors.map(key => (
+                <ColorSetting id={`cursor-${key}`} label={i18n(labels[key])} value={cursorDefaults[key]}/>
+        ))}
+        <label class="cursor-setting-row" for="cursor-size">
+            <span>{i18n(Key.cursorSize)}</span>
+            <output id="cursor-size-value">24 px</output>
+        </label>
+        <input id="cursor-size" type="range" min="16" max="64" step="1" value={cursorDefaults.size}
+               aria-describedby="cursor-size-note"/>
+        <p id="cursor-size-note" class="text-xs text-75 mt-2">{i18n(Key.cursorSizeNote)}</p>
+        <button id="cursor-reset" type="button"
+                class="btn-regular rounded-lg px-3 py-2 mt-3">{i18n(Key.cursorReset)}</button>
+    </div>
 </details>
 <script>
-	import { initCursor } from "@/scripts/cursor";
-	initCursor();
+    import {initCursor} from "@/scripts/cursor";
+
+    initCursor();
 </script>
 <style>
-	.cursor-setting-row { display:flex; align-items:center; justify-content:space-between; gap:.75rem; margin-top:.75rem; font-size:.875rem; color:var(--primary); }
-	#cursor-size { width:100%; accent-color:var(--primary); }
-	output { font-family:monospace; }
+    .cursor-setting-row {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: .75rem;
+        margin-top: .75rem;
+        font-size: .875rem;
+        color: var(--primary);
+    }
+
+    #cursor-size {
+        width: 100%;
+        accent-color: var(--primary);
+    }
+
+    output {
+        font-family: monospace;
+    }
 </style>

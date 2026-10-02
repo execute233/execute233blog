@@ -1,7 +1,6 @@
 ---
-
-import { profileConfig, siteConfig } from "../config";
-import { url } from "../utils/url-utils";
+import {profileConfig, siteConfig} from "../config";
+import {url} from "../utils/url-utils";
 
 const currentYear = new Date().getFullYear();
 ---
@@ -15,7 +14,8 @@ const currentYear = new Date().getFullYear();
         <div>
             &copy; <span id="copyright-year">{currentYear}</span> {profileConfig.name}. All Rights Reserved. /
             <a class="transition link text-[var(--primary)] font-medium" target="_blank" href={url('rss.xml')}>RSS</a> /
-            <a class="transition link text-[var(--primary)] font-medium" target="_blank" href={url('sitemap-index.xml')}>Sitemap</a>
+            <a class="transition link text-[var(--primary)] font-medium" target="_blank"
+               href={url('sitemap-index.xml')}>Sitemap</a>
         </div>
         <div>
             <a class="transition underline underline-offset-2" href="https://beian.miit.gov.cn/" target="_blank">粤ICP备2026124118号</a>

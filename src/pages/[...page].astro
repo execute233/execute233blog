@@ -1,11 +1,11 @@
 ---
-import type { GetStaticPaths } from "astro";
-import { PAGE_SIZE } from "@constants/constants";
-import { getSortedPosts } from "@utils/content-utils";
-import { url } from "@utils/url-utils";
-export const getStaticPaths = (async ({ paginate }) => {
- return paginate(await getSortedPosts("blog"), { pageSize: PAGE_SIZE })
-  .filter((page) => page.params.page !== undefined);
+import type {GetStaticPaths} from "astro";
+import {PAGE_SIZE} from "@constants/constants";
+import {getSortedPosts} from "@utils/content-utils";
+import {url} from "@utils/url-utils";
+export const getStaticPaths = (async ({paginate}) => {
+    return paginate(await getSortedPosts("blog"), {pageSize: PAGE_SIZE})
+        .filter((page) => page.params.page !== undefined);
 }) satisfies GetStaticPaths;
 return Astro.redirect(url(`/blog/${Astro.params.page}/`), 301);
 ---

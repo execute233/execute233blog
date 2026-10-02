@@ -1,6 +1,6 @@
 ---
-import { siteConfig } from "@/config";
-import { url } from "@utils/url-utils";
+import {siteConfig} from "@/config";
+import {url} from "@utils/url-utils";
 
 const title = "execute233";
 const characters = Array.from(title);
@@ -10,17 +10,18 @@ const iconUrl = (src: string) => src.startsWith("/") ? url(src) : src;
 ---
 
 <a href={url('/')} aria-label={`${title}，回到首页`} draggable="false"
-    class="site-logo btn-plain scale-animation shrink-0 rounded-lg h-11 px-2 font-bold active:scale-95">
+   class="site-logo btn-plain scale-animation shrink-0 rounded-lg h-11 px-2 font-bold active:scale-95">
     <picture class="logo-icon">
         {favicons.map((favicon) => (
-            <source srcset={iconUrl(favicon.src)} media={favicon.theme && `(prefers-color-scheme: ${favicon.theme})`} />
+                <source srcset={iconUrl(favicon.src)}
+                        media={favicon.theme && `(prefers-color-scheme: ${favicon.theme})`}/>
         ))}
-        <img src={iconUrl(fallbackIcon)} width="28" height="28" alt="" draggable="false" />
+        <img src={iconUrl(fallbackIcon)} width="28" height="28" alt="" draggable="false"/>
     </picture>
     <span class="logo-title" aria-hidden="true">
         {characters.map((character, index) => (
-            <span class="logo-character" data-symbol={['>', '_', '/', '{', '}'][index % 5]}
-                style={`--delay: ${index * 65}ms; --shift: ${index % 2 ? '-100%' : index + 1 < characters.length ? '100%' : '0%'}`}>
+                <span class="logo-character" data-symbol={['>', '_', '/', '{', '}'][index % 5]}
+                      style={`--delay: ${index * 65}ms; --shift: ${index % 2 ? '-100%' : index + 1 < characters.length ? '100%' : '0%'}`}>
                 <span>{character}</span>
             </span>
         ))}
@@ -44,7 +45,10 @@ const iconUrl = (src: string) => src.startsWith("/") ? url(src) : src;
         border-radius: 12px;
     }
 
-    .logo-icon img { display: block; border-radius: 9px; }
+    .logo-icon img {
+        display: block;
+        border-radius: 9px;
+    }
 
     .logo-title {
         display: inline-flex;
@@ -67,26 +71,52 @@ const iconUrl = (src: string) => src.startsWith("/") ? url(src) : src;
     }
 
     @media (prefers-reduced-motion: no-preference) {
-        .logo-character { animation: logo-swap 6s var(--delay) infinite; }
-        .logo-character > span { animation: logo-decode 6s var(--delay) infinite; }
-        .logo-character::after { animation: logo-symbol 6s var(--delay) infinite; }
+        .logo-character {
+            animation: logo-swap 6s var(--delay) infinite;
+        }
+
+        .logo-character > span {
+            animation: logo-decode 6s var(--delay) infinite;
+        }
+
+        .logo-character::after {
+            animation: logo-symbol 6s var(--delay) infinite;
+        }
     }
 
     /* 短暂解码、相邻字换位，然后恢复；其余时间保持站名清晰。 */
     @keyframes logo-swap {
-        0%, 8%, 38%, 100% { transform: translateX(0); }
-        17%, 27% { transform: translateX(var(--shift)); }
-        20% { color: #fff; text-shadow: 0 0 8px var(--primary); }
-        38%, 100% { color: var(--primary); text-shadow: none; }
+        0%, 8%, 38%, 100% {
+            transform: translateX(0);
+        }
+        17%, 27% {
+            transform: translateX(var(--shift));
+        }
+        20% {
+            color: #fff;
+            text-shadow: 0 0 8px var(--primary);
+        }
+        38%, 100% {
+            color: var(--primary);
+            text-shadow: none;
+        }
     }
 
     @keyframes logo-decode {
-        0%, 8%, 17%, 27%, 38%, 100% { opacity: 1; }
-        11%, 14%, 31%, 34% { opacity: 0; }
+        0%, 8%, 17%, 27%, 38%, 100% {
+            opacity: 1;
+        }
+        11%, 14%, 31%, 34% {
+            opacity: 0;
+        }
     }
 
     @keyframes logo-symbol {
-        0%, 8%, 17%, 27%, 38%, 100% { opacity: 0; }
-        11%, 14%, 31%, 34% { opacity: 1; }
+        0%, 8%, 17%, 27%, 38%, 100% {
+            opacity: 0;
+        }
+        11%, 14%, 31%, 34% {
+            opacity: 1;
+        }
     }
 </style>

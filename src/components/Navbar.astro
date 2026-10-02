@@ -1,9 +1,9 @@
 ---
-import { Icon } from "astro-icon/components";
-import { navBarConfig } from "../config";
-import { LinkPresets } from "../constants/link-presets";
-import { LinkPreset, type NavBarLink } from "../types/config";
-import { url } from "../utils/url-utils";
+import {Icon} from "astro-icon/components";
+import {navBarConfig} from "../config";
+import {LinkPresets} from "../constants/link-presets";
+import {LinkPreset, type NavBarLink} from "../types/config";
+import {url} from "../utils/url-utils";
 /* Theme switching is disabled — dark mode is the only theme for now.
  * Kept for a possible future light theme. */
 // import LightDarkSwitch from "./LightDarkSwitch.svelte";
@@ -15,45 +15,50 @@ import NavMenuPanel from "./widget/NavMenuPanel.astro";
 const className = Astro.props.class;
 
 let links: NavBarLink[] = navBarConfig.links.map(
-	(item: NavBarLink | LinkPreset): NavBarLink => {
-		if (typeof item === "number") {
-			return LinkPresets[item];
-		}
-		return item;
-	},
+    (item: NavBarLink | LinkPreset): NavBarLink => {
+        if (typeof item === "number") {
+            return LinkPresets[item];
+        }
+        return item;
+    },
 );
 ---
 <div id="navbar" class="z-50 onload-animation">
     <div class:list={[
         className,
         "navbar-glass w-full"]}>
-      <div class="navbar-content relative mx-auto flex items-center h-16 gap-2 px-4 md:px-6 max-w-[90rem]">
-        <AnimatedLogo />
-        <div class="navbar-search ml-auto lg:ml-4 shrink-0">
-            <Search client:load />
+        <div class="navbar-content relative mx-auto flex items-center h-16 gap-2 px-4 md:px-6 max-w-[90rem]">
+            <AnimatedLogo/>
+            <div class="navbar-search ml-auto lg:ml-4 shrink-0">
+                <Search client:load/>
+            </div>
+            <nav aria-label="主导航" class="hidden lg:flex ml-auto items-center">
+                {links.map((l) => {
+                    return <a aria-label={l.name} href={l.external ? l.url : url(l.url)}
+                              target={l.external ? "_blank" : null}
+                              class="btn-plain scale-animation rounded-lg h-11 text-sm font-medium px-3 active:scale-95"
+                    >
+                        <div class="flex items-center">
+                            {l.name}
+                            {l.external &&
+                                    <Icon name="fa6-solid:arrow-up-right-from-square"
+                                          class="text-[0.875rem] transition -translate-y-[1px] ml-1 text-black/[0.2] dark:text-white/[0.2]"></Icon>}
+                        </div>
+                    </a>;
+                })}
+            </nav>
+            <div class="flex shrink-0 lg:ml-2">
+                {/* Theme switcher disabled — kept for a possible future light theme. */}
+                {/* <LightDarkSwitch client:only="svelte"></LightDarkSwitch> */}
+                <button aria-label="Menu" name="Nav Menu"
+                        class="btn-plain scale-animation rounded-lg w-11 h-11 active:scale-90 lg:!hidden"
+                        id="nav-menu-switch">
+                    <Icon name="material-symbols:menu-rounded" class="text-[1.25rem]"></Icon>
+                </button>
+                <BackgroundSettings/>
+            </div>
+            <NavMenuPanel links={links}></NavMenuPanel>
         </div>
-        <nav aria-label="主导航" class="hidden lg:flex ml-auto items-center">
-            {links.map((l) => {
-                return <a aria-label={l.name} href={l.external ? l.url : url(l.url)} target={l.external ? "_blank" : null}
-                          class="btn-plain scale-animation rounded-lg h-11 text-sm font-medium px-3 active:scale-95"
-                >
-                    <div class="flex items-center">
-                        {l.name}
-                        {l.external && <Icon name="fa6-solid:arrow-up-right-from-square" class="text-[0.875rem] transition -translate-y-[1px] ml-1 text-black/[0.2] dark:text-white/[0.2]"></Icon>}
-                    </div>
-                </a>;
-            })}
-        </nav>
-        <div class="flex shrink-0 lg:ml-2">
-            {/* Theme switcher disabled — kept for a possible future light theme. */}
-            {/* <LightDarkSwitch client:only="svelte"></LightDarkSwitch> */}
-            <button aria-label="Menu" name="Nav Menu" class="btn-plain scale-animation rounded-lg w-11 h-11 active:scale-90 lg:!hidden" id="nav-menu-switch">
-                <Icon name="material-symbols:menu-rounded" class="text-[1.25rem]"></Icon>
-            </button>
-            <BackgroundSettings />
-        </div>
-        <NavMenuPanel links={links}></NavMenuPanel>
-      </div>
     </div>
 </div>
 
@@ -134,60 +139,61 @@ let links: NavBarLink[] = navBarConfig.links.map(
 </style>
 
 <script>
-function loadButtonScript(): void {
-    const menuBtn = document.getElementById("nav-menu-switch");
-    if (menuBtn) {
-        menuBtn.onclick = (): void => {
-            const menuPanel = document.getElementById("nav-menu-panel");
-            if (menuPanel) {
-                menuPanel.classList.toggle("float-panel-closed");
-            }
-        };
+    function loadButtonScript(): void {
+        const menuBtn = document.getElementById("nav-menu-switch");
+        if (menuBtn) {
+            menuBtn.onclick = (): void => {
+                const menuPanel = document.getElementById("nav-menu-panel");
+                if (menuPanel) {
+                    menuPanel.classList.toggle("float-panel-closed");
+                }
+            };
+        }
     }
-}
 
-loadButtonScript();
-// 顶栏不随 Swup 替换，栏目跳转后主动收起移动导航。
-document.getElementById("nav-menu-panel")?.addEventListener("click", (event) => {
-    if (event.target instanceof Element && event.target.closest("a")) {
-        document.getElementById("nav-menu-panel")?.classList.add("float-panel-closed");
-    }
-});
+    loadButtonScript();
+    // 顶栏不随 Swup 替换，栏目跳转后主动收起移动导航。
+    document.getElementById("nav-menu-panel")?.addEventListener("click", (event) => {
+        if (event.target instanceof Element && event.target.closest("a")) {
+            document.getElementById("nav-menu-panel")?.classList.add("float-panel-closed");
+        }
+    });
 </script>
 
-{import.meta.env.PROD && <script is:inline define:vars={{scriptUrl: url('/pagefind/pagefind.js')}}>
-// is:inline — emitted verbatim, so this must stay plain JS
-async function loadPagefind() {
-    try {
-        const response = await fetch(scriptUrl, { method: 'HEAD' });
-        if (!response.ok) {
-            throw new Error(`Pagefind script not found: ${response.status}`);
+{import.meta.env.PROD &&
+<script is:inline define:vars={{scriptUrl: url('/pagefind/pagefind.js')}}>
+    // is:inline — emitted verbatim, so this must stay plain JS
+    async function loadPagefind() {
+        try {
+            const response = await fetch(scriptUrl, {method: 'HEAD'});
+            if (!response.ok) {
+                throw new Error(`Pagefind script not found: ${response.status}`);
+            }
+
+            const pagefind = await import(scriptUrl);
+
+            await pagefind.options({
+                excerptLength: 20
+            });
+
+            window.pagefind = pagefind;
+
+            document.dispatchEvent(new CustomEvent('pagefindready'));
+            console.log('Pagefind loaded and initialized successfully, event dispatched.');
+        } catch (error) {
+            console.error('Failed to load Pagefind:', error);
+            window.pagefind = {
+                search: () => Promise.resolve({results: []}),
+                options: () => Promise.resolve(),
+            };
+            document.dispatchEvent(new CustomEvent('pagefindloaderror'));
+            console.log('Pagefind load error, event dispatched.');
         }
-
-        const pagefind = await import(scriptUrl);
-
-        await pagefind.options({
-            excerptLength: 20
-        });
-
-        window.pagefind = pagefind;
-
-        document.dispatchEvent(new CustomEvent('pagefindready'));
-        console.log('Pagefind loaded and initialized successfully, event dispatched.');
-    } catch (error) {
-        console.error('Failed to load Pagefind:', error);
-        window.pagefind = {
-            search: () => Promise.resolve({ results: [] }),
-            options: () => Promise.resolve(),
-        };
-        document.dispatchEvent(new CustomEvent('pagefindloaderror'));
-        console.log('Pagefind load error, event dispatched.');
     }
-}
 
-if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', loadPagefind);
-} else {
-    loadPagefind();
-}
+    if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', loadPagefind);
+    } else {
+        loadPagefind();
+    }
 </script>}
