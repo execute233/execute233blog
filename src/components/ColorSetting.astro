@@ -1,38 +1,96 @@
 ---
 import Key from "@/i18n/i18nKey";
-import { i18n } from "@/i18n/translation";
+import {i18n} from "@/i18n/translation";
 
 interface Props {
-	id: string;
-	label: string;
-	value: string;
+    id: string;
+    label: string;
+    value: string;
 }
-const { id, label, value } = Astro.props;
+const {id, label, value} = Astro.props;
 ---
 <div class="appearance-row" data-color-setting={id}>
-	<div class="appearance-caption">
-		<span>{label}</span>
-		<button type="button" class="appearance-swatch" aria-label={label} aria-expanded="false" aria-controls={`palette-${id}`}>
-			<span style={`background:${value}`}></span>
-		</button>
-	</div>
-	<div id={`palette-${id}`} class="appearance-palette" hidden>
-		<hex-alpha-color-picker color={value} aria-label={label}></hex-alpha-color-picker>
-		<label class="appearance-caption">{i18n(Key.colorValue)}
-			<input class="appearance-hex" aria-label={`${label} · ${i18n(Key.colorValue)}`} value={value} pattern="#[0-9a-fA-F]{8}" maxlength="9" spellcheck="false" />
-		</label>
-		<label class="appearance-caption" for={`opacity-${id}`}>{i18n(Key.colorOpacity)} <output></output></label>
-		<input id={`opacity-${id}`} class="appearance-opacity" aria-label={`${label} · ${i18n(Key.colorOpacity)}`} type="range" min="0" max="100" step="1" />
-	</div>
+    <div class="appearance-caption">
+        <span>{label}</span>
+        <button type="button" class="appearance-swatch" aria-label={label} aria-expanded="false"
+                aria-controls={`palette-${id}`}>
+            <span style={`background:${value}`}></span>
+        </button>
+    </div>
+    <div id={`palette-${id}`} class="appearance-palette" hidden>
+        <hex-alpha-color-picker color={value} aria-label={label}></hex-alpha-color-picker>
+        <label class="appearance-caption">{i18n(Key.colorValue)}
+            <input class="appearance-hex" aria-label={`${label} · ${i18n(Key.colorValue)}`} value={value}
+                   pattern="#[0-9a-fA-F]{8}" maxlength="9" spellcheck="false"/>
+        </label>
+        <label class="appearance-caption" for={`opacity-${id}`}>{i18n(Key.colorOpacity)}
+            <output></output>
+        </label>
+        <input id={`opacity-${id}`} class="appearance-opacity" aria-label={`${label} · ${i18n(Key.colorOpacity)}`}
+               type="range" min="0" max="100" step="1"/>
+    </div>
 </div>
 <style>
-	.appearance-row { margin-top: .75rem; }
-	.appearance-caption { display:flex; align-items:center; justify-content:space-between; gap:.75rem; font-size:.875rem; color:var(--primary); }
-	.appearance-swatch { width:2.75rem; height:1.75rem; padding:0; border:1px solid #94a3b855; border-radius:.4rem; overflow:hidden; background:repeating-conic-gradient(#808080 0% 25%, #ddd 0% 50%) 0 / 12px 12px; }
-	.appearance-swatch span { display:block; width:100%; height:100%; }
-	.appearance-palette { margin-top:.75rem; padding:.75rem; border:1px solid var(--line-color); border-radius:.75rem; --disclosure-x:0px; --disclosure-y:-8px; }
-	hex-alpha-color-picker { width:100%; height:170px; margin-bottom:1rem; }
-	.appearance-hex { width:7rem; padding:.25rem; border:1px solid var(--line-color); border-radius:.25rem; background:transparent; color:inherit; font-family:monospace; }
-	.appearance-opacity { width:100%; accent-color:var(--primary); }
-	.appearance-palette label + label { margin-top:.75rem; }
+    .appearance-row {
+        margin-top: .75rem;
+    }
+
+    .appearance-caption {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: .75rem;
+        font-size: .875rem;
+        color: var(--primary);
+    }
+
+    .appearance-swatch {
+        width: 2.75rem;
+        height: 1.75rem;
+        padding: 0;
+        border: 1px solid #94a3b855;
+        border-radius: .4rem;
+        overflow: hidden;
+        background: repeating-conic-gradient(#808080 0% 25%, #ddd 0% 50%) 0 / 12px 12px;
+    }
+
+    .appearance-swatch span {
+        display: block;
+        width: 100%;
+        height: 100%;
+    }
+
+    .appearance-palette {
+        margin-top: .75rem;
+        padding: .75rem;
+        border: 1px solid var(--line-color);
+        border-radius: .75rem;
+        --disclosure-x: 0px;
+        --disclosure-y: -8px;
+    }
+
+    hex-alpha-color-picker {
+        width: 100%;
+        height: 170px;
+        margin-bottom: 1rem;
+    }
+
+    .appearance-hex {
+        width: 7rem;
+        padding: .25rem;
+        border: 1px solid var(--line-color);
+        border-radius: .25rem;
+        background: transparent;
+        color: inherit;
+        font-family: monospace;
+    }
+
+    .appearance-opacity {
+        width: 100%;
+        accent-color: var(--primary);
+    }
+
+    .appearance-palette label + label {
+        margin-top: .75rem;
+    }
 </style>
