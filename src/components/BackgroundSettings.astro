@@ -1,6 +1,7 @@
 ---
 import { Icon } from "astro-icon/components";
 import AppearanceSettings from "./AppearanceSettings.astro";
+import CursorSettings from "./CursorSettings.astro";
 ---
 <details id="site-settings" class="relative" data-pagefind-ignore>
  <summary aria-label="设置" title="设置" class="btn-plain rounded-lg w-11 h-11 cursor-pointer list-none"><Icon name="material-symbols:settings-outline-rounded" class="text-xl" /></summary>
@@ -17,6 +18,7 @@ import AppearanceSettings from "./AppearanceSettings.astro";
    </div>
   </details>
   <AppearanceSettings />
+  <CursorSettings />
  </div>
 </details>
 <script>

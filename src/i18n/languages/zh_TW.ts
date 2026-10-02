@@ -2,6 +2,16 @@ import Key from "../i18nKey";
 import type { Translation } from "../translation";
 
 export const zh_TW: Translation = {
+	[Key.colorValue]: "顏色值",
+	[Key.colorOpacity]: "不透明度",
+	[Key.cursor]: "游標",
+	[Key.cursorGlow]: "背景發光色",
+	[Key.cursorBorder]: "邊界色",
+	[Key.cursorFill]: "底色",
+	[Key.cursorSize]: "大小",
+	[Key.cursorSizeNote]:
+		"預設 24 CSS px。瀏覽器無法讀取系統實際游標大小，可在此手動調整匹配。",
+	[Key.cursorReset]: "恢復預設游標",
 	[Key.home]: "首頁",
 	[Key.about]: "關於",
 	[Key.archive]: "彙整",
