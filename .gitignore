@@ -34,6 +34,9 @@ yarn.lock
 /tmp/
 /.playwright-mcp/
 
+# 本地音乐资源
+/public/media/island/
+
 # 个人工具配置与本地索引（AGENTS.md、根 CLAUDE.md 仍随仓库维护）
 /.claude/
 /.codex/

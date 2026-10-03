@@ -1,29 +1,33 @@
 ---
-import {Icon} from "astro-icon/components";
-import {navBarConfig} from "../config";
-import {LinkPresets} from "../constants/link-presets";
-import {LinkPreset, type NavBarLink} from "../types/config";
-import {url} from "../utils/url-utils";
+import { Icon } from "astro-icon/components";
+import { musicConfig, navBarConfig } from "../config";
+import { LinkPresets } from "../constants/link-presets";
+import { LinkPreset, type NavBarLink } from "../types/config";
+import { url } from "../utils/url-utils";
+import AnimatedLogo from "./AnimatedLogo.astro";
 /* Theme switching is disabled — dark mode is the only theme for now.
  * Kept for a possible future light theme. */
 // import LightDarkSwitch from "./LightDarkSwitch.svelte";
 import BackgroundSettings from "./BackgroundSettings.astro";
-import AnimatedLogo from "./AnimatedLogo.astro";
 import Search from "./Search.svelte";
 import NavMenuPanel from "./widget/NavMenuPanel.astro";
 
 const className = Astro.props.class;
 
 let links: NavBarLink[] = navBarConfig.links.map(
-    (item: NavBarLink | LinkPreset): NavBarLink => {
-        if (typeof item === "number") {
-            return LinkPresets[item];
-        }
-        return item;
-    },
+	(item: NavBarLink | LinkPreset): NavBarLink => {
+		if (typeof item === "number") {
+			return LinkPresets[item];
+		}
+		return item;
+	},
 );
 ---
-<div id="navbar" class="z-50 onload-animation">
+<div
+	id="navbar"
+	class="z-50 onload-animation"
+	data-music-island={musicConfig.enable || undefined}
+>
     <div class:list={[
         className,
         "navbar-glass w-full"]}>
