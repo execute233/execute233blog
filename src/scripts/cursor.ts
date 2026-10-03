@@ -72,6 +72,7 @@ export function initCursor(): void {
 	const fine = matchMedia("(hover: hover) and (pointer: fine)");
 	const reduced = matchMedia("(prefers-reduced-motion: reduce)");
 	const root = document.documentElement;
+	let pointerInside = false;
 	let hovered: Element | null = null;
 	let kind = "arrow";
 	let draggingText = false;
@@ -102,7 +103,6 @@ export function initCursor(): void {
 		paint();
 	};
 	const hide = () => {
-		root.removeAttribute("data-cursor-active");
 		hovered = null;
 		cursor.hidden = true;
 		draggingText = false;
@@ -110,32 +110,15 @@ export function initCursor(): void {
 		frame = 0;
 	};
 	const classify = (element: Element | null) => {
-		if (element === hovered) return;
-		hovered = null;
-		if (!element || element.closest("iframe, select")) {
-			hide();
-			return;
-		}
-		// Read the original cursor synchronously, restoring suppression before
-		// returning to the browser so classification cannot leave a visible gap.
-		const active = root.hasAttribute("data-cursor-active");
-		if (active) root.removeAttribute("data-cursor-active");
-		const native = getComputedStyle(element).cursor;
-		if (active) root.setAttribute("data-cursor-active", "");
-		if (
-			!["auto", "default", "pointer", "text", "none"].includes(native) ||
-			native === "none"
-		) {
-			hide();
-			return;
-		}
+		if (!element || (element === hovered && !cursor.hidden)) return;
 		const text =
 			draggingText ||
-			native === "text" ||
-			(native !== "pointer" &&
-				!element.closest("a, button, summary, label, [role=button]") &&
+			!!element.closest(
+				"input:not([type]), input[type=text i], input[type=search i], input[type=email i], input[type=url i], input[type=tel i], input[type=password i], input[type=number i], textarea, [contenteditable=''], [contenteditable=true], [contenteditable=plaintext-only]",
+			) ||
+			(!element.closest("a, button, summary, label, select, [role=button]") &&
 				!!element.closest(
-					"p, li, h1, h2, h3, h4, h5, h6, pre, code, blockquote, td, th, input:not([type]), input[type=text], input[type=search], textarea, [contenteditable=true]",
+					"p, li, h1, h2, h3, h4, h5, h6, pre, code, blockquote, td, th",
 				));
 		const nextKind = text ? "text" : "arrow";
 		if (cursor.hidden || nextKind !== kind) snap();
@@ -143,8 +126,18 @@ export function initCursor(): void {
 		cursor.dataset.kind = kind;
 		cursor.hidden = false;
 		hovered = element;
-		root.setAttribute("data-cursor-active", "");
 	};
+	const refresh = () => {
+		hovered = null;
+		if (!fine.matches || !pointerInside || document.hidden) return;
+		classify(document.elementFromPoint(tx, ty));
+	};
+	const syncAvailability = () => {
+		root.toggleAttribute("data-cursor-enabled", fine.matches);
+		if (fine.matches) refresh();
+		else hide();
+	};
+	syncAvailability();
 	const tick = (now: number) => {
 		frame = 0;
 		const dt = Math.min((now - last) / 1000 || 1 / 60, 1 / 30);
@@ -188,9 +181,11 @@ export function initCursor(): void {
 		"pointermove",
 		(event) => {
 			if (!fine.matches || event.pointerType !== "mouse") {
+				pointerInside = false;
 				hide();
 				return;
 			}
+			pointerInside = true;
 			tx = event.clientX;
 			ty = event.clientY;
 			classify(event.target instanceof Element ? event.target : null);
@@ -218,30 +213,49 @@ export function initCursor(): void {
 		{ passive: true },
 	);
 	document.addEventListener("pointerdown", (event) => {
-		if (event.pointerType !== "mouse") {
+		if (!fine.matches || event.pointerType !== "mouse") {
+			pointerInside = false;
 			hide();
 			return;
 		}
+		pointerInside = true;
 		tx = event.clientX;
 		ty = event.clientY;
+		classify(event.target instanceof Element ? event.target : null);
 		draggingText = kind === "text";
 		snap();
 	});
 	document.addEventListener("pointerup", () => {
 		draggingText = false;
+		refresh();
 	});
-	document.addEventListener("pointerout", (event) => {
-		if (!event.relatedTarget) hide();
+	root.addEventListener("pointerenter", (event) => {
+		if (!fine.matches || event.pointerType !== "mouse") return;
+		pointerInside = true;
+		tx = event.clientX;
+		ty = event.clientY;
+		refresh();
+		snap();
 	});
-	document.addEventListener("pointercancel", hide);
+	root.addEventListener("pointerleave", () => {
+		pointerInside = false;
+		hide();
+	});
+	document.addEventListener("pointercancel", () => {
+		pointerInside = false;
+		hide();
+	});
 	window.addEventListener("blur", hide);
+	window.addEventListener("focus", refresh);
 	document.addEventListener("visibilitychange", () => {
 		if (document.hidden) hide();
+		else refresh();
 	});
-	fine.addEventListener("change", hide);
+	fine.addEventListener("change", syncAvailability);
 	reduced.addEventListener("change", snap);
-	// Delegation survives Swup replacements; clear the old target during navigation.
-	document.addEventListener("swup:visit:start", hide);
+	// Keep the cursor visible during navigation and classify the replacement DOM.
+	document.addEventListener("swup:content:replace", refresh);
+	document.addEventListener("swup:page:view", refresh);
 	document.addEventListener(
 		"scroll",
 		() => {
