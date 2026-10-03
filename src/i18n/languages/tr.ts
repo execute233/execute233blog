@@ -2,6 +2,12 @@ import Key from "../i18nKey";
 import type { Translation } from "../translation";
 
 export const tr: Translation = {
+	[Key.navigation]: "Gezinti",
+	[Key.contact]: "İletişim",
+	[Key.menu]: "Menü",
+	[Key.skipToContent]: "İçeriğe geç",
+	[Key.tableOfContents]: "İçindekiler",
+	[Key.backToList]: "Listeye dön",
 	[Key.music]: "Müzik",
 	[Key.musicEmpty]: "Çalma listesi boş",
 	[Key.musicOpen]: "Müzik çaları aç",

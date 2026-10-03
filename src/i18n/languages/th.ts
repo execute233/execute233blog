@@ -2,6 +2,12 @@ import Key from "../i18nKey";
 import type { Translation } from "../translation";
 
 export const th: Translation = {
+	[Key.navigation]: "การนำทาง",
+	[Key.contact]: "ติดต่อ",
+	[Key.menu]: "เมนู",
+	[Key.skipToContent]: "ข้ามไปยังเนื้อหา",
+	[Key.tableOfContents]: "สารบัญ",
+	[Key.backToList]: "กลับไปที่รายการ",
 	[Key.music]: "เพลง",
 	[Key.musicEmpty]: "รายการเล่นว่าง",
 	[Key.musicOpen]: "เปิดเครื่องเล่นเพลง",

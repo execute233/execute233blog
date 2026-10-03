@@ -2,6 +2,12 @@ import Key from "../i18nKey";
 import type { Translation } from "../translation";
 
 export const es: Translation = {
+	[Key.navigation]: "Navegación",
+	[Key.contact]: "Contacto",
+	[Key.menu]: "Menú",
+	[Key.skipToContent]: "Ir al contenido",
+	[Key.tableOfContents]: "En esta página",
+	[Key.backToList]: "Volver a la lista",
 	[Key.music]: "Música",
 	[Key.musicEmpty]: "La lista está vacía",
 	[Key.musicOpen]: "Abrir reproductor",

@@ -2,6 +2,12 @@ import Key from "../i18nKey";
 import type { Translation } from "../translation";
 
 export const vi: Translation = {
+	[Key.navigation]: "Điều hướng",
+	[Key.contact]: "Liên hệ",
+	[Key.menu]: "Menu",
+	[Key.skipToContent]: "Chuyển đến nội dung",
+	[Key.tableOfContents]: "Mục lục",
+	[Key.backToList]: "Quay lại danh sách",
 	[Key.music]: "Âm nhạc",
 	[Key.musicEmpty]: "Danh sách phát trống",
 	[Key.musicOpen]: "Mở trình phát nhạc",

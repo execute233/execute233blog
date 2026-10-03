@@ -2,6 +2,12 @@ import Key from "../i18nKey";
 import type { Translation } from "../translation";
 
 export const ja: Translation = {
+	[Key.navigation]: "ナビゲーション",
+	[Key.contact]: "連絡先",
+	[Key.menu]: "メニュー",
+	[Key.skipToContent]: "本文へ移動",
+	[Key.tableOfContents]: "目次",
+	[Key.backToList]: "一覧に戻る",
 	[Key.music]: "音楽",
 	[Key.musicEmpty]: "プレイリストは空です",
 	[Key.musicOpen]: "プレーヤーを開く",

@@ -1,4 +1,11 @@
 enum I18nKey {
+	navigation = "navigation",
+	contact = "contact",
+	menu = "menu",
+	skipToContent = "skipToContent",
+	tableOfContents = "tableOfContents",
+	backToList = "backToList",
+
 	music = "music",
 	musicEmpty = "musicEmpty",
 	musicOpen = "musicOpen",

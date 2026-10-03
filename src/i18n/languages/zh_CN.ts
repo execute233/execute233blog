@@ -2,6 +2,12 @@ import Key from "../i18nKey";
 import type { Translation } from "../translation";
 
 export const zh_CN: Translation = {
+	[Key.navigation]: "导航",
+	[Key.contact]: "联系",
+	[Key.menu]: "菜单",
+	[Key.skipToContent]: "跳到内容",
+	[Key.tableOfContents]: "文章目录",
+	[Key.backToList]: "返回列表",
 	[Key.music]: "音乐",
 	[Key.musicEmpty]: "歌单暂为空",
 	[Key.musicOpen]: "展开音乐播放器",

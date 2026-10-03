@@ -2,6 +2,12 @@ import Key from "../i18nKey";
 import type { Translation } from "../translation";
 
 export const id: Translation = {
+	[Key.navigation]: "Navigasi",
+	[Key.contact]: "Kontak",
+	[Key.menu]: "Menu",
+	[Key.skipToContent]: "Lewati ke konten",
+	[Key.tableOfContents]: "Daftar isi",
+	[Key.backToList]: "Kembali ke daftar",
 	[Key.music]: "Musik",
 	[Key.musicEmpty]: "Daftar putar kosong",
 	[Key.musicOpen]: "Buka pemutar musik",

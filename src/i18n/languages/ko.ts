@@ -2,6 +2,12 @@ import Key from "../i18nKey";
 import type { Translation } from "../translation";
 
 export const ko: Translation = {
+	[Key.navigation]: "탐색",
+	[Key.contact]: "연락처",
+	[Key.menu]: "메뉴",
+	[Key.skipToContent]: "본문으로 건너뛰기",
+	[Key.tableOfContents]: "목차",
+	[Key.backToList]: "목록으로 돌아가기",
 	[Key.music]: "음악",
 	[Key.musicEmpty]: "재생 목록이 비어 있습니다",
 	[Key.musicOpen]: "음악 플레이어 펼치기",

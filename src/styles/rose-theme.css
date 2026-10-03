@@ -1,0 +1,509 @@
+@import "./rose-navigation.css";
+@import "./rose-footer.css";
+
+:root.rose-theme {
+	color-scheme: dark;
+	--primary: oklch(0.82 0.085 var(--hue));
+	--page-bg: var(--blog-background, #100d14);
+	--card-bg: #20171f;
+	--float-panel-bg: #211923;
+	--bg: var(--blog-background, #100d14);
+	--surface: var(--card-surface, #20171f);
+	--ink: #faf2f7;
+	--muted: #b9a8b5;
+	--subtle: #aa94a6;
+	--accent: var(--primary);
+	--accent-rgb: 240 169 198;
+	--line: rgb(var(--accent-rgb) / 16%);
+	--shadow: #4b3041;
+	--radius: 30px;
+	--radius-large: 1.875rem;
+	--line-color: var(--line);
+	--line-divider: var(--line);
+	--btn-regular-bg: #3d2839;
+	--btn-regular-bg-hover: #503348;
+	--btn-regular-bg-active: #59394f;
+	--btn-card-bg-hover: #30222d;
+	--btn-card-bg-active: #3d2a37;
+	--btn-plain-bg-hover: rgb(var(--accent-rgb) / 9%);
+	--btn-plain-bg-active: rgb(var(--accent-rgb) / 14%);
+	--btn-content: var(--primary);
+	--toc-width: 185px;
+	--toc-btn-hover: #31232e;
+	--toc-btn-active: #422c3b;
+	--toc-badge-bg: #3d2839;
+}
+:root.rose-theme.dark {
+	--primary: oklch(0.82 0.085 var(--hue));
+	--page-bg: var(--blog-background, #100d14);
+	--card-bg: #20171f;
+	--float-panel-bg: #211923;
+	--btn-regular-bg: #3d2839;
+	--btn-regular-bg-hover: #503348;
+	--btn-regular-bg-active: #59394f;
+	--btn-card-bg-hover: #30222d;
+	--btn-card-bg-active: #3d2a37;
+	--btn-plain-bg-hover: rgb(var(--accent-rgb) / 9%);
+	--btn-plain-bg-active: rgb(var(--accent-rgb) / 14%);
+	--btn-content: var(--primary);
+	--line-color: var(--line);
+	--line-divider: var(--line);
+	--toc-btn-hover: #31232e;
+	--toc-btn-active: #422c3b;
+	--toc-badge-bg: #3d2839;
+}
+.rose-theme body {
+	color: var(--ink);
+}
+.rose-theme #universe {
+	opacity: 0.12;
+}
+.rose-theme:has([data-post-section]) #universe {
+	opacity: 0.04;
+}
+.rose-theme #galaxy-veil {
+	background: transparent;
+}
+.rose-ambient {
+	position: fixed;
+	inset: 0;
+	z-index: 0;
+	pointer-events: none;
+	background:
+		radial-gradient(
+			ellipse at 6% 8%,
+			rgb(107 47 76 / 15%),
+			transparent 45%
+		),
+		radial-gradient(
+			ellipse at 93% 64%,
+			rgb(87 61 118 / 11%),
+			transparent 55%
+		);
+}
+.stars-only #universe {
+	opacity: 1;
+}
+.stars-only .rose-ambient,
+.stars-only .rose-footer {
+	visibility: hidden;
+}
+.eyebrow,
+.mono {
+	font-family: "JetBrains Mono Variable", monospace;
+}
+.eyebrow {
+	display: block;
+	font-size: 10px;
+	font-weight: 600;
+	letter-spacing: 0.16em;
+	color: var(--accent);
+	line-height: 1.7;
+}
+.surface,
+.rose-theme .card-base {
+	border: 1px solid var(--line);
+	border-radius: var(--radius);
+	background:
+		linear-gradient(145deg, rgb(var(--accent-rgb) / 4%), transparent 50%),
+		var(--surface);
+	box-shadow:
+		5px 6px 0 var(--shadow),
+		inset 0 1px 0 rgb(255 255 255 / 3%);
+}
+.rose-theme :is(a, button, summary):focus-visible {
+	outline: 2px solid var(--primary);
+	outline-offset: 4px;
+}
+.rose-shell {
+	position: relative;
+	z-index: 10;
+	display: grid;
+	grid-template-columns: minmax(0, 1fr);
+	width: min(1100px, calc(100% - 224px));
+	margin: 0 auto;
+	padding-top: 128px;
+	min-height: 65vh;
+}
+.rose-shell:has([data-post-section]) {
+	grid-template-columns: minmax(0, 1fr) 185px;
+	gap: 40px;
+}
+.rose-shell main {
+	min-width: 0;
+}
+.rose-shell:not(:has([data-post-section])) #toc-wrapper {
+	display: none;
+}
+.rose-shell #toc-wrapper {
+	position: sticky;
+	top: 110px;
+	align-self: start;
+	padding-top: 15px;
+}
+.rose-shell #toc-inner-wrapper {
+	max-height: calc(100dvh - 150px);
+	overflow-y: auto;
+}
+.rose-toc-details summary {
+	font-size: 11px;
+	color: var(--accent);
+	padding-bottom: 18px;
+	cursor: pointer;
+}
+.rose-toc-details table-of-contents {
+	display: block;
+	position: relative;
+}
+.pill-button {
+	display: inline-flex;
+	align-items: center;
+	justify-content: space-between;
+	gap: 22px;
+	border-radius: 25px;
+	padding: 11px 23px;
+	background: var(--accent);
+	color: #100d14;
+	font-size: 13px;
+	font-weight: 700;
+	box-shadow: inset 0 1px 0 rgb(255 255 255 / 25%);
+	transition:
+		background 180ms,
+		transform 180ms;
+}
+.pill-button:hover {
+	background: color-mix(in srgb, var(--accent), white 15%);
+	transform: translateY(-2px);
+}
+.text-link {
+	color: var(--muted);
+	font-size: 12px;
+	white-space: nowrap;
+}
+.text-link:hover {
+	color: var(--accent);
+}
+.text-link span {
+	margin-left: 8px;
+	color: var(--accent);
+}
+.rose-list-heading {
+	margin: 15px 0 34px;
+}
+.rose-list-heading h1 {
+	font-size: clamp(34px, 4vw, 55px);
+	letter-spacing: -0.045em;
+	margin: 21px 0 16px;
+}
+.rose-list-heading p {
+	font-size: 14px;
+	color: var(--muted);
+	margin-bottom: 20px;
+}
+.rose-post-list {
+	display: grid;
+	gap: 24px;
+	margin: 25px 0;
+}
+.rose-post-card {
+	display: grid;
+	grid-template-columns: 125px minmax(0, 1fr) 28px;
+	gap: 24px;
+	padding: 29px 32px;
+	transition:
+		transform 220ms,
+		border-color 220ms;
+}
+.rose-post-card:has(.rose-post-cover) {
+	grid-template-columns: 125px minmax(0, 1fr) 22%;
+}
+.rose-post-card:hover {
+	transform: translateY(-3px);
+	border-color: rgb(var(--accent-rgb) / 45%);
+}
+.rose-post-card-meta {
+	display: flex;
+	flex-direction: column;
+	gap: 6px;
+	font-size: 11px;
+	color: var(--subtle);
+}
+.rose-post-card-meta > .mono {
+	color: var(--accent);
+	margin-bottom: 5px;
+}
+.rose-post-card-meta a:hover {
+	color: var(--accent);
+}
+.rose-post-card h2 {
+	font-size: 25px;
+	line-height: 1.3;
+	letter-spacing: -0.035em;
+	color: var(--ink);
+	font-weight: 600;
+}
+.rose-post-card h2 a:hover {
+	color: var(--accent);
+}
+.rose-post-card p {
+	font-size: 13px;
+	line-height: 1.85;
+	color: var(--muted);
+	margin-top: 13px;
+}
+.rose-post-reading-time {
+	display: flex;
+	gap: 14px;
+	font-size: 10px;
+	color: var(--subtle);
+	margin-top: 15px;
+}
+.rose-post-arrow {
+	align-self: center;
+	color: var(--accent);
+	font-size: 26px;
+}
+.rose-post-cover {
+	display: block;
+	align-self: stretch;
+	min-height: 140px;
+	border-radius: 17px;
+	overflow: hidden;
+}
+.rose-post-cover img {
+	width: 100%;
+	height: 100%;
+	object-fit: cover;
+}
+.rose-theme .rose-reading {
+	border-radius: 25px;
+	background: color-mix(in srgb, var(--surface) 90%, var(--bg));
+	box-shadow: none;
+	padding: 38px 44px 28px;
+}
+.rose-reading-header {
+	border-bottom: 1px solid var(--line);
+	padding-bottom: 25px;
+	margin-bottom: 30px;
+}
+.rose-reading-back {
+	color: var(--subtle);
+	font-size: 12px;
+}
+.rose-reading h1 {
+	margin: 27px 0 17px;
+	font-size: clamp(28px, 3vw, 42px);
+	letter-spacing: -0.04em;
+	line-height: 1.4;
+	color: var(--ink);
+}
+.rose-reading .meta-icon {
+	width: 22px;
+	height: 22px;
+	background: transparent;
+	margin-right: 4px;
+}
+.rose-reading .meta-icon svg {
+	width: 17px;
+	height: 17px;
+}
+.rose-reading .custom-md {
+	max-width: 44rem !important;
+	margin: 0 auto;
+	font-size: 16px;
+	line-height: 1.95;
+}
+.rose-reading .custom-md h2 {
+	font-size: 24px;
+	margin-top: 2.25em;
+}
+.rose-reading .custom-md :is(h1, h2, h3, h4) {
+	scroll-margin-top: 110px;
+}
+.rose-reading .custom-md .expressive-code {
+	font-size: 0.875rem;
+	line-height: 1.7;
+}
+.rose-reading .custom-md :is(table, pre) {
+	max-width: 100%;
+}
+.rose-reading .custom-md img {
+	border-radius: 14px;
+}
+.rose-reading-stats {
+	display: flex;
+	gap: 18px;
+	color: var(--subtle);
+	font-size: 11px;
+	margin-top: 18px;
+}
+.rose-reading-neighbors {
+	display: flex;
+	gap: 20px;
+	margin-top: 27px;
+}
+.rose-reading-neighbors a {
+	flex: 1;
+	min-width: 0;
+	padding: 19px;
+	border: 1px solid var(--line);
+	border-radius: 20px;
+	background: var(--surface);
+	color: var(--muted);
+	font-size: 13px;
+	overflow-wrap: anywhere;
+}
+.rose-reading-neighbors a:hover {
+	color: var(--accent);
+}
+.rose-reading-neighbors a:last-child {
+	text-align: right;
+}
+@media (max-width: 1279px) {
+	.rose-shell:has([data-post-section]) {
+		grid-template-columns: minmax(0, 1fr);
+		gap: 23px;
+	}
+	.rose-shell:has([data-post-section]) #toc-wrapper {
+		position: static;
+		grid-row: 1;
+		padding: 0;
+	}
+	.rose-shell #toc-inner-wrapper {
+		max-height: none;
+	}
+	.rose-toc-details {
+		border-bottom: 1px solid var(--line);
+	}
+	.rose-toc-details summary {
+		padding: 10px 0 14px;
+	}
+	.rose-toc-details table-of-contents {
+		max-height: 280px;
+		overflow-y: auto;
+		padding-bottom: 15px;
+	}
+}
+@media (max-width: 1100px) {
+	.rose-shell {
+		width: calc(100% - 170px);
+		margin-left: 126px;
+		margin-right: 44px;
+	}
+	.rose-post-card {
+		grid-template-columns: 105px minmax(0, 1fr) 20px;
+		gap: 18px;
+		padding: 25px;
+	}
+	.rose-post-card:has(.rose-post-cover) {
+		grid-template-columns: 105px minmax(0, 1fr) 22%;
+	}
+}
+@media (max-width: 800px) {
+	.rose-shell {
+		width: calc(100% - 64px);
+		margin-left: auto;
+		margin-right: auto;
+	}
+}
+@media (max-width: 600px) {
+	.rose-shell {
+		width: calc(100% - 40px);
+	}
+	.rose-shell {
+		padding-top: 105px;
+	}
+	.music-island:not([data-open="true"]) {
+		width: clamp(100px, calc(100vw - 246px), 176px);
+	}
+	.rose-list-heading {
+		margin: 0 0 28px;
+	}
+	.rose-list-heading h1 {
+		font-size: 33px;
+	}
+	.rose-list-heading p {
+		font-size: 12px;
+	}
+	.rose-post-list {
+		gap: 21px;
+	}
+	.rose-post-card,
+	.rose-post-card:has(.rose-post-cover) {
+		position: relative;
+		display: flex;
+		flex-direction: column;
+		gap: 17px;
+		padding: 24px;
+		border-radius: 23px;
+	}
+	.rose-post-card-meta {
+		flex-direction: row;
+		flex-wrap: wrap;
+		gap: 12px;
+		font-size: 10px;
+		padding-right: 12px;
+	}
+	.rose-post-card-meta > .mono {
+		margin: 0;
+	}
+	.rose-post-card-meta time {
+		margin-left: auto;
+	}
+	.rose-post-card h2 {
+		font-size: 23px;
+		padding-right: 14px;
+	}
+	.rose-post-card p {
+		font-size: 12px;
+	}
+	.rose-post-arrow {
+		position: absolute;
+		right: 16px;
+		top: 59px;
+		font-size: 19px;
+	}
+	.rose-post-cover {
+		width: 100%;
+		max-height: 190px;
+	}
+	.rose-theme .rose-reading {
+		border-radius: 23px;
+		padding: 26px 22px;
+	}
+	.rose-reading h1 {
+		font-size: 27px;
+	}
+	.rose-reading .custom-md {
+		font-size: 15px;
+	}
+	.rose-reading .custom-md h2 {
+		font-size: 22px;
+	}
+	.rose-reading-neighbors {
+		flex-direction: column;
+	}
+}
+@media (prefers-reduced-motion: reduce) {
+	.rose-theme *,
+	.rose-theme *::before,
+	.rose-theme *::after {
+		scroll-behavior: auto !important;
+		transition-duration: 0s !important;
+		animation: none !important;
+	}
+	.rose-theme .onload-animation {
+		opacity: 1;
+	}
+	.rose-post-card:hover,
+	.pill-button:hover {
+		transform: none;
+	}
+}
+.rose-list-heading h1,
+.rose-reading h1 {
+	font-weight: 700;
+}
+.rose-shell #toc-inner-wrapper {
+	mask-image: none;
+}

@@ -1,14 +1,14 @@
 ---
 import ArticleList from "@components/ArticleList.astro";
-import {PAGE_SIZE} from "@constants/constants";
+import { PAGE_SIZE } from "@constants/constants";
 import MainGridLayout from "@layouts/MainGridLayout.astro";
-import {getSortedPosts} from "@utils/content-utils";
-import type {GetStaticPaths} from "astro";
-export const getStaticPaths = (async ({paginate}) => {
-    return paginate(await getSortedPosts("blog"), {pageSize: PAGE_SIZE});
+import { getSortedPosts } from "@utils/content-utils";
+import type { GetStaticPaths } from "astro";
+export const getStaticPaths = (async ({ paginate }) => {
+	return paginate(await getSortedPosts("blog"), { pageSize: PAGE_SIZE });
 }) satisfies GetStaticPaths;
-const {page} = Astro.props;
+const { page } = Astro.props;
 ---
-<MainGridLayout hideSidebar title="博客">
+<MainGridLayout title="博客">
     <ArticleList page={page} title="博客" description="把探索写成文章，把经验留给下一次出发。"/>
 </MainGridLayout>
