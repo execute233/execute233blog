@@ -1,0 +1,242 @@
+---
+import Key from "@i18n/i18nKey";
+import { i18n } from "@i18n/translation";
+import { url } from "@utils/url-utils";
+import { Icon } from "astro-icon/components";
+import { musicConfig } from "@/config";
+import { loadMusicLibrary } from "@/server/music-library";
+import "@/styles/music-island.css";
+
+const library = musicConfig.enable ? await loadMusicLibrary() : { tracks: [] };
+const tracks = library.tracks.map((track) => ({
+	...track,
+	src: url(track.src),
+	cover: track.cover ? url(track.cover) : url("/favicon/favicon-dark.svg"),
+	lyrics: track.lyrics ? url(track.lyrics) : undefined,
+}));
+const labels = {
+	music: i18n(Key.music),
+	empty: i18n(Key.musicEmpty),
+	open: i18n(Key.musicOpen),
+	play: i18n(Key.musicPlay),
+	pause: i18n(Key.musicPause),
+	mute: i18n(Key.musicMute),
+	unmute: i18n(Key.musicUnmute),
+	loading: i18n(Key.musicLoading),
+	error: i18n(Key.musicUnavailable),
+	noLyrics: i18n(Key.musicNoLyrics),
+};
+const first = tracks[0];
+---
+{
+	tracks.length > 0 && (
+		<div
+			id="music-island"
+			class="music-island"
+			data-open="false"
+			data-list-open="false"
+			data-volume-open="false"
+			data-state="paused"
+			data-tracks={JSON.stringify(tracks)}
+			data-labels={JSON.stringify(labels)}
+			data-pagefind-ignore
+		>
+			<button
+				id="music-island-summary"
+				class="music-summary"
+				type="button"
+				aria-label={labels.open}
+				aria-expanded="false"
+				aria-controls="music-island-panel"
+			>
+				<img
+					data-music-cover
+					src={first?.cover}
+					alt=""
+					width="36"
+					height="36"
+				/>
+				<span class="music-spectrum music-spectrum-mini" aria-hidden="true">
+					{Array.from({ length: 6 }, () => <i />)}
+				</span>
+			</button>
+			<section
+				id="music-island-panel"
+				class="music-panel"
+				aria-label={labels.music}
+				inert
+			>
+				<div class="music-heading">
+					<img
+						data-music-cover
+						src={first?.cover || url("/favicon/favicon-dark.svg")}
+						alt=""
+						width="96"
+						height="96"
+					/>
+					<div class="music-copy">
+						<strong id="music-lyric">{first?.title || labels.empty}</strong>
+						<span>
+							<span data-music-artist>{first?.artist || ""}</span>
+							<span data-music-title>{first?.title || labels.music}</span>
+						</span>
+					</div>
+					<span
+						class="music-spectrum music-spectrum-expanded"
+						aria-hidden="true"
+					>
+						{Array.from({ length: 6 }, () => <i />)}
+					</span>
+				</div>
+				<div class="music-timeline">
+					<input
+						id="music-progress"
+						type="range"
+						min="0"
+						max="1"
+						value="0"
+						step="0.1"
+						disabled
+						aria-label={i18n(Key.musicProgress)}
+					/>
+					<div>
+						<span id="music-elapsed">0:00</span>
+						<span id="music-remaining">−0:00</span>
+					</div>
+				</div>
+				<div class="music-actions">
+					<button
+						id="music-list-toggle"
+						type="button"
+						aria-label={i18n(Key.musicPlaylist)}
+						aria-expanded="false"
+						aria-controls="music-playlist"
+					>
+						<Icon name="material-symbols:queue-music-rounded" />
+					</button>
+					<button
+						data-music-action="previous"
+						type="button"
+						aria-label={i18n(Key.musicPrevious)}
+						disabled={!first}
+					>
+						<Icon name="material-symbols:skip-previous-rounded" />
+					</button>
+					<button
+						id="music-play"
+						type="button"
+						aria-label={labels.play}
+						disabled={!first}
+					>
+						<Icon
+							class="music-play-icon"
+							name="material-symbols:play-arrow-rounded"
+						/>
+						<Icon
+							class="music-pause-icon"
+							name="material-symbols:pause-rounded"
+						/>
+					</button>
+					<button
+						data-music-action="next"
+						type="button"
+						aria-label={i18n(Key.musicNext)}
+						disabled={!first}
+					>
+						<Icon name="material-symbols:skip-next-rounded" />
+					</button>
+					<button
+						id="music-volume-toggle"
+						type="button"
+						aria-label={i18n(Key.musicVolume)}
+						aria-expanded="false"
+						aria-controls="music-volume-panel"
+					>
+						<Icon class="music-volume-icon" name="material-symbols:volume-up-rounded" />
+						<Icon class="music-muted-icon" name="material-symbols:volume-off-rounded" />
+					</button>
+				</div>
+				<div
+					id="music-volume-panel"
+					class="music-expansion music-options"
+					role="group"
+					aria-label={i18n(Key.musicVolume)}
+					aria-hidden="true"
+					inert
+				>
+					<button
+						id="music-mute"
+						type="button"
+						aria-label={labels.mute}
+						aria-pressed="false"
+					>
+						<Icon
+							class="music-volume-icon"
+							name="material-symbols:volume-up-rounded"
+						/>
+						<Icon
+							class="music-muted-icon"
+							name="material-symbols:volume-off-rounded"
+						/>
+					</button>
+					<input
+						id="music-volume"
+						type="range"
+						min="0"
+						max="1"
+						value="0.72"
+						step="0.01"
+						aria-label={i18n(Key.musicVolume)}
+					/>
+					<output id="music-volume-value" for="music-volume">72%</output>
+				</div>
+				<div
+					id="music-playlist"
+					class="music-expansion music-playlist"
+					role="group"
+					aria-label={i18n(Key.musicPlaylist)}
+					aria-hidden="true"
+					inert
+				>
+					<p>{i18n(Key.musicPlaylist)}</p>
+					{!first ? (
+						<p>{labels.empty}</p>
+					) : (
+						<ol>
+							{tracks.map((track, index) => (
+								<li>
+									<button
+										type="button"
+										data-track-index={index}
+										aria-current={index === 0 ? "true" : undefined}
+									>
+										<span>{String(index + 1).padStart(2, "0")}</span>
+										<span>
+											<strong>{track.title}</strong>
+											<small>{track.artist}</small>
+										</span>
+									</button>
+								</li>
+							))}
+						</ol>
+					)}
+				</div>
+			</section>
+			<p
+				id="music-status"
+				class="music-status"
+				role="status"
+				aria-live="polite"
+			/>
+			<audio id="music-audio" preload="none" />
+		</div>
+	)
+}
+
+<script>
+	if (document.getElementById("music-island")) {
+		void import("@/scripts/music-island").then(({ initMusicIsland }) => {
+			initMusicIsland();
+		});
+	}
+</script>

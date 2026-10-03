@@ -33,6 +33,8 @@ category: 学习记录
 
 ## 全站背景
 
+音乐播放器的曲目、文件目录和播放行为见 [灵动岛音乐播放器](music-island.md)。
+
 `GalaxyBackground.astro` 提供全站 Canvas 和阅读遮罩；`src/scripts/galaxy.ts` 保留所提供背景的粒子算法与默认参数。
 
 顶栏最右侧“设置 → 背景 · 星空控制”支持参数调节、暂停、恢复默认和临时“只看星空”。参数保存到 `localStorage` 的 `execute233.background.v1`；刷新和站内跳转后保留。只看星空不持久化，关闭菜单或按 Esc 可恢复页面。
