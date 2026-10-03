@@ -1,6 +1,8 @@
 @media (hover: hover) and (pointer: fine) {
-	html[data-cursor-active],
-	html[data-cursor-active] * {
+	html[data-cursor-enabled],
+	html[data-cursor-enabled] *,
+	html[data-cursor-enabled] *::before,
+	html[data-cursor-enabled] *::after {
 		cursor: none !important;
 	}
 }
