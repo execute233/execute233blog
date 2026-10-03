@@ -9,6 +9,7 @@ import ConfigCarrier from "@components/ConfigCarrier.astro";
 import GalaxyBackground from "@components/GalaxyBackground.astro";
 import MusicIsland from "@components/MusicIsland.astro";
 import { profileConfig, siteConfig } from "@/config";
+import { APPEARANCE_STORAGE_KEY } from "@/data/appearance";
 import {
 	AUTO_MODE,
 	BANNER_HEIGHT,
@@ -109,41 +110,74 @@ const bannerOffset =
     ))}
 
     <!-- Set the theme before the page is rendered to avoid a flash -->
-    <script is:inline define:vars={{
-        DEFAULT_THEME,
-        LIGHT_MODE,
-        DARK_MODE,
-        AUTO_MODE,
-        BANNER_HEIGHT_EXTEND,
-        PAGE_WIDTH,
-        configHue
-    }}>
-        // is:inline — emitted verbatim, so this must stay plain JS
-        // Load the theme from local storage
-        const theme = localStorage.getItem('theme') || DEFAULT_THEME;
-        switch (theme) {
-            case LIGHT_MODE:
-                document.documentElement.classList.remove('dark');
-                break
-            case DARK_MODE:
-                document.documentElement.classList.add('dark');
-                break
-            case AUTO_MODE:
-                if (window.matchMedia('(prefers-color-scheme: dark)').matches) {
-                    document.documentElement.classList.add('dark');
-                } else {
-                    document.documentElement.classList.remove('dark');
-                }
-        }
+	<script is:inline define:vars={{
+		DEFAULT_THEME,
+		LIGHT_MODE,
+		DARK_MODE,
+		AUTO_MODE,
+		BANNER_HEIGHT_EXTEND,
+		PAGE_WIDTH,
+		configHue,
+		themeColorFixed: siteConfig.themeColor.fixed,
+		APPEARANCE_STORAGE_KEY
+	}}>
+		// is:inline — emitted verbatim, so this must stay plain JS
+		// Load the theme from local storage
+		let theme = DEFAULT_THEME;
+		try {
+			theme = localStorage.getItem("theme") || DEFAULT_THEME;
+		} catch {
+			// Keep the configured default when browser storage is unavailable.
+		}
+		switch (theme) {
+			case LIGHT_MODE:
+				document.documentElement.classList.remove("dark");
+				break;
+			case DARK_MODE:
+				document.documentElement.classList.add("dark");
+				break;
+			case AUTO_MODE:
+				if (window.matchMedia("(prefers-color-scheme: dark)").matches) {
+					document.documentElement.classList.add("dark");
+				} else {
+					document.documentElement.classList.remove("dark");
+				}
+		}
 
-        // Theme color is fixed to the site default; the hue picker has been removed
-        document.documentElement.style.setProperty('--hue', configHue);
+		// Keep the current color during Swup navigation; restore saved color before paint.
+		let activeHue = configHue;
+		if (!themeColorFixed) {
+			const currentHue = document.documentElement.style.getPropertyValue("--hue");
+			let hue = currentHue ? Number(currentHue) : configHue;
+			try {
+				if (!currentHue) {
+					const saved = JSON.parse(
+						localStorage.getItem(APPEARANCE_STORAGE_KEY) || "null",
+					);
+					hue = saved?.hue;
+				}
+			} catch {
+				// Unavailable or invalid storage falls back to the configured color.
+			}
+			if (
+				typeof hue === "number" &&
+				Number.isInteger(hue) &&
+				hue >= 0 &&
+				hue <= 360
+			) {
+				activeHue = hue;
+			}
+		}
+		document.documentElement.style.setProperty("--hue", activeHue);
 
-        // calculate the --banner-height-extend, which needs to be a multiple of 4 to avoid blurry text
-        let offset = Math.floor(window.innerHeight * (BANNER_HEIGHT_EXTEND / 100));
-        offset = offset - offset % 4;
-        document.documentElement.style.setProperty('--banner-height-extend', `${offset}px`);
-    </script>
+		// calculate the --banner-height-extend, which needs to be a multiple of 4 to avoid blurry text
+		let offset = Math.floor(window.innerHeight * (BANNER_HEIGHT_EXTEND / 100));
+		offset = offset - (offset % 4);
+		document.documentElement.style.setProperty(
+			"--banner-height-extend",
+			`${offset}px`,
+		);
+	</script>
     <style define:vars={{
         configHue,
         'page-width': `${PAGE_WIDTH}rem`,

@@ -19,7 +19,7 @@
 | `src/styles/rose-navigation.css` | 顶栏、悬浮导航及其手机断点 |
 | `src/styles/rose-footer.css` | 页脚与响应式列数 |
 
-导航和页脚的断点规则各自放在对应文件，避免开发模式的样式加载顺序覆盖手机布局。默认色相位于 `siteConfig.themeColor.hue`，卡片与博客底色位于 `src/data/appearance.ts`。旧版本的默认灰色自动更新为新默认色，用户选择的其他颜色继续保留。
+导航和页脚的断点规则各自放在对应文件，避免开发模式的样式加载顺序覆盖手机布局。默认色相位于 `siteConfig.themeColor.hue`，设置面板可调整并保存色相。卡片底色、边框、侧影与高亮由色相派生；博客背景色单独维护在 `src/data/appearance.ts`，保留用户选择。旧的卡片背景缓存不再应用。
 
 ## 阅读与页面跳转
 

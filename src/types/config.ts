@@ -77,6 +77,17 @@ export type ProfileConfig = {
 	avatar?: string;
 	name: string;
 	bio?: string;
+	interests: {
+		title: string;
+		label: string;
+		icon: string;
+		description: string;
+		tags: string[];
+	}[];
+	technologies: {
+		title: string;
+		items: string[];
+	}[];
 	links: {
 		name: string;
 		url: string;

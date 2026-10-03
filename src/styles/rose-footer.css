@@ -40,7 +40,7 @@
 .rose-footer-motto {
 	color: var(--subtle);
 	font-family: "JetBrains Mono Variable", monospace;
-	font-size: 9px;
+	font-size: 12px;
 }
 .rose-footer h2 {
 	color: var(--accent);
@@ -81,7 +81,7 @@
 		color 180ms;
 }
 .rose-footer-contact a:hover {
-	background: rgb(var(--accent-rgb) / 8%);
+	background: color-mix(in srgb, var(--accent) 8%, transparent);
 }
 .rose-footer-contact svg {
 	width: 13px;

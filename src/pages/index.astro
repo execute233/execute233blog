@@ -1,5 +1,6 @@
 ---
 import ImageWrapper from "@components/misc/ImageWrapper.astro";
+import ProfileInterests from "@components/ProfileInterests.astro";
 import Key from "@i18n/i18nKey";
 import { i18n } from "@i18n/translation";
 import MainGridLayout from "@layouts/MainGridLayout.astro";
@@ -20,13 +21,15 @@ const entries = [
 ];
 ---
 
-<MainGridLayout description="大学生，喜欢编程、科学探索与 AI。边查文档，边写代码，边探索未知。">
+<MainGridLayout
+	description="来自广东的大学生，喜欢编程开发、电子与科学探索、AI 应用。边查文档，边写代码，把实践和慢慢弄懂的问题记下来。"
+>
 	<div data-landing class="rose-home">
 		<header class="hero-heading">
 			<span class="eyebrow">A PERSONAL STUDIO <span class="kicker-line"></span> 运行实验簿</span>
 			<p class="hello">你好，世界。<span>I'm</span></p>
 			<h1>execute<span>233</span><span class="title-period">.</span></h1>
-			<p class="hero-description">边查文档，边写代码，<br class="mobile-break" />把一点点好奇变成能运行的东西。</p>
+			<p class="hero-description">边查文档，边写代码，<br class="mobile-break" />懂一点就试一点，跑通了再记下来。</p>
 		</header>
 		<div class="rose-hero-grid">
 			<section class="profile-card surface">
@@ -40,7 +43,7 @@ const entries = [
 				</div>
 				<span class="eyebrow">个人档案 / PROFILE</span>
 				<h2>{profileConfig.name}<span class="status-dot" aria-hidden="true"></span></h2>
-				<p>来自广东的大学生。<br />编程、科学探索与 AI。</p>
+				<p>来自广东的大学生。<br />写代码，做实验，也探索 AI 应用。</p>
 				<div class="social-links">
 					{profileConfig.links.map((link) => (
 						<a href={link.url} target="_blank" rel="noopener noreferrer">
@@ -56,8 +59,8 @@ const entries = [
 					<span class="mono" aria-hidden="true">&lt; / &gt;</span>
 				</div>
 				<div class="manifest-orbit" aria-hidden="true"></div>
-				<h2>Hello World 之后，<br />还有<span>很多世界。</span></h2>
-				<p>写下探索的过程，也留下有用的答案。<br />这是我的运行实验簿。</p>
+				<h2>查文档，踩坑，<br /><span>然后写下来。</span></h2>
+				<p>代码不一定一次跑通，问题倒是经常碰到。<br />留份记录，下次少绕一点路。</p>
 				<div class="manifest-bottom">
 					<a href={url("/blog/")} class="pill-button">开始阅读 <span aria-hidden="true">↗</span></a>
 					<a href={url("/learning/")} class="text-link">最近在学 <span aria-hidden="true">↗</span></a>
@@ -73,6 +76,16 @@ const entries = [
 				</a>
 			))}
 		</nav>
+		<section class="interest-section" aria-labelledby="home-interests-title">
+			<header class="section-heading">
+				<div>
+					<span class="eyebrow">INTERESTS / EXPLORING</span>
+					<h2 id="home-interests-title">好奇心，具体一点</h2>
+				</div>
+				<a class="text-link" href={url("/about/")}>更多关于我 <span aria-hidden="true">↗</span></a>
+			</header>
+			<ProfileInterests />
+		</section>
 		{recent.length > 0 && (
 			<section class="journal-section">
 				<header class="section-heading">

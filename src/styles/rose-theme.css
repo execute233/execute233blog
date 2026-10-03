@@ -1,56 +1,37 @@
 @import "./rose-navigation.css";
 @import "./rose-footer.css";
 
-:root.rose-theme {
+:root.rose-theme,
+:root.rose-theme.dark {
 	color-scheme: dark;
 	--primary: oklch(0.82 0.085 var(--hue));
 	--page-bg: var(--blog-background, #100d14);
-	--card-bg: #20171f;
-	--float-panel-bg: #211923;
+	--card-bg: oklch(0.23 0.018 var(--hue));
+	--float-panel-bg: oklch(0.245 0.018 var(--hue));
 	--bg: var(--blog-background, #100d14);
-	--surface: var(--card-surface, #20171f);
-	--ink: #faf2f7;
-	--muted: #b9a8b5;
-	--subtle: #aa94a6;
+	--surface: var(--card-bg);
+	--ink: oklch(0.96 0.013 var(--hue));
+	--muted: oklch(0.75 0.026 var(--hue));
+	--subtle: oklch(0.67 0.035 var(--hue));
 	--accent: var(--primary);
-	--accent-rgb: 240 169 198;
-	--line: rgb(var(--accent-rgb) / 16%);
-	--shadow: #4b3041;
+	--line: color-mix(in srgb, var(--accent) 16%, transparent);
+	--shadow: oklch(0.34 0.045 var(--hue));
 	--radius: 30px;
 	--radius-large: 1.875rem;
 	--line-color: var(--line);
 	--line-divider: var(--line);
-	--btn-regular-bg: #3d2839;
-	--btn-regular-bg-hover: #503348;
-	--btn-regular-bg-active: #59394f;
-	--btn-card-bg-hover: #30222d;
-	--btn-card-bg-active: #3d2a37;
-	--btn-plain-bg-hover: rgb(var(--accent-rgb) / 9%);
-	--btn-plain-bg-active: rgb(var(--accent-rgb) / 14%);
+	--btn-regular-bg: oklch(0.31 0.035 var(--hue));
+	--btn-regular-bg-hover: oklch(0.37 0.045 var(--hue));
+	--btn-regular-bg-active: oklch(0.4 0.05 var(--hue));
+	--btn-card-bg-hover: oklch(0.28 0.025 var(--hue));
+	--btn-card-bg-active: oklch(0.32 0.035 var(--hue));
+	--btn-plain-bg-hover: color-mix(in srgb, var(--accent) 9%, transparent);
+	--btn-plain-bg-active: color-mix(in srgb, var(--accent) 14%, transparent);
 	--btn-content: var(--primary);
 	--toc-width: 185px;
-	--toc-btn-hover: #31232e;
-	--toc-btn-active: #422c3b;
-	--toc-badge-bg: #3d2839;
-}
-:root.rose-theme.dark {
-	--primary: oklch(0.82 0.085 var(--hue));
-	--page-bg: var(--blog-background, #100d14);
-	--card-bg: #20171f;
-	--float-panel-bg: #211923;
-	--btn-regular-bg: #3d2839;
-	--btn-regular-bg-hover: #503348;
-	--btn-regular-bg-active: #59394f;
-	--btn-card-bg-hover: #30222d;
-	--btn-card-bg-active: #3d2a37;
-	--btn-plain-bg-hover: rgb(var(--accent-rgb) / 9%);
-	--btn-plain-bg-active: rgb(var(--accent-rgb) / 14%);
-	--btn-content: var(--primary);
-	--line-color: var(--line);
-	--line-divider: var(--line);
-	--toc-btn-hover: #31232e;
-	--toc-btn-active: #422c3b;
-	--toc-badge-bg: #3d2839;
+	--toc-btn-hover: oklch(0.285 0.025 var(--hue));
+	--toc-btn-active: oklch(0.335 0.035 var(--hue));
+	--toc-badge-bg: var(--btn-regular-bg);
 }
 .rose-theme body {
 	color: var(--ink);
@@ -72,12 +53,12 @@
 	background:
 		radial-gradient(
 			ellipse at 6% 8%,
-			rgb(107 47 76 / 15%),
+			oklch(0.4 0.08 var(--hue) / 15%),
 			transparent 45%
 		),
 		radial-gradient(
 			ellipse at 93% 64%,
-			rgb(87 61 118 / 11%),
+			oklch(0.4 0.08 calc(var(--hue) + 40) / 11%),
 			transparent 55%
 		);
 }
@@ -105,7 +86,11 @@
 	border: 1px solid var(--line);
 	border-radius: var(--radius);
 	background:
-		linear-gradient(145deg, rgb(var(--accent-rgb) / 4%), transparent 50%),
+		linear-gradient(
+			145deg,
+			color-mix(in srgb, var(--accent) 4%, transparent),
+			transparent 50%
+		),
 		var(--surface);
 	box-shadow:
 		5px 6px 0 var(--shadow),
@@ -219,7 +204,7 @@
 }
 .rose-post-card:hover {
 	transform: translateY(-3px);
-	border-color: rgb(var(--accent-rgb) / 45%);
+	border-color: color-mix(in srgb, var(--accent) 45%, transparent);
 }
 .rose-post-card-meta {
 	display: flex;

@@ -1,18 +1,69 @@
 ---
-import {appearanceOptions} from "@/data/appearance";
+import { siteConfig } from "@/config";
+import { appearanceOptions } from "@/data/appearance";
+import Key from "@/i18n/i18nKey";
+import { i18n } from "@/i18n/translation";
 import ColorSetting from "./ColorSetting.astro";
 ---
-<details id="appearance-settings">
-    <summary class="cursor-pointer rounded-lg p-3 text-90 font-bold">背景 · 样式</summary>
-    <div class="settings-submenu px-3 pb-3">
-        {appearanceOptions.map(option => (
-                <ColorSetting id={option.key} label={option.label} value={option.defaultValue}/>
-        ))}
-        <button id="appearance-reset" type="button" class="btn-regular rounded-lg px-3 py-2 mt-3">恢复默认样式</button>
-    </div>
+<details id="appearance-settings" data-default-hue={siteConfig.themeColor.hue}>
+	<summary class="cursor-pointer rounded-lg p-3 text-90 font-bold">背景 · 样式</summary>
+	<div class="settings-submenu px-3 pb-3">
+		{!siteConfig.themeColor.fixed && (
+			<div class="theme-hue-control">
+				<div class="theme-hue-heading">
+					<label for="theme-hue">{i18n(Key.themeColor)}</label>
+					<span class="theme-hue-preview" aria-hidden="true"></span>
+					<output for="theme-hue" id="theme-hue-value">{siteConfig.themeColor.hue}°</output>
+				</div>
+				<input
+					id="theme-hue"
+					type="range"
+					min="0"
+					max="360"
+					step="1"
+					value={siteConfig.themeColor.hue}
+				/>
+			</div>
+		)}
+		{appearanceOptions.map((option) => (
+			<ColorSetting id={option.key} label={option.label} value={option.defaultValue} />
+		))}
+		<button id="appearance-reset" type="button" class="btn-regular rounded-lg px-3 py-2 mt-3">恢复默认样式</button>
+	</div>
 </details>
 <script>
-    import {initAppearanceSettings} from "@/scripts/appearance";
+	import { initAppearanceSettings } from "@/scripts/appearance";
 
-    initAppearanceSettings();
+	initAppearanceSettings();
 </script>
+<style>
+	.theme-hue-control {
+		margin-top: 0.75rem;
+		color: var(--primary);
+		font-size: 0.875rem;
+	}
+	.theme-hue-heading {
+		display: flex;
+		align-items: center;
+		gap: 0.75rem;
+		margin-bottom: 0.75rem;
+	}
+	.theme-hue-heading label {
+		margin-right: auto;
+	}
+	.theme-hue-preview {
+		width: 1rem;
+		height: 1rem;
+		border-radius: 50%;
+		background: var(--primary);
+	}
+	.theme-hue-heading output {
+		min-width: 4ch;
+		text-align: right;
+		font-variant-numeric: tabular-nums;
+	}
+	#theme-hue {
+		width: 100%;
+		accent-color: var(--primary);
+	}
+</style>

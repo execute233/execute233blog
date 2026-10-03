@@ -1,13 +1,6 @@
 // 新增颜色选项时，在这里声明，并在对应样式中使用 cssVariable。
 export const appearanceOptions = [
 	{
-		key: "card",
-		label: "卡片背景",
-		cssVariable: "--card-surface",
-		defaultValue: "#20171fff",
-		legacyDefaultValue: "#1d1d1deb",
-	},
-	{
 		key: "blog",
 		label: "博客背景色",
 		cssVariable: "--blog-background",
