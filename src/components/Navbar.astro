@@ -1,223 +1,122 @@
 ---
+import { LinkPresets } from "@constants/link-presets";
+import Key from "@i18n/i18nKey";
+import { i18n } from "@i18n/translation";
+import { pathsEqual, url } from "@utils/url-utils";
 import { Icon } from "astro-icon/components";
-import { musicConfig, navBarConfig, siteConfig } from "../config";
-import { LinkPresets } from "../constants/link-presets";
-import { LinkPreset, type NavBarLink } from "../types/config";
-import { url } from "../utils/url-utils";
-/* Theme switching is disabled — dark mode is the only theme for now.
- * Kept for a possible future light theme. */
-// import LightDarkSwitch from "./LightDarkSwitch.svelte";
+import { navBarConfig, siteConfig } from "@/config";
 import BackgroundSettings from "./BackgroundSettings.astro";
 import Search from "./Search.svelte";
 import NavMenuPanel from "./widget/NavMenuPanel.astro";
 
-const className = Astro.props.class;
 const logoTitle = "execute233";
 const favicons = siteConfig.favicon.filter(
 	(favicon) => favicon.sizes === "any",
 );
 const fallbackIcon = favicons[0]?.src ?? siteConfig.favicon[0].src;
 const iconUrl = (src: string) => (src.startsWith("/") ? url(src) : src);
-
-let links: NavBarLink[] = navBarConfig.links.map(
-	(item: NavBarLink | LinkPreset): NavBarLink => {
-		if (typeof item === "number") {
-			return LinkPresets[item];
-		}
-		return item;
-	},
+const icons: Record<string, string> = {
+	"/": "material-symbols:home-outline-rounded",
+	"/blog/": "material-symbols:article-outline-rounded",
+	"/learning/": "material-symbols:menu-book-outline-rounded",
+	"/tools/": "material-symbols:tune-rounded",
+	"/about/": "material-symbols:person-outline-rounded",
+};
+const links = navBarConfig.links.map((link) =>
+	typeof link === "number" ? LinkPresets[link] : link,
 );
 ---
-<div
-	id="navbar"
-	class="z-50 onload-animation"
-	data-music-island={musicConfig.enable || undefined}
->
-    <div class:list={[
-        className,
-        "navbar-glass w-full"]}>
-        <div class="navbar-content relative mx-auto flex items-center h-16 gap-2 px-4 md:px-6 max-w-[90rem]">
+
+<a class="rose-skip-link" href="#swup-container">{i18n(Key.skipToContent)}</a>
+<header id="navbar" class="rose-header" data-pagefind-ignore>
+	<a
+		href={url("/")}
+		aria-label={`${logoTitle}，回到首页`}
+		draggable="false"
+		class="site-logo"
+	>
+		<picture class="logo-icon">
+			{favicons.map((favicon) => (
+				<source
+					srcset={iconUrl(favicon.src)}
+					media={favicon.theme && `(prefers-color-scheme: ${favicon.theme})`}
+				/>
+			))}
+			<img src={iconUrl(fallbackIcon)} width="28" height="28" alt="" draggable="false" />
+		</picture>
+		<span class="logo-title" aria-hidden="true">{logoTitle}</span>
+	</a>
+	<div class="rose-header-actions">
+		<div class="navbar-search"><Search client:load /></div>
+		<BackgroundSettings />
+		<button
+			type="button"
+			id="nav-menu-switch"
+			class="rose-menu-trigger"
+			aria-label={i18n(Key.menu)}
+			aria-controls="nav-menu-panel"
+			aria-expanded="false"
+		>
+			<Icon name="material-symbols:menu-rounded" />
+		</button>
+	</div>
+	<nav class="rose-rail" aria-label={i18n(Key.navigation)}>
+		{links.map((link) => (
 			<a
-				href={url("/")}
-				aria-label={`${logoTitle}，回到首页`}
-				draggable="false"
-				class="site-logo relative flex items-center justify-center shrink-0 rounded-lg h-11 px-2 font-bold"
+				href={link.external ? link.url : url(link.url)}
+				aria-label={link.name}
+				aria-current={pathsEqual(Astro.url.pathname, url(link.url)) ? "page" : undefined}
+				data-nav-path={!link.external ? url(link.url) : undefined}
+				target={link.external ? "_blank" : undefined}
+				rel={link.external ? "noopener noreferrer" : undefined}
 			>
-				<picture class="logo-icon">
-					{favicons.map((favicon) => (
-						<source
-							srcset={iconUrl(favicon.src)}
-							media={favicon.theme && `(prefers-color-scheme: ${favicon.theme})`}
-						/>
-					))}
-					<img
-						src={iconUrl(fallbackIcon)}
-						width="28"
-						height="28"
-						alt=""
-						draggable="false"
-					/>
-				</picture>
-				<span class="logo-title" aria-hidden="true">{logoTitle}</span>
+				<Icon name={icons[link.url] ?? "material-symbols:link-rounded"} />
+				<span class="rose-rail-label" aria-hidden="true">{link.name}</span>
 			</a>
-            <div class="navbar-search ml-auto lg:ml-4 shrink-0">
-                <Search client:load/>
-            </div>
-            <nav aria-label="主导航" class="hidden lg:flex ml-auto items-center">
-                {links.map((l) => {
-                    return <a aria-label={l.name} href={l.external ? l.url : url(l.url)}
-                              target={l.external ? "_blank" : null}
-                              class="btn-plain scale-animation rounded-lg h-11 text-sm font-medium px-3 active:scale-95"
-                    >
-                        <div class="flex items-center">
-                            {l.name}
-                            {l.external &&
-                                    <Icon name="fa6-solid:arrow-up-right-from-square"
-                                          class="text-[0.875rem] transition -translate-y-[1px] ml-1 text-black/[0.2] dark:text-white/[0.2]"></Icon>}
-                        </div>
-                    </a>;
-                })}
-            </nav>
-            <div class="flex shrink-0 lg:ml-2">
-                {/* Theme switcher disabled — kept for a possible future light theme. */}
-                {/* <LightDarkSwitch client:only="svelte"></LightDarkSwitch> */}
-                <button aria-label="Menu" name="Nav Menu"
-                        class="btn-plain scale-animation rounded-lg w-11 h-11 active:scale-90 lg:!hidden"
-                        id="nav-menu-switch">
-                    <Icon name="material-symbols:menu-rounded" class="text-[1.25rem]"></Icon>
-                </button>
-                <BackgroundSettings/>
-            </div>
-            <NavMenuPanel links={links}></NavMenuPanel>
-        </div>
-    </div>
-</div>
-
-<style>
-	.site-logo {
-		gap: 0.5rem;
-		cursor: pointer;
-		-webkit-user-select: none;
-		user-select: none;
-		caret-color: transparent;
-	}
-
-	.logo-icon {
-		display: block;
-		flex-shrink: 0;
-		padding: 2px;
-		border: 1px solid color-mix(in srgb, var(--primary) 65%, transparent);
-		border-radius: 12px;
-	}
-
-	.logo-icon img {
-		display: block;
-		border-radius: 9px;
-	}
-
-	.logo-title {
-		display: inline-flex;
-		white-space: nowrap;
-		color: var(--primary);
-	}
-</style>
-
-<style is:global>
-    #navbar {
-        --btn-plain-bg-hover: transparent;
-        --btn-plain-bg-active: transparent;
-        /* Hide the browsing caret on navigation text, including in caret browsing mode. */
-        caret-color: transparent;
-    }
-
-    #navbar :is(input, textarea, [contenteditable="true"]):focus {
-        caret-color: auto;
-    }
-
-    #navbar .navbar-glass {
-        background: rgb(5 9 22 / 40%);
-        -webkit-backdrop-filter: blur(16px);
-        backdrop-filter: blur(16px);
-    }
-
-    #navbar #search-bar {
-        height: 2.5rem;
-        margin-right: 0;
-        background: rgb(3 8 14 / 35%);
-        border: 1px solid rgb(148 163 184 / 10%);
-    }
-
-    #navbar #search-bar input {
-        width: 11rem;
-    }
-
-    #navbar #search-bar:focus-within {
-        border-color: var(--primary);
-    }
-
-    #navbar :is(#search-panel, #nav-menu-panel) {
-        top: calc(100% + .5rem);
-    }
-
-    @media (min-width: 1024px) {
-        #navbar #search-panel {
-            left: 12rem;
-            right: auto;
-        }
-    }
-
-    #navbar :is(.btn-plain, .btn-regular, summary, #nav-menu-panel a, #search-panel a) {
-        background: transparent;
-        transition: color 180ms ease, transform 180ms ease;
-    }
-
-    #navbar .btn-plain::before {
-        background: transparent;
-    }
-
-    #navbar :is(.btn-plain, .btn-regular, summary, #nav-menu-panel a, #search-panel a):is(:hover, :focus-visible, :active),
-    #navbar details[open] > summary {
-        color: var(--primary);
-    }
-
-    @media (hover: hover) and (prefers-reduced-motion: no-preference) {
-        #navbar :is(.btn-plain, .btn-regular, summary, #nav-menu-panel a):hover {
-            transform: scale(1.04);
-        }
-    }
-
-    @media (prefers-reduced-motion: no-preference) {
-        #navbar :is(.btn-plain, .btn-regular, summary, #nav-menu-panel a):active {
-            transform: scale(.96);
-        }
-    }
-
-    #navbar :is(a, button, summary):focus-visible {
-        outline: 2px solid var(--primary);
-        outline-offset: 2px;
-    }
-</style>
+		))}
+	</nav>
+	<NavMenuPanel links={links} />
+</header>
 
 <script>
-    function loadButtonScript(): void {
-        const menuBtn = document.getElementById("nav-menu-switch");
-        if (menuBtn) {
-            menuBtn.onclick = (): void => {
-                const menuPanel = document.getElementById("nav-menu-panel");
-                if (menuPanel) {
-                    menuPanel.classList.toggle("float-panel-closed");
-                }
-            };
-        }
-    }
+	import { pathsEqual, url } from "@utils/url-utils";
 
-    loadButtonScript();
-    // 顶栏不随 Swup 替换，栏目跳转后主动收起移动导航。
-    document.getElementById("nav-menu-panel")?.addEventListener("click", (event) => {
-        if (event.target instanceof Element && event.target.closest("a")) {
-            document.getElementById("nav-menu-panel")?.classList.add("float-panel-closed");
-        }
-    });
+	const menuButton = document.getElementById("nav-menu-switch");
+	const menu = document.getElementById("nav-menu-panel");
+	const setMenuOpen = (open: boolean) => {
+		if (!menu) return;
+		if (!open && menu.contains(document.activeElement)) menuButton?.focus();
+		menu.inert = !open;
+		menu.classList.toggle("float-panel-closed", !open);
+		menuButton?.setAttribute("aria-expanded", String(open));
+	};
+	setMenuOpen(false);
+	menuButton?.addEventListener("click", () => {
+		setMenuOpen(menuButton.getAttribute("aria-expanded") !== "true");
+	});
+	document.addEventListener("pointerdown", (event) => {
+		if (event.target instanceof Node && !menu?.contains(event.target) && !menuButton?.contains(event.target)) setMenuOpen(false);
+	});
+	menu?.addEventListener("click", (event) => {
+		if (event.target instanceof Element && event.target.closest("a")) setMenuOpen(false);
+	});
+	document.addEventListener("keydown", (event) => {
+		if (event.key === "Escape") setMenuOpen(false);
+	});
+	const syncNavigation = () => {
+		const section = document.querySelector<HTMLElement>("[data-post-section]")?.dataset.postSection;
+		const path = section ? url(`/${section}/`) : location.pathname;
+		for (const link of document.querySelectorAll<HTMLAnchorElement>("[data-nav-path]")) {
+			const target = link.dataset.navPath ?? "";
+			const active = pathsEqual(path, target) || (!pathsEqual(target, url("/")) && path.startsWith(target));
+			if (active) link.setAttribute("aria-current", "page");
+			else link.removeAttribute("aria-current");
+		}
+		setMenuOpen(false);
+		document.getElementById("search-panel")?.classList.add("float-panel-closed");
+	};
+	syncNavigation();
+	document.addEventListener("swup:page:view", syncNavigation);
 </script>
 
 {import.meta.env.PROD &&
