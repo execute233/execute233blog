@@ -59,7 +59,73 @@ export const navBarConfig: NavBarConfig = {
 export const profileConfig: ProfileConfig = {
 	avatar: "assets/images/avatar.png", // Relative to the /src directory. Relative to the /public directory if it starts with '/'
 	name: "execute233",
-	bio: "大学生 · 边查文档，边写代码，边探索未知。",
+	bio: "大学生 · coder · 炼丹师",
+	// 兴趣与技术接触经历，按展示顺序排列。
+	interests: [
+		{
+			title: "编程开发",
+			label: "DEVELOPMENT",
+			icon: "material-symbols:code-rounded",
+			description:
+				"从 Python、Go 后端到 Web 界面，边查文档边开发，把想法一点点写成程序。",
+			tags: ["Java / Go", "TypeScript", "Web"],
+		},
+		{
+			title: "电子与科学探索",
+			label: "ELECTRONICS & SCIENCE",
+			icon: "material-symbols:science-outline",
+			description:
+				"喜欢动手验证好奇心。距离真正的雷电法王还很远，偶尔倒是会给电容一点压力。",
+			tags: ["动手实验", "科学探索"],
+		},
+		{
+			title: "AI 应用探索",
+			label: "AI APPLICATIONS",
+			icon: "material-symbols:smart-toy-rounded",
+			description:
+				"曾经的炼丹师，会高估 Agent 和 AI 工具，让 AI 帮自己写代码、做工具。",
+			tags: ["Agent", "AI 辅助开发"],
+		},
+	],
+	technologies: [
+		{
+			title: "语言与标记",
+			items: [
+				"Go",
+				"Java",
+				"TypeScript",
+				"Python",
+				"C#",
+				"HTML",
+				"Markdown",
+				"CSS",
+				"C/C++",
+				"Kotlin",
+			],
+		},
+		{
+			title: "框架与库",
+			items: [
+				"Spring 全家桶",
+				"Gin",
+				"GORM",
+				"Eino",
+				"Vue 3",
+				"React",
+				"Astro",
+				"Tailwind CSS",
+				".NET",
+			],
+		},
+		{
+			title: "数据库",
+			items: ["PostgreSQL", "Redis", "MySQL", "SQLite"],
+		},
+		{
+			title: "开发工具与中间件",
+			items: ["Docker", "RabbitMQ", "Nginx"],
+		},
+	],
 	links: [
 		{
 			name: "QQ",

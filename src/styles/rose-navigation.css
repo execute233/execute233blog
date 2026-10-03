@@ -33,7 +33,7 @@
 	display: block;
 	flex-shrink: 0;
 	padding: 2px;
-	border: 1px solid rgb(116 185 255 / 65%);
+	border: 1px solid color-mix(in srgb, var(--primary) 65%, transparent);
 	border-radius: 12px;
 }
 .rose-header .logo-icon img {
@@ -42,7 +42,7 @@
 }
 .rose-header .logo-title {
 	white-space: nowrap;
-	color: #74b9ff;
+	color: var(--primary);
 }
 .rose-header-actions {
 	display: flex;
@@ -72,7 +72,7 @@
 .rose-header #site-settings > summary:hover,
 .rose-menu-trigger:hover {
 	color: var(--accent);
-	background: rgb(var(--accent-rgb) / 9%);
+	background: color-mix(in srgb, var(--accent) 9%, transparent);
 }
 .rose-header #search-switch svg,
 .rose-menu-trigger svg {
@@ -111,7 +111,7 @@
 	padding: 9px;
 	border: 1px solid var(--line);
 	border-radius: 29px;
-	background: rgb(20 17 26 / 78%);
+	background: color-mix(in srgb, var(--float-panel-bg) 78%, transparent);
 	backdrop-filter: blur(20px);
 	box-shadow: 0 8px 24px rgb(0 0 0 / 12%);
 }
@@ -137,7 +137,7 @@
 }
 .rose-rail > a:hover,
 .rose-rail > a[aria-current="page"] {
-	background: rgb(var(--accent-rgb) / 13%);
+	background: color-mix(in srgb, var(--accent) 13%, transparent);
 	color: var(--accent);
 }
 .rose-rail-label {

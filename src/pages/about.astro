@@ -1,20 +1,36 @@
 ---
+import ProfileInterests from "@components/ProfileInterests.astro";
 import MainGridLayout from "@layouts/MainGridLayout.astro";
-import { milestones } from "@/data/milestones";
+import { profileConfig } from "@/config";
 ---
-<MainGridLayout title="关于 · 里程碑">
-    <section class="card-base p-6 md:p-9">
-        <h1 class="text-3xl font-bold text-90 mb-3">一路走来</h1>
-        <p class="text-75 mb-10">用一些重要的瞬间，记录自己的成长。</p>
-        <p class="text-sm text-50 mb-8">以下为里程碑示例，日期与经历待补充。</p>
-        <ol class="ml-2 border-l border-[var(--primary)] pl-7 space-y-10">
-            {milestones.map(item =>
-                    <li class="relative"><span
-                            class="absolute w-3 h-3 rounded-full bg-[var(--primary)] -left-[2.15rem] top-1"
-                            aria-hidden="true"></span>
-                        <p class="text-sm text-[var(--primary)] mb-2">{item.date}</p>
-                        <h2 class="text-xl font-bold text-90 mb-2">{item.title}</h2>
-                        <p class="text-75">{item.description}</p></li>)}
-        </ol>
-    </section>
+
+<MainGridLayout
+	title={`关于 · ${profileConfig.name}`}
+	description="来自广东的大学生，喜欢编程开发、电子与科学探索和 AI 应用。记录接触过的技术，也记录边学边做的过程。"
+>
+	<div class="rose-about">
+		<header class="rose-list-heading">
+			<span class="eyebrow">ABOUT / {profileConfig.name}</span>
+			<h1><span>会一点，</span><span>学一点，</span><span>再试一点。</span></h1>
+			<p>我是 {profileConfig.name}，来自广东的大学生，喜欢写代码、折腾电子实验，也在探索 AI 应用。</p>
+		</header>
+		<section class="profile-section" aria-labelledby="about-interests-title">
+			<h2 id="about-interests-title">好奇心都放在哪儿</h2>
+			<ProfileInterests />
+		</section>
+		<section class="profile-section" aria-labelledby="about-technologies-title">
+			<h2 id="about-technologies-title">接触过，也还在学</h2>
+			<p>使用过的语言、框架和工具。</p>
+			<div class="profile-technology-grid">
+				{profileConfig.technologies.map((group) => (
+					<section class="profile-technology-card surface">
+						<h3>{group.title}</h3>
+						<ul class="profile-tags">
+							{group.items.map((item) => <li>{item}</li>)}
+						</ul>
+					</section>
+				))}
+			</div>
+		</section>
+	</div>
 </MainGridLayout>

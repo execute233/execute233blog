@@ -17,7 +17,26 @@ export function initAppearanceSettings(): void {
 			? (parsed as Record<string, unknown>)
 			: {};
 	const syncRows: (() => void)[] = [];
-	const save = () => writeStoredJson(APPEARANCE_STORAGE_KEY, values);
+	const defaultHue = Number(panel.dataset.defaultHue);
+	const hueInput = panel.querySelector<HTMLInputElement>("#theme-hue");
+	const hueOutput = panel.querySelector<HTMLOutputElement>("#theme-hue-value");
+	const currentHue = Number(
+		document.documentElement.style.getPropertyValue("--hue") || defaultHue,
+	);
+	let hue = hueInput ? currentHue : defaultHue;
+	const save = () =>
+		writeStoredJson(APPEARANCE_STORAGE_KEY, { ...values, hue });
+	const syncHue = () => {
+		document.documentElement.style.setProperty("--hue", String(hue));
+		if (hueInput) hueInput.value = String(hue);
+		if (hueOutput) hueOutput.value = `${hue}°`;
+	};
+	hueInput?.addEventListener("input", () => {
+		hue = Number(hueInput.value);
+		syncHue();
+		save();
+	});
+	syncHue();
 	for (const option of appearanceOptions) {
 		const row = panel.querySelector<HTMLElement>(
 			`[data-color-setting="${option.key}"]`,
@@ -51,6 +70,8 @@ export function initAppearanceSettings(): void {
 		apply();
 	}
 	panel.querySelector("#appearance-reset")?.addEventListener("click", () => {
+		hue = defaultHue;
+		syncHue();
 		for (const option of appearanceOptions)
 			values[option.key] = option.defaultValue;
 		for (const sync of syncRows) sync();

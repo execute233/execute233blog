@@ -93,7 +93,7 @@
 - `src/pages/blog/[...page].astro`、`src/pages/learning/[...page].astro`：按 `section` 筛选的分页列表，共用 `ArticleList.astro`、`PostPage.astro` 和原有分页组件。旧的数字分页路径由 `src/pages/[...page].astro` 重定向。
 - `src/pages/posts/[...slug].astro`：文章页，调用 `entry.render()`，输出 JSON-LD 和文章元数据。
 - `src/pages/archive.astro`：将文章传给 `ArchivePanel.svelte`（`client:only="svelte"`），客户端通过查询参数筛选分类与标签。
-- `src/pages/about.astro`：展示 `src/data/milestones.ts` 中的里程碑。
+- `src/pages/about.astro`：展示个人介绍、兴趣与技术经历，和首页共用 `src/config.ts` 中的 `profileConfig.interests` 及 `ProfileInterests.astro`；完整技术列表由 `profileConfig.technologies` 配置。
 - `src/pages/tools.astro`：使用 `ToolCard.astro` 渲染 `src/data/tools.ts`。
 - `src/pages/rss.xml.ts`、`src/pages/robots.txt.ts`：生成对应的静态端点。
 - `Layout.astro`：负责页面外壳、head、SEO、主题初始化、滚动条和灯箱。

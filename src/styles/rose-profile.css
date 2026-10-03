@@ -1,0 +1,109 @@
+.profile-interest-grid {
+	display: grid;
+	grid-template-columns: repeat(3, minmax(0, 1fr));
+	gap: 24px;
+}
+.profile-interest-card {
+	display: flex;
+	flex-direction: column;
+	padding: 26px;
+}
+.profile-interest-heading {
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	gap: 12px;
+}
+.profile-interest-heading .eyebrow {
+	font-size: 9px;
+	letter-spacing: 0.08em;
+}
+.profile-interest-heading svg {
+	width: 24px;
+	height: 24px;
+	flex-shrink: 0;
+	color: var(--accent);
+}
+.profile-interest-card h3 {
+	font-size: 20px;
+	font-weight: 700;
+	margin-top: 24px;
+}
+.profile-interest-card p {
+	font-size: 13px;
+	line-height: 1.9;
+	color: var(--muted);
+	margin: 14px 0 22px;
+}
+.profile-tags {
+	display: flex;
+	flex-wrap: wrap;
+	gap: 8px;
+}
+.profile-interest-card .profile-tags {
+	margin-top: auto;
+}
+.profile-tags li {
+	border: 1px solid var(--line);
+	border-radius: 12px;
+	padding: 5px 10px;
+	font-size: 11px;
+	line-height: 1.6;
+	color: var(--muted);
+}
+.rose-about .rose-list-heading h1 {
+	font-weight: 700;
+	text-wrap: balance;
+}
+.rose-about .rose-list-heading h1 span {
+	display: inline-block;
+}
+.rose-about .profile-section {
+	margin-top: 48px;
+}
+.rose-about .profile-section > h2 {
+	font-size: 27px;
+	font-weight: 700;
+	margin-bottom: 22px;
+}
+.rose-about .profile-section > p {
+	font-size: 13px;
+	line-height: 1.9;
+	color: var(--muted);
+	margin-bottom: 24px;
+}
+.rose-about .profile-technology-grid {
+	display: grid;
+	grid-template-columns: repeat(2, minmax(0, 1fr));
+	gap: 24px;
+}
+.rose-about .profile-technology-card {
+	padding: 26px;
+}
+.rose-about .profile-technology-card h3 {
+	font-size: 18px;
+	font-weight: 700;
+	margin-bottom: 20px;
+}
+@media (max-width: 1000px) {
+	.profile-interest-grid {
+		grid-template-columns: 1fr;
+	}
+	.profile-interest-card h3 {
+		margin-top: 18px;
+	}
+}
+@media (max-width: 600px) {
+	.profile-interest-grid,
+	.rose-about .profile-technology-grid {
+		grid-template-columns: 1fr;
+		gap: 20px;
+	}
+	.profile-interest-card,
+	.rose-about .profile-technology-card {
+		padding: 23px;
+	}
+	.rose-about .profile-section > h2 {
+		font-size: 23px;
+	}
+}
