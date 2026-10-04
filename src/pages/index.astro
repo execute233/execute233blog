@@ -14,6 +14,16 @@ import "@/styles/rose-home.css";
 
 const recent = (await getSortedPosts("blog")).slice(0, 3);
 const learning = (await getSortedPosts("learning")).slice(0, 2);
+const profileCode = [
+	"#include <iostream>",
+	"int main() {",
+	"    while (true) {",
+	'        std::cout << "我喜欢你" <<',
+	"            std::endl;",
+	"    }",
+	"    return 0;",
+	"}",
+];
 const entries = [
 	{
 		label: "BLOG",
@@ -72,7 +82,19 @@ const entries = [
 						</a>
 					))}
 				</div>
-				<div class="profile-bottom"><span class="mono">HELLO, WORLD_</span></div>
+				<div class="profile-bottom">
+					<figure class="profile-terminal">
+						<figcaption class="profile-terminal-header">
+							<span class="profile-terminal-dots" aria-hidden="true">
+								<i></i><i></i><i></i>
+							</span>
+							<span>now.cpp</span>
+						</figcaption>
+						<pre><code>{profileCode.map((line, index) => (
+							<Fragment><span class="profile-code-number" aria-hidden="true">{String(index + 1).padStart(2, "0")}</span>{line}{index < profileCode.length - 1 ? "\n" : ""}</Fragment>
+						))}</code></pre>
+					</figure>
+				</div>
 			</Card>
 			<Card as="section" effect="highlight" clip class="manifest-card">
 				<div class="manifest-top">
