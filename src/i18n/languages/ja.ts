@@ -18,8 +18,6 @@ export const ja: Translation = {
 	[Key.musicNext]: "次の曲",
 	[Key.musicProgress]: "再生位置",
 	[Key.musicVolume]: "音量",
-	[Key.musicMute]: "ミュート",
-	[Key.musicUnmute]: "ミュート解除",
 	[Key.musicPlaylist]: "プレイリスト",
 	[Key.musicLoading]: "音声を読み込み中",
 	[Key.musicUnavailable]: "音声を再生できません",

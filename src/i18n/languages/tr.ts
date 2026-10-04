@@ -18,8 +18,6 @@ export const tr: Translation = {
 	[Key.musicNext]: "Sonraki parça",
 	[Key.musicProgress]: "Oynatma ilerlemesi",
 	[Key.musicVolume]: "Ses düzeyi",
-	[Key.musicMute]: "Sesi kapat",
-	[Key.musicUnmute]: "Sesi aç",
 	[Key.musicPlaylist]: "Çalma listesi",
 	[Key.musicLoading]: "Ses yükleniyor",
 	[Key.musicUnavailable]: "Ses kullanılamıyor",

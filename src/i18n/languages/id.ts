@@ -18,8 +18,6 @@ export const id: Translation = {
 	[Key.musicNext]: "Lagu berikutnya",
 	[Key.musicProgress]: "Progres pemutaran",
 	[Key.musicVolume]: "Volume",
-	[Key.musicMute]: "Bisukan",
-	[Key.musicUnmute]: "Aktifkan suara",
 	[Key.musicPlaylist]: "Daftar putar",
 	[Key.musicLoading]: "Memuat audio",
 	[Key.musicUnavailable]: "Audio tidak tersedia",

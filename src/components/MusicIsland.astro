@@ -20,8 +20,6 @@ const labels = {
 	open: i18n(Key.musicOpen),
 	play: i18n(Key.musicPlay),
 	pause: i18n(Key.musicPause),
-	mute: i18n(Key.musicMute),
-	unmute: i18n(Key.musicUnmute),
 	loading: i18n(Key.musicLoading),
 	error: i18n(Key.musicUnavailable),
 	noLyrics: i18n(Key.musicNoLyrics),
@@ -152,8 +150,7 @@ const first = tracks[0];
 						aria-expanded="false"
 						aria-controls="music-volume-panel"
 					>
-						<Icon class="music-volume-icon" name="material-symbols:volume-up-rounded" />
-						<Icon class="music-muted-icon" name="material-symbols:volume-off-rounded" />
+						<Icon name="material-symbols:volume-up-rounded" />
 					</button>
 				</div>
 				<div
@@ -164,31 +161,16 @@ const first = tracks[0];
 					aria-hidden="true"
 					inert
 				>
-					<button
-						id="music-mute"
-						type="button"
-						aria-label={labels.mute}
-						aria-pressed="false"
-					>
-						<Icon
-							class="music-volume-icon"
-							name="material-symbols:volume-up-rounded"
-						/>
-						<Icon
-							class="music-muted-icon"
-							name="material-symbols:volume-off-rounded"
-						/>
-					</button>
 					<input
 						id="music-volume"
 						type="range"
 						min="0"
 						max="1"
-						value="0.72"
+						value="0"
 						step="0.01"
 						aria-label={i18n(Key.musicVolume)}
 					/>
-					<output id="music-volume-value" for="music-volume">72%</output>
+					<output id="music-volume-value" for="music-volume">0%</output>
 				</div>
 				<div
 					id="music-playlist"

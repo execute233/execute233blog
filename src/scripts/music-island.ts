@@ -22,7 +22,6 @@ export function initMusicIsland(): void {
 	const playButton = get<HTMLButtonElement>("#music-play");
 	const progress = get<HTMLInputElement>("#music-progress");
 	const volume = get<HTMLInputElement>("#music-volume");
-	const mute = get<HTMLButtonElement>("#music-mute");
 	const listToggle = get<HTMLButtonElement>("#music-list-toggle");
 	const list = get<HTMLElement>("#music-playlist");
 	const volumeToggle = get<HTMLButtonElement>("#music-volume-toggle");
@@ -131,18 +130,15 @@ export function initMusicIsland(): void {
 	}
 
 	function updateVolume(): void {
-		const level = audio.muted ? 0 : audio.volume;
+		const level = audio.volume;
 		volume.value = String(level);
 		volume.style.setProperty("--progress", `${level * 100}%`);
 		get<HTMLOutputElement>("#music-volume-value").value =
 			`${Math.round(level * 100)}%`;
-		island.dataset.muted = String(level === 0);
-		mute.setAttribute("aria-label", level === 0 ? labels.unmute : labels.mute);
-		mute.setAttribute("aria-pressed", String(level === 0));
 	}
 
 	function saveVolume(): void {
-		writeStoredJson(storageKey, { volume: audio.volume, muted: audio.muted });
+		writeStoredJson(storageKey, { volume: audio.volume });
 	}
 
 	function stopSpectrum(): void {
@@ -322,7 +318,7 @@ export function initMusicIsland(): void {
 	}
 
 	const saved = readStoredJson(storageKey);
-	audio.volume = 0.72;
+	audio.volume = 0;
 	if (saved && typeof saved === "object") {
 		if (
 			"volume" in saved &&
@@ -330,8 +326,6 @@ export function initMusicIsland(): void {
 			Number.isFinite(saved.volume)
 		)
 			audio.volume = Math.min(1, Math.max(0, saved.volume));
-		if ("muted" in saved && typeof saved.muted === "boolean")
-			audio.muted = saved.muted;
 	}
 
 	summary.addEventListener("click", () => setOpen(true));
@@ -362,15 +356,6 @@ export function initMusicIsland(): void {
 	progress.addEventListener("input", () => seek(Number(progress.value)));
 	volume.addEventListener("input", () => {
 		audio.volume = Number(volume.value);
-		audio.muted = false;
-		saveVolume();
-		updateVolume();
-	});
-	mute.addEventListener("click", () => {
-		if (audio.muted || audio.volume === 0) {
-			audio.muted = false;
-			if (audio.volume === 0) audio.volume = 0.72;
-		} else audio.muted = true;
 		saveVolume();
 		updateVolume();
 	});
