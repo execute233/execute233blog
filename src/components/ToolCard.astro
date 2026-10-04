@@ -1,16 +1,25 @@
 ---
-import type {Tool} from "@/data/tools";
+import type { Tool } from "@/data/tools";
 
 interface Props {
-    tool: Tool;
+	tool: Tool;
 }
-const {tool} = Astro.props;
+const { tool } = Astro.props;
 ---
-<article class="card-base p-7 flex flex-col gap-4">
-    <span class="text-sm text-[var(--primary)]">{tool.category}</span>
-    <h2 class="text-2xl font-bold text-90">{tool.name}</h2>
-    <p class="text-75 flex-1">{tool.description}</p>
-    {tool.href ?
-            <a href={tool.href} target="_blank" rel="noopener noreferrer" class="text-[var(--primary)]">访问工具 ↗</a> :
-            <span class="text-sm text-50">整理中 · 占位内容</span>}
+<article class="rose-tool-card card-base p-7 flex flex-col gap-4">
+	<span class="text-[var(--primary)]">{tool.category}</span>
+	<h2 class="text-90">{tool.name}</h2>
+	<p class="text-75 flex-1">{tool.description}</p>
+	{tool.href ? (
+		<a
+			href={tool.href}
+			target="_blank"
+			rel="noopener noreferrer"
+			class="text-[var(--primary)]"
+		>
+			访问工具 ↗
+		</a>
+	) : (
+		<span class="text-50">整理中 · 占位内容</span>
+	)}
 </article>

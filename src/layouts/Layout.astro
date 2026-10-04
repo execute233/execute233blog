@@ -1,11 +1,8 @@
 ---
-import "@fontsource/roboto/400.css";
-import "@fontsource/roboto/500.css";
-import "@fontsource/roboto/700.css";
-import "@fontsource-variable/jetbrains-mono";
 import "@/styles/rose-theme.css";
 
 import ConfigCarrier from "@components/ConfigCarrier.astro";
+import FontFaces from "@components/FontFaces.astro";
 import GalaxyBackground from "@components/GalaxyBackground.astro";
 import MusicIsland from "@components/MusicIsland.astro";
 import { profileConfig, siteConfig } from "@/config";
@@ -73,10 +70,11 @@ const bannerOffset =
 ---
 
 <!DOCTYPE html>
-<html lang={siteLang} class="rose-theme bg-[var(--page-bg)] transition text-[14px] md:text-[16px]"
+<html lang={siteLang} class="rose-theme bg-[var(--page-bg)] transition"
       data-overlayscrollbars-initialize
 >
 <head>
+	<FontFaces />
 
     <title>{pageTitle}</title>
 
