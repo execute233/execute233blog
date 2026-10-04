@@ -1,4 +1,5 @@
 ---
+import Card from "@components/ui/Card.astro";
 import type { Tool } from "@/data/tools";
 
 interface Props {
@@ -6,7 +7,12 @@ interface Props {
 }
 const { tool } = Astro.props;
 ---
-<article class="rose-tool-card card-base p-7 flex flex-col gap-4">
+<Card
+	as="article"
+	effect={tool.href ? "lift" : "highlight"}
+	clip
+	class="rose-tool-card p-7 flex flex-col gap-4"
+>
 	<span class="text-[var(--primary)]">{tool.category}</span>
 	<h2 class="text-90">{tool.name}</h2>
 	<p class="text-75 flex-1">{tool.description}</p>
@@ -22,4 +28,4 @@ const { tool } = Astro.props;
 	) : (
 		<span class="text-50">整理中 · 占位内容</span>
 	)}
-</article>
+</Card>

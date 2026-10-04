@@ -1,4 +1,5 @@
 ---
+import Card from "@components/ui/Card.astro";
 import { Icon } from "astro-icon/components";
 import { profileConfig } from "@/config";
 import "@/styles/rose-profile.css";
@@ -6,7 +7,7 @@ import "@/styles/rose-profile.css";
 
 <div class="profile-interest-grid">
 	{profileConfig.interests.map((interest) => (
-		<article class="profile-interest-card surface">
+		<Card as="article" effect="highlight" class="profile-interest-card">
 			<div class="profile-interest-heading">
 				<span class="eyebrow">{interest.label}</span>
 				<Icon name={interest.icon} aria-hidden="true" />
@@ -16,6 +17,6 @@ import "@/styles/rose-profile.css";
 			<ul class="profile-tags" aria-label={`${interest.title}的方向`}>
 				{interest.tags.map((tag) => <li>{tag}</li>)}
 			</ul>
-		</article>
+		</Card>
 	))}
 </div>

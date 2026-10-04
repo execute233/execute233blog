@@ -1,6 +1,7 @@
 ---
 import type { CollectionEntry } from "astro:content";
 import path from "node:path";
+import Card from "@components/ui/Card.astro";
 import Key from "@i18n/i18nKey";
 import { i18n } from "@i18n/translation";
 import { formatDateToYYYYMMDD } from "@utils/date-utils";
@@ -17,7 +18,7 @@ const { title, category, published, image, description } = entry.data;
 const { remarkPluginFrontmatter } = await entry.render();
 ---
 
-<article class="rose-post-card card-base">
+<Card as="article" effect="lift" clip class="rose-post-card">
 	<div class="rose-post-card-meta">
 		<span class="mono">{String(index).padStart(2, "0")}</span>
 		<a href={getCategoryUrl(category)}>{category || i18n(Key.uncategorized)}</a>
@@ -43,4 +44,4 @@ const { remarkPluginFrontmatter } = await entry.render();
 	) : (
 		<a href={url} aria-label={title} class="rose-post-arrow" tabindex="-1">↗</a>
 	)}
-</article>
+</Card>

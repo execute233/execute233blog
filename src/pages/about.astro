@@ -1,5 +1,6 @@
 ---
 import ProfileInterests from "@components/ProfileInterests.astro";
+import Card from "@components/ui/Card.astro";
 import MainGridLayout from "@layouts/MainGridLayout.astro";
 import { profileConfig } from "@/config";
 ---
@@ -23,12 +24,12 @@ import { profileConfig } from "@/config";
 			<p>使用过的语言、框架和工具。</p>
 			<div class="profile-technology-grid">
 				{profileConfig.technologies.map((group) => (
-					<section class="profile-technology-card surface">
+					<Card as="section" effect="highlight" class="profile-technology-card">
 						<h3>{group.title}</h3>
 						<ul class="profile-tags">
 							{group.items.map((item) => <li>{item}</li>)}
 						</ul>
-					</section>
+					</Card>
 				))}
 			</div>
 		</section>

@@ -1,3 +1,4 @@
+@import "./card.css";
 @import "./rose-navigation.css";
 @import "./rose-footer.css";
 
@@ -94,21 +95,6 @@
 	letter-spacing: 0.16em;
 	color: var(--accent);
 	line-height: 1.4;
-}
-.surface,
-.rose-theme .card-base {
-	border: 1px solid var(--line);
-	border-radius: var(--radius);
-	background:
-		linear-gradient(
-			145deg,
-			color-mix(in srgb, var(--accent) 4%, transparent),
-			transparent 50%
-		),
-		var(--surface);
-	box-shadow:
-		5px 6px 0 var(--shadow),
-		inset 0 1px 0 rgb(255 255 255 / 3%);
 }
 .rose-theme :is(a, button, summary):focus-visible {
 	outline: 2px solid var(--primary);
@@ -216,16 +202,9 @@
 	grid-template-columns: 125px minmax(0, 1fr) 28px;
 	gap: 24px;
 	padding: 29px 32px;
-	transition:
-		transform 220ms,
-		border-color 220ms;
 }
 .rose-post-card:has(.rose-post-cover) {
 	grid-template-columns: 125px minmax(0, 1fr) 22%;
-}
-.rose-post-card:hover {
-	transform: translateY(-3px);
-	border-color: color-mix(in srgb, var(--accent) 45%, transparent);
 }
 .rose-post-card-meta {
 	display: flex;
@@ -474,6 +453,8 @@
 		flex-direction: column;
 		gap: 17px;
 		padding: 24px;
+	}
+	.rose-post-card:has(.rose-post-cover) {
 		border-radius: 23px;
 	}
 	.rose-post-card-meta {
@@ -533,7 +514,6 @@
 	.rose-theme .onload-animation {
 		opacity: 1;
 	}
-	.rose-post-card:hover,
 	.pill-button:hover {
 		transform: none;
 	}

@@ -15,11 +15,44 @@
 | 文件 | 职责 |
 | --- | --- |
 | `src/styles/rose-theme.css` | 全站变量、页面外壳、列表及阅读页 |
+| `src/styles/card.css` | 公共卡片材质、裁剪及交互状态 |
 | `src/styles/rose-home.css` | 首页布局、档案与内容卡片 |
 | `src/styles/rose-navigation.css` | 顶栏、悬浮导航及其手机断点 |
 | `src/styles/rose-footer.css` | 页脚与响应式列数 |
 
 导航和页脚的断点规则各自放在对应文件，避免开发模式的样式加载顺序覆盖手机布局。默认色相位于 `siteConfig.themeColor.hue`，设置面板可调整并保存色相。卡片底色、边框、侧影与高亮由色相派生；博客背景色单独维护在 `src/data/appearance.ts`，保留用户选择。旧的卡片背景缓存不再应用。
+
+## 公共卡片
+
+内容卡片使用 `src/components/ui/Card.astro`。它直接输出指定的 HTML 元素，内部内容通过默认插槽传入；标题、图标、标签、间距和响应式布局继续由具体卡片维护。公共样式由 `rose-theme.css` 在全站加载，兼容仍使用 `card-base` 的正文、归档和设置浮层。
+
+| 属性 | 默认值 | 用途 |
+| --- | --- | --- |
+| `as` | `div` | 根元素，可选 `div`、`article`、`section`、`a`；使用 `a` 时必须提供 `href` |
+| `effect` | `none` | `none` 为静态，`highlight` 高亮边框和阴影，`lift` 额外上移 3px |
+| `clip` | `false` | 是否裁剪超出圆角的内容 |
+
+支持 `class`、`class:list` 和对应元素的常规 HTML 属性。内部链接保持独立；`effect` 只控制视觉反馈，不会改变点击范围或增加键盘停靠点。
+
+```astro
+---
+import Card from "@components/ui/Card.astro";
+import { url } from "@utils/url-utils";
+---
+
+<Card as="article" effect="highlight" class="profile-interest-card">
+	<h3>兴趣</h3>
+	<p>介绍内容。</p>
+</Card>
+
+<Card as="a" href={url("/blog/")} effect="lift" class="entry-card">
+	<h3>博客</h3>
+</Card>
+```
+
+档案、介绍、兴趣和技术卡片使用 `highlight`；栏目、学习、文章和有访问地址的工具卡片使用 `lift`，无地址的工具使用 `highlight`。档案、介绍、文章和工具通过 `clip` 保留原有裁剪行为。
+
+悬停效果仅在支持精细指针和悬停的设备上启用。卡片自身或内部链接获得键盘可见焦点时，外壳高亮但不上浮，链接保留焦点轮廓；减少动态效果时取消位移和过渡，保留静态高亮。
 
 ## 字号与阅读层级
 
