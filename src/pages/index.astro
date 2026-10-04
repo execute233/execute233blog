@@ -1,6 +1,7 @@
 ---
 import ImageWrapper from "@components/misc/ImageWrapper.astro";
 import ProfileInterests from "@components/ProfileInterests.astro";
+import Card from "@components/ui/Card.astro";
 import Key from "@i18n/i18nKey";
 import { i18n } from "@i18n/translation";
 import MainGridLayout from "@layouts/MainGridLayout.astro";
@@ -29,10 +30,10 @@ const entries = [
 			<span class="eyebrow">A PERSONAL STUDIO <span class="kicker-line"></span> 运行实验簿</span>
 			<p class="hello">你好，世界。<span>I'm</span></p>
 			<h1>execute<span>233</span><span class="title-period">.</span></h1>
-			<p class="hero-description">对 AI、软件开发和科学实验感兴趣。</p>
+				<p class="hero-description">Hi, I’m Execute233. I build software and explore AI.</p>
 		</header>
 		<div class="rose-hero-grid">
-			<section class="profile-card surface">
+			<Card as="section" effect="highlight" clip class="profile-card">
 				<div class="profile-art">
 					<div class="profile-orbit" aria-hidden="true"></div>
 					<ImageWrapper
@@ -52,28 +53,33 @@ const entries = [
 					))}
 				</div>
 				<div class="profile-bottom"><span class="mono">HELLO, WORLD_</span></div>
-			</section>
-			<section class="manifest-card surface">
+			</Card>
+			<Card as="section" effect="highlight" clip class="manifest-card">
 				<div class="manifest-top">
 					<span class="eyebrow"><span class="status-dot"></span> EXPLORING THE UNKNOWN</span>
 					<span class="mono" aria-hidden="true">&lt; / &gt;</span>
 				</div>
 				<div class="manifest-orbit" aria-hidden="true"></div>
-				<h2>你好，我是 Execute233，<br /><span>对 AI 和开发工具感兴趣的开发者。</span></h2>
-				<p>最近在尝试模型服务和 AI Agent，也做过网站、机器人和一些小工具。<br />喜欢研究它们怎么工作，也希望做出自己用得上的东西。</p>
+				<h2>Hi, I’m <br /><span>Execute233, </span><br />I build software and explore AI.</h2>
+				<p>喜欢研究它们怎么工作，也希望做出自己用得上的东西。</p>
 				<div class="manifest-bottom">
 					<a href={url("/blog/")} class="pill-button">开始阅读 <span aria-hidden="true">↗</span></a>
 					<a href={url("/learning/")} class="text-link">最近在学 <span aria-hidden="true">↗</span></a>
 				</div>
-			</section>
+			</Card>
 		</div>
 		<nav class="entry-grid" aria-label="探索栏目">
 			{entries.map((entry, index) => (
-				<a href={url(entry.path)} class="entry-card surface">
+				<Card
+					as="a"
+					href={url(entry.path)}
+					effect="lift"
+					class="entry-card"
+				>
 					<span class="eyebrow">0{index + 1} / EXPLORE</span>
 					<span class="entry-arrow" aria-hidden="true">↗</span>
 					<h3>{entry.name}</h3><p>{entry.description}</p>
-				</a>
+				</Card>
 			))}
 		</nav>
 		<section class="interest-section" aria-labelledby="home-interests-title">
@@ -115,11 +121,16 @@ const entries = [
 				</header>
 				<div class="learning-grid">
 					{learning.map((post, index) => (
-						<a href={getPostUrlBySlug(post.slug)} class="learning-card surface">
+						<Card
+							as="a"
+							href={getPostUrlBySlug(post.slug)}
+							effect="lift"
+							class="learning-card"
+						>
 							<div class="note-heading"><span class="eyebrow">LEARNING NOTE / 0{index + 1}</span><span class="note-symbol" aria-hidden="true">{index === 0 ? "✳︎" : "↺"}</span></div>
 							<h3>{post.data.title}</h3><p>{post.data.description}</p>
 							<div class="note-footer"><time datetime={formatDateToYYYYMMDD(post.data.published)} class="mono">{formatDateToYYYYMMDD(post.data.published).replaceAll("-", ".")}</time><span>{i18n(Key.more)} ↗</span></div>
-						</a>
+						</Card>
 					))}
 				</div>
 			</section>

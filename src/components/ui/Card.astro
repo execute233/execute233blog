@@ -1,0 +1,35 @@
+---
+import type { HTMLAttributes } from "astro/types";
+
+type ContainerTag = "div" | "article" | "section";
+
+type Props = {
+	effect?: "none" | "highlight" | "lift";
+	clip?: boolean;
+} & (
+	| ({ as: "a"; href: string } & Omit<HTMLAttributes<"a">, "href">)
+	| ({ as?: ContainerTag } & HTMLAttributes<ContainerTag>)
+);
+
+const {
+	as: Tag = "div",
+	effect = "none",
+	clip = false,
+	class: className,
+	"class:list": classList,
+	...attributes
+} = Astro.props;
+---
+
+<Tag
+	{...attributes}
+	class:list={[
+		"site-card",
+		`site-card--${effect}`,
+		{ "site-card--clip": clip },
+		className,
+		classList,
+	]}
+>
+	<slot />
+</Tag>
