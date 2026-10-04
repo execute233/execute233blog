@@ -59,7 +59,7 @@ export const navBarConfig: NavBarConfig = {
 export const profileConfig: ProfileConfig = {
 	avatar: "assets/images/avatar.png", // Relative to the /src directory. Relative to the /public directory if it starts with '/'
 	name: "execute233",
-	bio: "大学生 · coder · 炼丹师",
+	bio: "开发者 · AI 与开发工具",
 	// 兴趣与技术接触经历，按展示顺序排列。
 	interests: [
 		{
@@ -67,23 +67,21 @@ export const profileConfig: ProfileConfig = {
 			label: "DEVELOPMENT",
 			icon: "material-symbols:code-rounded",
 			description:
-				"从 Python、Go 后端到 Web 界面，边查文档边开发，把想法一点点写成程序。",
+				"做过个人网站、QQ 机器人和一些小工具，对后端开发和 Web 界面都感兴趣。",
 			tags: ["Java / Go", "TypeScript", "Web"],
 		},
 		{
 			title: "电子与科学探索",
 			label: "ELECTRONICS & SCIENCE",
 			icon: "material-symbols:science-outline",
-			description:
-				"喜欢动手验证好奇心。距离真正的雷电法王还很远，偶尔倒是会给电容一点压力。",
+			description: "喜欢电子实验，也对各种科学现象感兴趣。",
 			tags: ["动手实验", "科学探索"],
 		},
 		{
 			title: "AI 应用探索",
 			label: "AI APPLICATIONS",
 			icon: "material-symbols:smart-toy-rounded",
-			description:
-				"曾经的炼丹师，会高估 Agent 和 AI 工具，让 AI 帮自己写代码、做工具。",
+			description: "对模型服务和 AI Agent 感兴趣，也在尝试用 AI 辅助开发。",
 			tags: ["Agent", "AI 辅助开发"],
 		},
 	],

@@ -14,22 +14,22 @@ import "@/styles/rose-home.css";
 const recent = (await getSortedPosts("blog")).slice(0, 3);
 const learning = (await getSortedPosts("learning")).slice(0, 2);
 const entries = [
-	{ name: "博客", path: "/blog/", description: "把想法写下来。" },
-	{ name: "学习记录", path: "/learning/", description: "留下理解的过程。" },
-	{ name: "工具", path: "/tools/", description: "让探索更顺手。" },
-	{ name: "关于", path: "/about/", description: "持续更新的旅程。" },
+	{ name: "博客", path: "/blog/", description: "软件开发与个人实践。" },
+	{ name: "学习记录", path: "/learning/", description: "学习笔记与实践记录。" },
+	{ name: "工具", path: "/tools/", description: "工具推荐与使用心得。" },
+	{ name: "关于", path: "/about/", description: "我的介绍与兴趣。" },
 ];
 ---
 
 <MainGridLayout
-	description="来自广东的大学生，喜欢编程开发、电子与科学探索、AI 应用。边查文档，边写代码，把实践和慢慢弄懂的问题记下来。"
+	description="来自广东的开发者，对 AI、软件开发和科学实验感兴趣。分享模型服务、AI Agent 和个人项目的实践记录。"
 >
 	<div data-landing class="rose-home">
 		<header class="hero-heading">
 			<span class="eyebrow">A PERSONAL STUDIO <span class="kicker-line"></span> 运行实验簿</span>
 			<p class="hello">你好，世界。<span>I'm</span></p>
 			<h1>execute<span>233</span><span class="title-period">.</span></h1>
-			<p class="hero-description">边查文档，边写代码，<br class="mobile-break" />懂一点就试一点，跑通了再记下来。</p>
+			<p class="hero-description">对 AI、软件开发和科学实验感兴趣。</p>
 		</header>
 		<div class="rose-hero-grid">
 			<section class="profile-card surface">
@@ -43,7 +43,7 @@ const entries = [
 				</div>
 				<span class="eyebrow">个人档案 / PROFILE</span>
 				<h2>{profileConfig.name}<span class="status-dot" aria-hidden="true"></span></h2>
-				<p>来自广东的大学生。<br />写代码，做实验，也探索 AI 应用。</p>
+				<p>来自广东的开发者。<br />写代码，做实验，也探索 AI 应用。</p>
 				<div class="social-links">
 					{profileConfig.links.map((link) => (
 						<a href={link.url} target="_blank" rel="noopener noreferrer">
@@ -51,7 +51,7 @@ const entries = [
 						</a>
 					))}
 				</div>
-				<div class="profile-bottom"><span class="mono">HELLO, WORLD_</span><span>会一点点，学一点点。</span></div>
+				<div class="profile-bottom"><span class="mono">HELLO, WORLD_</span></div>
 			</section>
 			<section class="manifest-card surface">
 				<div class="manifest-top">
@@ -59,8 +59,8 @@ const entries = [
 					<span class="mono" aria-hidden="true">&lt; / &gt;</span>
 				</div>
 				<div class="manifest-orbit" aria-hidden="true"></div>
-				<h2>查文档，踩坑，<br /><span>然后写下来。</span></h2>
-				<p>代码不一定一次跑通，问题倒是经常碰到。<br />留份记录，下次少绕一点路。</p>
+				<h2>你好，我是 Execute233，<br /><span>对 AI 和开发工具感兴趣的开发者。</span></h2>
+				<p>最近在尝试模型服务和 AI Agent，也做过网站、机器人和一些小工具。<br />喜欢研究它们怎么工作，也希望做出自己用得上的东西。</p>
 				<div class="manifest-bottom">
 					<a href={url("/blog/")} class="pill-button">开始阅读 <span aria-hidden="true">↗</span></a>
 					<a href={url("/learning/")} class="text-link">最近在学 <span aria-hidden="true">↗</span></a>
@@ -80,7 +80,7 @@ const entries = [
 			<header class="section-heading">
 				<div>
 					<span class="eyebrow">INTERESTS / EXPLORING</span>
-					<h2 id="home-interests-title">好奇心，具体一点</h2>
+					<h2 id="home-interests-title">我的兴趣</h2>
 				</div>
 				<a class="text-link" href={url("/about/")}>更多关于我 <span aria-hidden="true">↗</span></a>
 			</header>
@@ -110,7 +110,7 @@ const entries = [
 		{learning.length > 0 && (
 			<section class="learning-section">
 				<header class="section-heading">
-					<div><span class="eyebrow">LEARNING / IN PROGRESS</span><h2>理解，始于记录</h2></div>
+					<div><span class="eyebrow">LEARNING / IN PROGRESS</span><h2>最近的学习记录</h2></div>
 					<a class="text-link" href={url("/learning/")}>学习记录 <span aria-hidden="true">↗</span></a>
 				</header>
 				<div class="learning-grid">

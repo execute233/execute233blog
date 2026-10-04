@@ -37,10 +37,6 @@
 	margin: 23px 0 14px;
 	max-width: 300px;
 }
-.rose-footer-motto {
-	color: var(--subtle);
-	font-size: 12px;
-}
 .rose-footer h2 {
 	color: var(--accent);
 	font-size: 0.63rem;
