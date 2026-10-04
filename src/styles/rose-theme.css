@@ -33,6 +33,24 @@
 	--toc-btn-active: oklch(0.335 0.035 var(--hue));
 	--toc-badge-bg: var(--btn-regular-bg);
 }
+:root.rose-theme {
+	font-synthesis: none;
+	--font-site:
+		"JetBrains Mono", "Noto Sans SC", "Microsoft YaHei", ui-monospace,
+		SFMono-Regular, Consolas, monospace;
+	--font-code:
+		"JetBrains Mono", ui-monospace, SFMono-Regular, Consolas, monospace;
+	--font-reading:
+		ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC",
+		"Hiragino Sans GB", "Microsoft YaHei", "Noto Sans SC", "Helvetica Neue",
+		Arial, sans-serif;
+	--text-label: 0.7rem;
+	--text-caption: 0.75rem;
+	--text-body: 0.875rem;
+	--text-card-title: 1.5rem;
+	--text-section-title: clamp(1.35rem, 3vw, 1.8rem);
+	--text-page-title: clamp(1.875rem, 5vw, 3.75rem);
+}
 .rose-theme body {
 	color: var(--ink);
 }
@@ -69,17 +87,13 @@
 .stars-only .rose-footer {
 	visibility: hidden;
 }
-.eyebrow,
-.mono {
-	font-family: "JetBrains Mono Variable", monospace;
-}
 .eyebrow {
 	display: block;
-	font-size: 10px;
-	font-weight: 600;
+	font-size: var(--text-label);
+	font-weight: 800;
 	letter-spacing: 0.16em;
 	color: var(--accent);
-	line-height: 1.7;
+	line-height: 1.4;
 }
 .surface,
 .rose-theme .card-base {
@@ -131,7 +145,7 @@
 	overflow-y: auto;
 }
 .rose-toc-details summary {
-	font-size: 11px;
+	font-size: 0.78rem;
 	color: var(--accent);
 	padding-bottom: 18px;
 	cursor: pointer;
@@ -139,6 +153,10 @@
 .rose-toc-details table-of-contents {
 	display: block;
 	position: relative;
+}
+.rose-toc-details table-of-contents .text-sm {
+	font-size: 0.78rem;
+	line-height: 1.4;
 }
 .pill-button {
 	display: inline-flex;
@@ -149,8 +167,8 @@
 	padding: 11px 23px;
 	background: var(--accent);
 	color: #100d14;
-	font-size: 13px;
-	font-weight: 700;
+	font-size: 0.92rem;
+	font-weight: 750;
 	box-shadow: inset 0 1px 0 rgb(255 255 255 / 25%);
 	transition:
 		background 180ms,
@@ -162,7 +180,8 @@
 }
 .text-link {
 	color: var(--muted);
-	font-size: 12px;
+	font-size: var(--text-caption);
+	font-weight: 700;
 	white-space: nowrap;
 }
 .text-link:hover {
@@ -176,12 +195,14 @@
 	margin: 15px 0 34px;
 }
 .rose-list-heading h1 {
-	font-size: clamp(34px, 4vw, 55px);
+	font-size: var(--text-page-title);
+	line-height: 1.08;
 	letter-spacing: -0.045em;
 	margin: 21px 0 16px;
 }
 .rose-list-heading p {
-	font-size: 14px;
+	font-size: 1rem;
+	line-height: 1.8;
 	color: var(--muted);
 	margin-bottom: 20px;
 }
@@ -210,7 +231,7 @@
 	display: flex;
 	flex-direction: column;
 	gap: 6px;
-	font-size: 11px;
+	font-size: var(--text-caption);
 	color: var(--subtle);
 }
 .rose-post-card-meta > .mono {
@@ -221,25 +242,25 @@
 	color: var(--accent);
 }
 .rose-post-card h2 {
-	font-size: 25px;
-	line-height: 1.3;
+	font-size: var(--text-card-title);
+	line-height: 1.25;
 	letter-spacing: -0.035em;
 	color: var(--ink);
-	font-weight: 600;
+	font-weight: 800;
 }
 .rose-post-card h2 a:hover {
 	color: var(--accent);
 }
 .rose-post-card p {
-	font-size: 13px;
-	line-height: 1.85;
+	font-size: var(--text-body);
+	line-height: 1.75;
 	color: var(--muted);
 	margin-top: 13px;
 }
 .rose-post-reading-time {
 	display: flex;
 	gap: 14px;
-	font-size: 10px;
+	font-size: var(--text-label);
 	color: var(--subtle);
 	margin-top: 15px;
 }
@@ -260,6 +281,18 @@
 	height: 100%;
 	object-fit: cover;
 }
+.rose-tool-card h2 {
+	font-size: var(--text-card-title);
+	font-weight: 800;
+	line-height: 1.25;
+}
+.rose-tool-card p {
+	font-size: var(--text-body);
+	line-height: 1.75;
+}
+.rose-tool-card > :is(a, span) {
+	font-size: var(--text-caption);
+}
 .rose-theme .rose-reading {
 	border-radius: 25px;
 	background: color-mix(in srgb, var(--surface) 90%, var(--bg));
@@ -273,13 +306,14 @@
 }
 .rose-reading-back {
 	color: var(--subtle);
-	font-size: 12px;
+	font-size: var(--text-caption);
 }
-.rose-reading h1 {
+.rose-reading-header h1 {
 	margin: 27px 0 17px;
-	font-size: clamp(28px, 3vw, 42px);
+	font-size: var(--text-page-title);
 	letter-spacing: -0.04em;
-	line-height: 1.4;
+	line-height: 1.08;
+	overflow-wrap: anywhere;
 	color: var(--ink);
 }
 .rose-reading .meta-icon {
@@ -295,18 +329,37 @@
 .rose-reading .custom-md {
 	max-width: 44rem !important;
 	margin: 0 auto;
+	font-family: var(--font-reading);
 	font-size: 16px;
-	line-height: 1.95;
+	line-height: 1.8;
+}
+.rose-reading .custom-md :is(h1, h2, h3, h4, h5, h6) {
+	font-family: var(--font-site);
+	font-weight: 800;
+	letter-spacing: -0.01em;
+	line-height: 1.32;
+}
+.rose-reading .custom-md h1 {
+	font-size: 1.75rem;
 }
 .rose-reading .custom-md h2 {
-	font-size: 24px;
+	font-size: 1.4rem;
 	margin-top: 2.25em;
+}
+.rose-reading .custom-md h3 {
+	font-size: 1.15rem;
+}
+.rose-reading .custom-md h4 {
+	font-size: 1rem;
+}
+.rose-reading .custom-md :is(h5, h6) {
+	font-size: 0.92rem;
 }
 .rose-reading .custom-md :is(h1, h2, h3, h4) {
 	scroll-margin-top: 110px;
 }
 .rose-reading .custom-md .expressive-code {
-	font-size: 0.875rem;
+	font-size: 0.85rem;
 	line-height: 1.7;
 }
 .rose-reading .custom-md :is(table, pre) {
@@ -319,7 +372,7 @@
 	display: flex;
 	gap: 18px;
 	color: var(--subtle);
-	font-size: 11px;
+	font-size: var(--text-label);
 	margin-top: 18px;
 }
 .rose-reading-neighbors {
@@ -335,7 +388,7 @@
 	border-radius: 20px;
 	background: var(--surface);
 	color: var(--muted);
-	font-size: 13px;
+	font-size: var(--text-body);
 	overflow-wrap: anywhere;
 }
 .rose-reading-neighbors a:hover {
@@ -392,6 +445,10 @@
 	}
 }
 @media (max-width: 600px) {
+	:root.rose-theme {
+		--text-card-title: 1.25rem;
+		--text-page-title: 1.875rem;
+	}
 	.rose-shell {
 		width: calc(100% - 40px);
 	}
@@ -404,11 +461,8 @@
 	.rose-list-heading {
 		margin: 0 0 28px;
 	}
-	.rose-list-heading h1 {
-		font-size: 33px;
-	}
 	.rose-list-heading p {
-		font-size: 12px;
+		font-size: var(--text-body);
 	}
 	.rose-post-list {
 		gap: 21px;
@@ -426,7 +480,7 @@
 		flex-direction: row;
 		flex-wrap: wrap;
 		gap: 12px;
-		font-size: 10px;
+		font-size: var(--text-label);
 		padding-right: 12px;
 	}
 	.rose-post-card-meta > .mono {
@@ -436,11 +490,7 @@
 		margin-left: auto;
 	}
 	.rose-post-card h2 {
-		font-size: 23px;
 		padding-right: 14px;
-	}
-	.rose-post-card p {
-		font-size: 12px;
 	}
 	.rose-post-arrow {
 		position: absolute;
@@ -456,14 +506,17 @@
 		border-radius: 23px;
 		padding: 26px 22px;
 	}
-	.rose-reading h1 {
-		font-size: 27px;
-	}
 	.rose-reading .custom-md {
-		font-size: 15px;
+		line-height: 1.78;
+	}
+	.rose-reading .custom-md h1 {
+		font-size: 1.6rem;
 	}
 	.rose-reading .custom-md h2 {
-		font-size: 22px;
+		font-size: 1.3rem;
+	}
+	.rose-reading .custom-md h3 {
+		font-size: 1.1rem;
 	}
 	.rose-reading-neighbors {
 		flex-direction: column;
@@ -486,8 +539,8 @@
 	}
 }
 .rose-list-heading h1,
-.rose-reading h1 {
-	font-weight: 700;
+.rose-reading-header h1 {
+	font-weight: 800;
 }
 .rose-shell #toc-inner-wrapper {
 	mask-image: none;

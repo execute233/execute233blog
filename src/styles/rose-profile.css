@@ -15,7 +15,7 @@
 	gap: 12px;
 }
 .profile-interest-heading .eyebrow {
-	font-size: 9px;
+	font-size: var(--text-label);
 	letter-spacing: 0.08em;
 }
 .profile-interest-heading svg {
@@ -25,13 +25,14 @@
 	color: var(--accent);
 }
 .profile-interest-card h3 {
-	font-size: 20px;
-	font-weight: 700;
+	font-size: var(--text-card-title);
+	font-weight: 800;
+	line-height: 1.25;
 	margin-top: 24px;
 }
 .profile-interest-card p {
-	font-size: 13px;
-	line-height: 1.9;
+	font-size: var(--text-body);
+	line-height: 1.75;
 	color: var(--muted);
 	margin: 14px 0 22px;
 }
@@ -47,12 +48,12 @@
 	border: 1px solid var(--line);
 	border-radius: 12px;
 	padding: 5px 10px;
-	font-size: 11px;
+	font-size: var(--text-caption);
 	line-height: 1.6;
 	color: var(--muted);
 }
 .rose-about .rose-list-heading h1 {
-	font-weight: 700;
+	font-weight: 800;
 	text-wrap: balance;
 }
 .rose-about .rose-list-heading h1 span {
@@ -62,12 +63,13 @@
 	margin-top: 48px;
 }
 .rose-about .profile-section > h2 {
-	font-size: 27px;
-	font-weight: 700;
+	font-size: var(--text-section-title);
+	font-weight: 760;
+	line-height: 1.33;
 	margin-bottom: 22px;
 }
 .rose-about .profile-section > p {
-	font-size: 13px;
+	font-size: var(--text-body);
 	line-height: 1.9;
 	color: var(--muted);
 	margin-bottom: 24px;
@@ -81,8 +83,9 @@
 	padding: 26px;
 }
 .rose-about .profile-technology-card h3 {
-	font-size: 18px;
-	font-weight: 700;
+	font-size: var(--text-card-title);
+	font-weight: 800;
+	line-height: 1.25;
 	margin-bottom: 20px;
 }
 @media (max-width: 1000px) {
@@ -102,8 +105,5 @@
 	.profile-interest-card,
 	.rose-about .profile-technology-card {
 		padding: 23px;
-	}
-	.rose-about .profile-section > h2 {
-		font-size: 23px;
 	}
 }

@@ -148,7 +148,7 @@
 	border: 1px solid var(--line);
 	background: var(--surface);
 	padding: 7px 12px;
-	font-size: 12px;
+	font-size: 0.78rem;
 	opacity: 0;
 	transform: translateX(-4px);
 	transition:
@@ -222,7 +222,9 @@
 		right: 16px;
 	}
 	.rose-header .settings-menu {
-		top: calc(100% + 13px);
+		position: fixed;
+		top: 73px;
+		right: 16px;
 	}
 }
 @media (max-width: 360px) {

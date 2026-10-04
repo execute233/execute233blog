@@ -20,34 +20,33 @@
 .rose-footer-brand strong {
 	display: block;
 	color: var(--ink);
-	font-size: 19px;
+	font-size: 1.05rem;
+	font-weight: 780;
 	letter-spacing: -0.03em;
 }
 .rose-footer-brand > span > span {
 	display: block;
-	font-family: "JetBrains Mono Variable", monospace;
 	color: var(--subtle);
-	font-size: 10px;
+	font-size: var(--text-label);
 	margin-top: 5px;
 }
 .rose-footer-about > p {
 	color: var(--muted);
-	font-size: 12px;
+	font-size: var(--text-body);
 	line-height: 1.85;
 	margin: 23px 0 14px;
 	max-width: 300px;
 }
 .rose-footer-motto {
 	color: var(--subtle);
-	font-family: "JetBrains Mono Variable", monospace;
 	font-size: 12px;
 }
 .rose-footer h2 {
 	color: var(--accent);
-	font-size: 11px;
+	font-size: 0.63rem;
 	letter-spacing: 0.08em;
 	margin: 3px 0 21px;
-	font-weight: 500;
+	font-weight: 750;
 }
 .rose-footer-navigation ul {
 	display: grid;
@@ -56,7 +55,8 @@
 	list-style: none;
 	padding: 0;
 	margin: 0;
-	font-size: 13px;
+	font-size: 0.78rem;
+	font-weight: 650;
 	color: var(--muted);
 }
 .rose-footer a:hover {
@@ -75,7 +75,8 @@
 	padding: 7px 11px;
 	border-radius: 18px;
 	color: var(--muted);
-	font-size: 11px;
+	font-size: 0.66rem;
+	font-weight: 700;
 	transition:
 		background 180ms,
 		color 180ms;
@@ -96,7 +97,7 @@
 	padding-top: 21px;
 	border-top: 1px solid var(--line);
 	color: var(--subtle);
-	font-size: 10px;
+	font-size: var(--text-label);
 }
 .rose-footer-bottom > div {
 	display: flex;
@@ -146,16 +147,13 @@
 		gap: 28px 21px;
 	}
 	.rose-footer-navigation ul {
-		font-size: 12px;
 		gap: 12px;
 	}
 	.rose-footer-contact a {
-		font-size: 10px;
 		padding: 6px 9px;
 	}
 	.rose-footer-bottom {
 		gap: 12px 18px;
 		margin-top: 30px;
-		font-size: 9px;
 	}
 }

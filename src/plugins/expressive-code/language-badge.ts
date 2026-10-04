@@ -1,13 +1,13 @@
 /**
  * Based on the discussion at https://github.com/expressive-code/expressive-code/issues/153#issuecomment-2282218684
  */
-import {definePlugin} from "@expressive-code/core";
+import { definePlugin } from "@expressive-code/core";
 
 export function pluginLanguageBadge() {
-    return definePlugin({
-        name: "Language Badge",
-        // @ts-expect-error
-        baseStyles: ({_cssVar}) => `
+	return definePlugin({
+		name: "Language Badge",
+		// @ts-expect-error
+		baseStyles: ({ _cssVar }) => `
       [data-language]::before {
         position: absolute;
         z-index: 2;
@@ -15,7 +15,7 @@ export function pluginLanguageBadge() {
         top: 0.5rem;
         padding: 0.1rem 0.5rem;
         content: attr(data-language);
-        font-family: "JetBrains Mono Variable", ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+        font-family: var(--font-code);
         font-size: 0.75rem;
         font-weight: bold;
         text-transform: uppercase;
@@ -46,5 +46,5 @@ export function pluginLanguageBadge() {
         }
       }
     `,
-    });
+	});
 }
