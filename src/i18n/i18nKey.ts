@@ -16,8 +16,6 @@ enum I18nKey {
 	musicNext = "musicNext",
 	musicProgress = "musicProgress",
 	musicVolume = "musicVolume",
-	musicMute = "musicMute",
-	musicUnmute = "musicUnmute",
 	musicPlaylist = "musicPlaylist",
 	musicLoading = "musicLoading",
 	musicUnavailable = "musicUnavailable",

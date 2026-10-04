@@ -18,8 +18,6 @@ export const zh_CN: Translation = {
 	[Key.musicNext]: "下一首",
 	[Key.musicProgress]: "播放进度",
 	[Key.musicVolume]: "音量",
-	[Key.musicMute]: "静音",
-	[Key.musicUnmute]: "取消静音",
 	[Key.musicPlaylist]: "播放列表",
 	[Key.musicLoading]: "正在载入音频",
 	[Key.musicUnavailable]: "音频不可用",

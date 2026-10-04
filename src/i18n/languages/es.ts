@@ -18,8 +18,6 @@ export const es: Translation = {
 	[Key.musicNext]: "Pista siguiente",
 	[Key.musicProgress]: "Progreso de reproducción",
 	[Key.musicVolume]: "Volumen",
-	[Key.musicMute]: "Silenciar",
-	[Key.musicUnmute]: "Activar sonido",
 	[Key.musicPlaylist]: "Lista de reproducción",
 	[Key.musicLoading]: "Cargando audio",
 	[Key.musicUnavailable]: "Audio no disponible",

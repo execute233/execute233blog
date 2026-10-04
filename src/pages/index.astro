@@ -15,10 +15,30 @@ import "@/styles/rose-home.css";
 const recent = (await getSortedPosts("blog")).slice(0, 3);
 const learning = (await getSortedPosts("learning")).slice(0, 2);
 const entries = [
-	{ name: "博客", path: "/blog/", description: "软件开发与个人实践。" },
-	{ name: "学习记录", path: "/learning/", description: "学习笔记与实践记录。" },
-	{ name: "工具", path: "/tools/", description: "工具推荐与使用心得。" },
-	{ name: "关于", path: "/about/", description: "我的介绍与兴趣。" },
+	{
+		label: "BLOG",
+		name: "博客",
+		path: "/blog/",
+		description: "软件开发与个人实践。",
+	},
+	{
+		label: "LEARN",
+		name: "学习记录",
+		path: "/learning/",
+		description: "学习笔记与实践记录。",
+	},
+	{
+		label: "TOOLS",
+		name: "工具",
+		path: "/tools/",
+		description: "工具推荐与使用心得。",
+	},
+	{
+		label: "ABOUT",
+		name: "关于",
+		path: "/about/",
+		description: "我的介绍与兴趣。",
+	},
 ];
 ---
 
@@ -28,9 +48,9 @@ const entries = [
 	<div data-landing class="rose-home">
 		<header class="hero-heading">
 			<span class="eyebrow">A PERSONAL STUDIO <span class="kicker-line"></span> 运行实验簿</span>
-			<p class="hello">你好，世界。<span>I'm</span></p>
-			<h1>execute<span>233</span><span class="title-period">.</span></h1>
-				<p class="hero-description">Hi, I’m Execute233. I build software and explore AI.</p>
+			<p class="hello">Hello World! <span>I'm</span></p>
+			<h1>execute<span>233</span></h1>
+			<p class="hero-description">喜欢在计算机方面折腾的普通菜鸟一枚。 这里记录软件折腾、开发实验、游戏和那些值得留下来的小发现。</p>
 		</header>
 		<div class="rose-hero-grid">
 			<Card as="section" effect="highlight" clip class="profile-card">
@@ -76,7 +96,7 @@ const entries = [
 					effect="lift"
 					class="entry-card"
 				>
-					<span class="eyebrow">0{index + 1} / EXPLORE</span>
+					<span class="eyebrow">0{index + 1} / {entry.label}</span>
 					<span class="entry-arrow" aria-hidden="true">↗</span>
 					<h3>{entry.name}</h3><p>{entry.description}</p>
 				</Card>

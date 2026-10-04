@@ -18,8 +18,6 @@ export const vi: Translation = {
 	[Key.musicNext]: "Bài tiếp theo",
 	[Key.musicProgress]: "Tiến trình phát",
 	[Key.musicVolume]: "Âm lượng",
-	[Key.musicMute]: "Tắt tiếng",
-	[Key.musicUnmute]: "Bật tiếng",
 	[Key.musicPlaylist]: "Danh sách phát",
 	[Key.musicLoading]: "Đang tải âm thanh",
 	[Key.musicUnavailable]: "Không thể phát âm thanh",

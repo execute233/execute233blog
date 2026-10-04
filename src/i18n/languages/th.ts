@@ -18,8 +18,6 @@ export const th: Translation = {
 	[Key.musicNext]: "เพลงถัดไป",
 	[Key.musicProgress]: "ตำแหน่งการเล่น",
 	[Key.musicVolume]: "ระดับเสียง",
-	[Key.musicMute]: "ปิดเสียง",
-	[Key.musicUnmute]: "เปิดเสียง",
 	[Key.musicPlaylist]: "รายการเล่น",
 	[Key.musicLoading]: "กำลังโหลดเสียง",
 	[Key.musicUnavailable]: "ไม่สามารถเล่นเสียงได้",

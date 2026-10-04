@@ -18,8 +18,6 @@ export const ko: Translation = {
 	[Key.musicNext]: "다음 곡",
 	[Key.musicProgress]: "재생 위치",
 	[Key.musicVolume]: "음량",
-	[Key.musicMute]: "음소거",
-	[Key.musicUnmute]: "음소거 해제",
 	[Key.musicPlaylist]: "재생 목록",
 	[Key.musicLoading]: "오디오 로딩 중",
 	[Key.musicUnavailable]: "오디오를 재생할 수 없습니다",
