@@ -130,16 +130,61 @@
 	margin-top: 23px;
 	padding-top: 13px;
 	border-top: 1px solid var(--line);
+	text-align: left;
+}
+.rose-home .profile-terminal {
+	margin: 0;
+	min-width: 0;
+	overflow: hidden;
+	border: 1px solid color-mix(in srgb, var(--accent) 25%, transparent);
+	border-radius: 14px;
+	background: color-mix(in srgb, var(--surface) 70%, #000);
+}
+.rose-home .profile-terminal-header {
 	display: flex;
-	flex-wrap: wrap;
 	align-items: center;
 	justify-content: space-between;
-	gap: 8px;
+	gap: 12px;
+	padding: 8px 12px;
+	border-bottom: 1px solid var(--line);
 	color: var(--subtle);
 	font-size: var(--text-label);
 }
-.rose-home .profile-bottom .mono {
-	letter-spacing: 0.06em;
+.rose-home .profile-terminal-dots {
+	display: flex;
+	gap: 5px;
+}
+.rose-home .profile-terminal-dots i {
+	width: 6px;
+	height: 6px;
+	border-radius: 50%;
+	background: #e58a91;
+}
+.rose-home .profile-terminal-dots i:nth-child(2) {
+	background: #d5b16f;
+}
+.rose-home .profile-terminal-dots i:nth-child(3) {
+	background: #8fb998;
+}
+.rose-home .profile-terminal pre {
+	margin: 0;
+	padding: 12px;
+	overflow-x: auto;
+	color: var(--ink);
+	font-family: var(--font-code);
+	font-size: var(--text-label);
+	line-height: 1.8;
+	text-align: left;
+}
+.rose-home .profile-terminal code {
+	font: inherit;
+}
+.rose-home .profile-code-number {
+	display: inline-block;
+	width: 2ch;
+	margin-right: 12px;
+	color: var(--subtle);
+	user-select: none;
 }
 .rose-home .manifest-card {
 	position: relative;
@@ -380,9 +425,6 @@
 		padding-left: 20px;
 		padding-right: 20px;
 	}
-	.rose-home .profile-bottom {
-		justify-content: center;
-	}
 	.rose-home .manifest-card {
 		padding-left: 28px;
 		padding-right: 28px;
@@ -456,9 +498,6 @@
 	.rose-home .rose-profile-image {
 		width: 115px;
 		height: 115px;
-	}
-	.rose-home .profile-bottom {
-		justify-content: space-between;
 	}
 	.rose-home .manifest-card {
 		padding: 25px;
