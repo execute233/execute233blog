@@ -6,9 +6,13 @@ import { tools } from "@/data/tools";
 <MainGridLayout title="工具">
 	<header class="rose-list-heading card-base p-9 mb-4">
 		<h1 class="text-90 mb-3">工具箱</h1>
-		<p class="text-75">记录值得留下的工具与使用心得。以下为示例占位，后续持续更新。</p>
+		<p class="text-75">工具推荐与使用心得。</p>
 	</header>
-	<div class="grid xl:grid-cols-2 gap-4">
-		{tools.map((tool) => <ToolCard tool={tool} />)}
-	</div>
+	{tools.length > 0 ? (
+		<div class="grid xl:grid-cols-2 gap-4">
+			{tools.map((tool) => <ToolCard tool={tool} />)}
+		</div>
+	) : (
+		<p class="text-75 card-base p-9">暂无工具推荐。</p>
+	)}
 </MainGridLayout>

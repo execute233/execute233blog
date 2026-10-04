@@ -6,20 +6,20 @@ import { profileConfig } from "@/config";
 
 <MainGridLayout
 	title={`关于 · ${profileConfig.name}`}
-	description="来自广东的大学生，喜欢编程开发、电子与科学探索和 AI 应用。记录接触过的技术，也记录边学边做的过程。"
+	description="来自广东的开发者，喜欢软件开发、电子实验和 AI 应用。这里介绍我的兴趣和使用过的技术。"
 >
 	<div class="rose-about">
 		<header class="rose-list-heading">
 			<span class="eyebrow">ABOUT / {profileConfig.name}</span>
-			<h1><span>会一点，</span><span>学一点，</span><span>再试一点。</span></h1>
-			<p>我是 {profileConfig.name}，来自广东的大学生，喜欢写代码、折腾电子实验，也在探索 AI 应用。</p>
+			<h1>关于我</h1>
+			<p>我是 {profileConfig.name}，来自广东的开发者，喜欢写代码、折腾电子实验，也在探索 AI 应用。</p>
 		</header>
 		<section class="profile-section" aria-labelledby="about-interests-title">
-			<h2 id="about-interests-title">好奇心都放在哪儿</h2>
+			<h2 id="about-interests-title">兴趣爱好</h2>
 			<ProfileInterests />
 		</section>
 		<section class="profile-section" aria-labelledby="about-technologies-title">
-			<h2 id="about-technologies-title">接触过，也还在学</h2>
+			<h2 id="about-technologies-title">使用过的技术</h2>
 			<p>使用过的语言、框架和工具。</p>
 			<div class="profile-technology-grid">
 				{profileConfig.technologies.map((group) => (

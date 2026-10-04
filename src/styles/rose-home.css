@@ -38,9 +38,6 @@
 	margin-top: 20px;
 	color: var(--muted);
 }
-.rose-home .mobile-break {
-	display: none;
-}
 .rose-home .rose-hero-grid {
 	display: grid;
 	grid-template-columns: 0.82fr 1.32fr;
@@ -456,9 +453,6 @@
 	.rose-home .hero-description {
 		line-height: 1.75;
 		margin-top: 17px;
-	}
-	.rose-home .mobile-break {
-		display: block;
 	}
 	.rose-home .rose-hero-grid {
 		grid-template-columns: 1fr;
