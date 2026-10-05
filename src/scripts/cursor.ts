@@ -17,9 +17,10 @@ export function initCursor(): void {
 	cursor.id = "site-cursor";
 	cursor.hidden = true;
 	cursor.setAttribute("aria-hidden", "true");
-	// Static vector geometry lets both pointers share the same three colors.
+	// Static vector geometry lets all pointer shapes share the same three colors.
 	cursor.innerHTML = `<svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
 		<g class="cursor-arrow" transform="translate(-2.5 -2.5)"><path class="cursor-shape" d="M2.5 4.2 Q1.6 1.6 4.2 2.5 L21 9.3 Q23 10.3 20.8 11.3 L13.2 13.2 L11.3 20.8 Q10.3 23 9.3 21 Z"/></g>
+		<g class="cursor-hand" transform="translate(-8 -1)"><path class="cursor-shape" d="M6 12 V3 C6 1.9 6.9 1 8 1 S10 1.9 10 3 V9 C10 7 14 7 14 10 C14 8 18 8 18 11 C18 9 22 9 22 12 V16 C22 20 19 23 15 23 H12 C10 23 8.5 22 7.5 20.5 L2.5 14 C1.8 13 2 11.8 3 11.3 C4 10.8 5 11.3 6 12 Z M10 9 V14 M14 10 V14 M18 11 V14"/></g>
 		<g class="cursor-text" transform="translate(-12 -12)"><path class="cursor-shape" d="M8 1 H16 Q17 1 17 2 Q17 3 16 3 H13 V21 H16 Q17 21 17 22 Q17 23 16 23 H8 Q7 23 7 22 Q7 21 8 21 H11 V3 H8 Q7 3 7 2 Q7 1 8 1 Z"/></g>
 	</svg>`;
 	document.body.append(cursor);
@@ -70,67 +71,60 @@ export function initCursor(): void {
 	save();
 
 	const fine = matchMedia("(hover: hover) and (pointer: fine)");
-	const reduced = matchMedia("(prefers-reduced-motion: reduce)");
 	const root = document.documentElement;
 	let pointerInside = false;
-	let hovered: Element | null = null;
 	let kind = "arrow";
 	let draggingText = false;
 	let x = 0;
 	let y = 0;
-	let tx = 0;
-	let ty = 0;
-	let vx = 0;
-	let vy = 0;
-	let angle = 0;
-	let va = 0;
-	let scale = 1;
-	let vs = 0;
-	let targetAngle = 0;
-	let targetScale = 1;
-	let last = 0;
-	let frame = 0;
 	const paint = () => {
-		cursor.style.transform = `translate3d(${x}px, ${y}px, 0) rotate(${angle}deg) scale(${scale}, 1)`;
-	};
-	const snap = () => {
-		cancelAnimationFrame(frame);
-		frame = 0;
-		x = tx;
-		y = ty;
-		vx = vy = angle = va = vs = 0;
-		scale = 1;
-		paint();
+		cursor.style.transform = `translate3d(${x}px, ${y}px, 0)`;
 	};
 	const hide = () => {
-		hovered = null;
 		cursor.hidden = true;
+		cursor.removeAttribute("data-pressed");
 		draggingText = false;
-		cancelAnimationFrame(frame);
-		frame = 0;
 	};
 	const classify = (element: Element | null) => {
-		if (!element || (element === hovered && !cursor.hidden)) return;
-		const text =
-			draggingText ||
-			!!element.closest(
+		if (!element) return;
+		const interactive = element.closest(
+			"a[href], area[href], button, summary, select, input, label, [role=button], [role=link], [onclick], .cursor-pointer",
+		);
+		const control =
+			interactive instanceof HTMLLabelElement
+				? interactive.control
+				: interactive;
+		const disabled =
+			!!element.closest(":disabled, [aria-disabled=true], [inert]") ||
+			!!control?.closest(":disabled, [aria-disabled=true], [inert]");
+		if (draggingText) {
+			kind = "text";
+		} else if (disabled) {
+			kind = "arrow";
+		} else if (
+			element.closest(
 				"input:not([type]), input[type=text i], input[type=search i], input[type=email i], input[type=url i], input[type=tel i], input[type=password i], input[type=number i], textarea, [contenteditable=''], [contenteditable=true], [contenteditable=plaintext-only]",
-			) ||
-			(!element.closest("a, button, summary, label, select, [role=button]") &&
-				!!element.closest(
-					"p, li, h1, h2, h3, h4, h5, h6, pre, code, blockquote, td, th",
-				));
-		const nextKind = text ? "text" : "arrow";
-		if (cursor.hidden || nextKind !== kind) snap();
-		kind = nextKind;
+			)
+		) {
+			kind = "text";
+		} else if (control) {
+			kind = "pointer";
+		} else if (
+			element.closest(
+				"p, li, h1, h2, h3, h4, h5, h6, pre, code, blockquote, td, th",
+			)
+		) {
+			kind = "text";
+		} else {
+			kind = "arrow";
+		}
+		if (cursor.hidden) paint();
 		cursor.dataset.kind = kind;
 		cursor.hidden = false;
-		hovered = element;
 	};
 	const refresh = () => {
-		hovered = null;
 		if (!fine.matches || !pointerInside || document.hidden) return;
-		classify(document.elementFromPoint(tx, ty));
+		classify(document.elementFromPoint(x, y));
 	};
 	const syncAvailability = () => {
 		root.toggleAttribute("data-cursor-enabled", fine.matches);
@@ -138,45 +132,6 @@ export function initCursor(): void {
 		else hide();
 	};
 	syncAvailability();
-	const tick = (now: number) => {
-		frame = 0;
-		const dt = Math.min((now - last) / 1000 || 1 / 60, 1 / 30);
-		last = now;
-		const remaining = Math.hypot(tx - x, ty - y);
-		if (remaining < 0.85) {
-			targetAngle = 0;
-			targetScale = 1;
-		}
-		while (targetAngle - angle > 180) targetAngle -= 360;
-		while (targetAngle - angle < -180) targetAngle += 360;
-		const steps = Math.ceil(dt * 240);
-		const h = dt / steps;
-		for (let i = 0; i < steps; i++) {
-			const wp = (2 * Math.PI) / 0.16;
-			const wr = (2 * Math.PI) / 0.12;
-			vx += ((tx - x) * wp * wp - 2 * 1.05 * wp * vx) * h;
-			vy += ((ty - y) * wp * wp - 2 * 1.05 * wp * vy) * h;
-			x += vx * h;
-			y += vy * h;
-			va += ((targetAngle - angle) * wr * wr - 2 * 1.05 * wr * va) * h;
-			angle += va * h;
-			vs += ((targetScale - scale) * wp * wp - 2 * 1.05 * wp * vs) * h;
-			scale += vs * h;
-		}
-		if (
-			remaining < 0.85 &&
-			Math.hypot(vx, vy) < 12 &&
-			Math.abs(targetAngle - angle) < 0.02 &&
-			Math.abs(va) < 0.05 &&
-			Math.abs(scale - 1) < 0.001 &&
-			Math.abs(vs) < 0.005
-		) {
-			snap();
-			return;
-		}
-		paint();
-		frame = requestAnimationFrame(tick);
-	};
 	document.addEventListener(
 		"pointermove",
 		(event) => {
@@ -186,29 +141,10 @@ export function initCursor(): void {
 				return;
 			}
 			pointerInside = true;
-			tx = event.clientX;
-			ty = event.clientY;
+			x = event.clientX;
+			y = event.clientY;
+			paint();
 			classify(event.target instanceof Element ? event.target : null);
-			if (cursor.hidden) return;
-			if (kind === "text" || reduced.matches || event.buttons) {
-				snap();
-				return;
-			}
-			const dx = tx - x;
-			const dy = ty - y;
-			const distance = Math.hypot(dx, dy);
-			targetAngle =
-				distance > 196
-					? (Math.atan2(dy, dx) * 180) / Math.PI + 135
-					: Math.max(
-							-1,
-							Math.min(1, (dx * 0.75 - dy * 0.62) / Math.max(distance, 1)),
-						) * 22;
-			targetScale = distance > 196 ? 0.92 : 0.96;
-			if (!frame) {
-				last = performance.now();
-				frame = requestAnimationFrame(tick);
-			}
 		},
 		{ passive: true },
 	);
@@ -219,23 +155,28 @@ export function initCursor(): void {
 			return;
 		}
 		pointerInside = true;
-		tx = event.clientX;
-		ty = event.clientY;
+		x = event.clientX;
+		y = event.clientY;
+		paint();
 		classify(event.target instanceof Element ? event.target : null);
 		draggingText = kind === "text";
-		snap();
+		cursor.toggleAttribute(
+			"data-pressed",
+			event.button === 0 && kind === "pointer",
+		);
 	});
 	document.addEventListener("pointerup", () => {
 		draggingText = false;
+		cursor.removeAttribute("data-pressed");
 		refresh();
 	});
 	root.addEventListener("pointerenter", (event) => {
 		if (!fine.matches || event.pointerType !== "mouse") return;
 		pointerInside = true;
-		tx = event.clientX;
-		ty = event.clientY;
+		x = event.clientX;
+		y = event.clientY;
+		paint();
 		refresh();
-		snap();
 	});
 	root.addEventListener("pointerleave", () => {
 		pointerInside = false;
@@ -252,14 +193,13 @@ export function initCursor(): void {
 		else refresh();
 	});
 	fine.addEventListener("change", syncAvailability);
-	reduced.addEventListener("change", snap);
 	// Keep the cursor visible during navigation and classify the replacement DOM.
 	document.addEventListener("swup:content:replace", refresh);
 	document.addEventListener("swup:page:view", refresh);
 	document.addEventListener(
 		"scroll",
 		() => {
-			if (!cursor.hidden) classify(document.elementFromPoint(tx, ty));
+			if (!cursor.hidden) classify(document.elementFromPoint(x, y));
 		},
 		{ capture: true, passive: true },
 	);
