@@ -87,7 +87,6 @@ export function initSakura(
 	canvas.dataset.initialized = "true";
 	const mobile = matchMedia("(max-width: 767px)");
 	let paused = initiallyPaused;
-	let started = false;
 	let width = 0;
 	let height = 0;
 	let hue = readHue();
@@ -245,13 +244,7 @@ export function initSakura(
 	}
 
 	function requestDraw(): void {
-		if (
-			started &&
-			!frame &&
-			!mobile.matches &&
-			!document.hidden &&
-			canvas.isConnected
-		)
+		if (!frame && !mobile.matches && !document.hidden && canvas.isConnected)
 			frame = requestAnimationFrame(render);
 	}
 
@@ -290,7 +283,7 @@ export function initSakura(
 		attributeFilter: ["style"],
 	});
 	new ResizeObserver(() => {
-		if (!started || mobile.matches || !measureContent()) return;
+		if (mobile.matches || !measureContent()) return;
 		seed();
 		lastFrame = 0;
 		requestDraw();
@@ -298,7 +291,7 @@ export function initSakura(
 	window.addEventListener(
 		"resize",
 		() => {
-			if (!started || resizeFrame) return;
+			if (resizeFrame) return;
 			resizeFrame = requestAnimationFrame(() => {
 				resizeFrame = 0;
 				resize();
@@ -313,18 +306,7 @@ export function initSakura(
 		lastFrame = 0;
 		requestDraw();
 	});
-	const start = () => {
-		started = true;
-		resize();
-		requestDraw();
-	};
-	const scheduleStart = () => {
-		if (typeof window.requestIdleCallback === "function")
-			window.requestIdleCallback(start, { timeout: 1500 });
-		else setTimeout(start, 200);
-	};
-	if (paused || mobile.matches) start();
-	else if (document.readyState === "complete") scheduleStart();
-	else window.addEventListener("load", scheduleStart, { once: true });
+	resize();
+	requestDraw();
 	return { setPaused };
 }
