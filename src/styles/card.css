@@ -1,5 +1,5 @@
-/* Keep page-specific styles effective regardless of Vite's injection order. */
-:where(.site-card),
+/* Class specificity prevents Tailwind's universal reset from removing the border. */
+.site-card,
 html.rose-theme :where(.card-base) {
 	border: 1px solid var(--line);
 	border-radius: var(--radius);

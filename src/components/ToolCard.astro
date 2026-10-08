@@ -13,7 +13,7 @@ const { tool } = Astro.props;
 	clip
 	class="rose-tool-card p-7 flex flex-col gap-4"
 >
-	<span class="text-[var(--primary)]">{tool.category}</span>
+	<span class="text-primary">{tool.category}</span>
 	<h2 class="text-90">{tool.name}</h2>
 	<p class="text-75 flex-1">{tool.description}</p>
 	{tool.href ? (
@@ -21,7 +21,7 @@ const { tool } = Astro.props;
 			href={tool.href}
 			target="_blank"
 			rel="noopener noreferrer"
-			class="text-[var(--primary)]"
+			class="text-primary"
 		>
 			访问工具 ↗
 		</a>

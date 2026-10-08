@@ -1,5 +1,5 @@
 ---
-import "@/styles/rose-theme.css";
+import "@/styles/global";
 
 import ConfigCarrier from "@components/ConfigCarrier.astro";
 import FontFaces from "@components/FontFaces.astro";
@@ -70,8 +70,10 @@ const bannerOffset =
 ---
 
 <!DOCTYPE html>
-<html lang={siteLang} class="rose-theme bg-[var(--page-bg)] transition"
-      data-overlayscrollbars-initialize
+<html
+	lang={siteLang}
+	class="rose-theme bg-page transition"
+	data-overlayscrollbars-initialize
 >
 <head>
 	<FontFaces />

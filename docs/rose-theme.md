@@ -14,7 +14,9 @@
 
 | 文件 | 职责 |
 | --- | --- |
-| `src/styles/rose-theme.css` | 全站变量、页面外壳、列表及阅读页 |
+| `src/styles/global.ts` | 全站共享样式的显式入口 |
+| `src/styles/theme-tokens.css` | 玫瑰主题颜色、字体、字号及圆角变量 |
+| `src/styles/rose-theme.css` | 页面外壳、列表及阅读页 |
 | `src/styles/card.css` | 公共卡片材质、裁剪及交互状态 |
 | `src/styles/rose-home.css` | 首页布局、档案与内容卡片 |
 | `src/styles/rose-navigation.css` | 顶栏、悬浮导航及其手机断点 |
@@ -22,9 +24,23 @@
 
 导航和页脚的断点规则各自放在对应文件，避免开发模式的样式加载顺序覆盖手机布局。默认色相位于 `siteConfig.themeColor.hue`，设置面板可调整并保存色相。卡片底色、边框、侧影与高亮由色相派生；博客背景色单独维护在 `src/data/appearance.ts`，保留用户选择。旧的卡片背景缓存不再应用。
 
+## Tailwind 与样式入口
+
+`Layout.astro` 导入 `src/styles/global.ts`，显式加载基础变量、Markdown、代码块、灯箱、滚动条、页面过渡和玫瑰主题。Tailwind 的基础样式与工具类仍由 `@astrojs/tailwind` 集成提供。`variables.styl` 保留 Markdown、按钮及明暗模式所需的基础变量，`theme-tokens.css` 提供玫瑰主题的覆盖值；两者都在使用。
+
+图片组件只查找 Astro 支持的图片格式，支持 `src/assets/` 和文章目录中的相对图片。它不再通过扫描整个 `src` 间接加载样式及其他组件。首页与兴趣区的样式继续由对应页面或组件导入，灵动岛和光标也保留各自入口。
+
+常规布局、间距、尺寸、文字、颜色和响应式优先使用 Tailwind。颜色及字号映射到现有 CSS 变量，不在 Tailwind 配置中重复定义数值。示例：`text-primary`、`text-muted`、`bg-surface`、`border-line`、`text-card-title`、`font-reading`、`font-code` 和 `rounded-card`。颜色变量包含完整颜色值；透明度效果继续使用 `color-mix()`，不直接使用 `bg-primary/50` 等透明度修饰符。
+
+默认 `sm`、`md`、`lg`、`xl` 等断点保持不变。原有 CSS 的最大宽度条件对应 `max-360:`、`max-600:`、`max-640:`、`max-767:`、`max-800:`、`max-900:`、`max-1000:`、`max-1100:`、`max-1279:`，均包含边界值。它们通过 Tailwind 插件声明，避免混合原始媒体查询的 `screens` 配置禁用 Tailwind 的动态 `min-*`、`max-*` 变体。
+
+迁移时保留实际数值，例如 `p-[26px]`，不改为近似的 `p-6`。同一属性迁移完成后删除对应 CSS 声明。脚本使用的类名、ID 和 `data-*` 属性继续保留。复杂动画、伪元素、遮罩和组件状态样式可以保留 CSS。阅读页的 `44rem !important` 与 Markdown 的 `!max-w-none` 暂时保留，后续迁移正文容器时一起处理。
+
+基础整理同时修复两处加载顺序造成的差异：公共卡片统一保留 1px 边框，设置子菜单在 768px 及以上统一使用 `md:p-4` 的 16px 内边距，小屏幕保留两侧和底部 12px。关于页原先被重置掉的边框恢复后，页面总高度增加桌面 6px、手机 14px。这些差异经过前后截图确认并保留。工具页标题与下方内容之间仍为 16px，通过 `!mb-4` 明确覆盖列表标题的默认间距。
+
 ## 公共卡片
 
-内容卡片使用 `src/components/ui/Card.astro`。它直接输出指定的 HTML 元素，内部内容通过默认插槽传入；标题、图标、标签、间距和响应式布局继续由具体卡片维护。公共样式由 `rose-theme.css` 在全站加载，兼容仍使用 `card-base` 的正文、归档和设置浮层。
+内容卡片使用 `src/components/ui/Card.astro`。它直接输出指定的 HTML 元素，内部内容通过默认插槽传入；标题、图标、标签、间距和响应式布局继续由具体卡片维护。公共样式由 `global.ts` 在全站加载，兼容仍使用 `card-base` 的正文、归档和设置浮层。
 
 | 属性 | 默认值 | 用途 |
 | --- | --- | --- |
@@ -60,9 +76,9 @@ import { url } from "@utils/url-utils";
 
 参考站的正文使用独立的系统无衬线字体栈。本博客沿用这种区分，正文标题和代码使用 JetBrains Mono，长文段落使用系统无衬线字体。较新的参考站字体是可变字体；这里使用静态版本，未提供的字重由浏览器选择最接近的真实字重，不生成合成粗体或斜体。
 
-字体栈集中在 `rose-theme.css`：`--font-site` 用于全站界面与正文标题，`--font-reading` 用于文章段落，`--font-code` 用于代码及代码块标题。Tailwind 和代码高亮配置引用这些变量；页脚与普通标签继承全局字体。灵动岛保留独立的字体栈。
+字体栈集中在 `theme-tokens.css`：`--font-site` 用于全站界面与正文标题，`--font-reading` 用于文章段落，`--font-code` 用于代码及代码块标题。Tailwind 和代码高亮配置引用这些变量；页脚与普通标签继承全局字体。灵动岛保留独立的字体栈。
 
-字号参考 `https://bad0rang3.xyz/`，按当前博客的页面和卡片角色对齐。共用字号在 `rose-theme.css` 的 `--text-*` 变量中维护，首页大标题单独使用流式字号。
+字号参考 `https://bad0rang3.xyz/`，按当前博客的页面和卡片角色对齐。共用字号在 `theme-tokens.css` 的 `--text-*` 变量中维护，首页大标题单独使用流式字号。
 
 | 元素 | 桌面 | 手机（600px 及以下） |
 | --- | --- | --- |

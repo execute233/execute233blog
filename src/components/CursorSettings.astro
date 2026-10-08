@@ -1,14 +1,18 @@
 ---
-import {cursorColors, cursorDefaults} from "@/data/cursor";
+import { cursorColors, cursorDefaults } from "@/data/cursor";
 import Key from "@/i18n/i18nKey";
-import {i18n} from "@/i18n/translation";
+import { i18n } from "@/i18n/translation";
 import ColorSetting from "./ColorSetting.astro";
 
-const labels = {glow: Key.cursorGlow, border: Key.cursorBorder, fill: Key.cursorFill};
+const labels = {
+	glow: Key.cursorGlow,
+	border: Key.cursorBorder,
+	fill: Key.cursorFill,
+};
 ---
 <details id="cursor-settings">
     <summary class="cursor-pointer rounded-lg p-3 text-90 font-bold">{i18n(Key.cursor)}</summary>
-    <div class="settings-submenu px-3 pb-3">
+    <div class="settings-submenu px-3 pb-3 md:p-4">
         {cursorColors.map(key => (
                 <ColorSetting id={`cursor-${key}`} label={i18n(labels[key])} value={cursorDefaults[key]}/>
         ))}

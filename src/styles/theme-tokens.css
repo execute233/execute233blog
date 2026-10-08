@@ -1,0 +1,56 @@
+:root.rose-theme,
+:root.rose-theme.dark {
+	color-scheme: dark;
+	--primary: oklch(0.82 0.085 var(--hue));
+	--page-bg: var(--blog-background, #100d14);
+	--card-bg: oklch(0.23 0.018 var(--hue));
+	--float-panel-bg: oklch(0.245 0.018 var(--hue));
+	--bg: var(--blog-background, #100d14);
+	--surface: var(--card-bg);
+	--ink: oklch(0.96 0.013 var(--hue));
+	--muted: oklch(0.75 0.026 var(--hue));
+	--subtle: oklch(0.67 0.035 var(--hue));
+	--accent: var(--primary);
+	--line: color-mix(in srgb, var(--accent) 16%, transparent);
+	--shadow: oklch(0.34 0.045 var(--hue));
+	--radius: 30px;
+	--radius-large: 1.875rem;
+	--line-color: var(--line);
+	--line-divider: var(--line);
+	--btn-regular-bg: oklch(0.31 0.035 var(--hue));
+	--btn-regular-bg-hover: oklch(0.37 0.045 var(--hue));
+	--btn-regular-bg-active: oklch(0.4 0.05 var(--hue));
+	--btn-card-bg-hover: oklch(0.28 0.025 var(--hue));
+	--btn-card-bg-active: oklch(0.32 0.035 var(--hue));
+	--btn-plain-bg-hover: color-mix(in srgb, var(--accent) 9%, transparent);
+	--btn-plain-bg-active: color-mix(in srgb, var(--accent) 14%, transparent);
+	--btn-content: var(--primary);
+	--toc-width: 185px;
+	--toc-btn-hover: oklch(0.285 0.025 var(--hue));
+	--toc-btn-active: oklch(0.335 0.035 var(--hue));
+	--toc-badge-bg: var(--btn-regular-bg);
+}
+:root.rose-theme {
+	font-synthesis: none;
+	--font-site:
+		"JetBrains Mono", "Noto Sans SC", "Microsoft YaHei", ui-monospace,
+		SFMono-Regular, Consolas, monospace;
+	--font-code:
+		"JetBrains Mono", ui-monospace, SFMono-Regular, Consolas, monospace;
+	--font-reading:
+		ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC",
+		"Hiragino Sans GB", "Microsoft YaHei", "Noto Sans SC", "Helvetica Neue",
+		Arial, sans-serif;
+	--text-label: 0.7rem;
+	--text-caption: 0.75rem;
+	--text-body: 0.875rem;
+	--text-card-title: 1.5rem;
+	--text-section-title: clamp(1.35rem, 3vw, 1.8rem);
+	--text-page-title: clamp(1.875rem, 5vw, 3.75rem);
+}
+@media (max-width: 600px) {
+	:root.rose-theme {
+		--text-card-title: 1.25rem;
+		--text-page-title: 1.875rem;
+	}
+}

@@ -7,7 +7,7 @@ import ColorSetting from "./ColorSetting.astro";
 ---
 <details id="appearance-settings" data-default-hue={siteConfig.themeColor.hue}>
 	<summary class="cursor-pointer rounded-lg p-3 text-90 font-bold">背景 · 样式</summary>
-	<div class="settings-submenu px-3 pb-3">
+	<div class="settings-submenu px-3 pb-3 md:p-4">
 		{!siteConfig.themeColor.fixed && (
 			<div class="theme-hue-control">
 				<div class="theme-hue-heading">

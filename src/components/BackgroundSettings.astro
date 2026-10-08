@@ -1,5 +1,5 @@
 ---
-import {Icon} from "astro-icon/components";
+import { Icon } from "astro-icon/components";
 import AppearanceSettings from "./AppearanceSettings.astro";
 import CursorSettings from "./CursorSettings.astro";
 ---
@@ -10,7 +10,7 @@ import CursorSettings from "./CursorSettings.astro";
     <div class="settings-menu rounded-2xl border border-[var(--line-color)] shadow-xl p-3">
         <details id="background-settings">
             <summary class="cursor-pointer rounded-lg p-3 text-90 font-bold">背景 · 星空控制</summary>
-            <div class="settings-submenu px-3 pb-3">
+            <div class="settings-submenu px-3 pb-3 md:p-4">
                 <div id="background-sliders"></div>
                 <div class="flex flex-wrap gap-2 mt-4">
                     <button id="background-pause" type="button" class="btn-regular rounded-lg px-3 py-2">暂停动画
@@ -67,7 +67,6 @@ import CursorSettings from "./CursorSettings.astro";
             right: calc(100% + 1rem);
             top: 0;
             width: 320px;
-            padding: 1rem;
             border: 1px solid var(--line-color);
             border-radius: 1rem;
             background: var(--float-panel-bg);
