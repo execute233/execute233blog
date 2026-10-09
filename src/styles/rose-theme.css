@@ -1,11 +1,20 @@
 .rose-theme body {
 	color: var(--ink);
 }
+:root.rose-theme:not(.dark) .text-90 {
+	color: var(--ink);
+}
+:root.rose-theme:not(.dark) .text-75 {
+	color: var(--muted);
+}
+:root.rose-theme:not(.dark) :is(.text-50, .text-30, .text-25) {
+	color: var(--subtle);
+}
 .rose-theme #universe {
-	opacity: 0.12;
+	opacity: var(--star-opacity);
 }
 .rose-theme:has([data-post-section]) #universe {
-	opacity: 0.04;
+	opacity: var(--star-reading-opacity);
 }
 .rose-theme #galaxy-veil {
 	background: transparent;
@@ -27,7 +36,7 @@
 			transparent 55%
 		);
 }
-.stars-only #universe {
+.rose-theme.stars-only #universe {
 	opacity: 1;
 }
 .stars-only .rose-ambient,
@@ -98,7 +107,7 @@
 	border-radius: 25px;
 	padding: 11px 23px;
 	background: var(--accent);
-	color: #100d14;
+	color: var(--accent-content);
 	font-size: 0.92rem;
 	font-weight: 750;
 	box-shadow: inset 0 1px 0 rgb(255 255 255 / 25%);
@@ -107,7 +116,7 @@
 		transform 180ms;
 }
 .pill-button:hover {
-	background: color-mix(in srgb, var(--accent), white 15%);
+	background: var(--accent-hover);
 	transform: translateY(-2px);
 }
 .text-link {
@@ -377,7 +386,7 @@
 		padding-top: 105px;
 	}
 	.music-island:not([data-open="true"]) {
-		width: clamp(100px, calc(100vw - 246px), 176px);
+		width: clamp(64px, calc(100vw - 296px), 176px);
 	}
 	.rose-list-heading {
 		margin: 0 0 28px;

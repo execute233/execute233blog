@@ -6,6 +6,7 @@ import { pathsEqual, url } from "@utils/url-utils";
 import { Icon } from "astro-icon/components";
 import { navBarConfig, siteConfig } from "@/config";
 import BackgroundSettings from "./BackgroundSettings.astro";
+import LightDarkSwitch from "./LightDarkSwitch.svelte";
 import Search from "./Search.svelte";
 import NavMenuPanel from "./widget/NavMenuPanel.astro";
 
@@ -48,6 +49,11 @@ const links = navBarConfig.links.map((link) =>
 	</a>
 	<div class="rose-header-actions">
 		<div class="navbar-search"><Search client:load /></div>
+		<LightDarkSwitch client:load>
+			<Icon slot="light" name="material-symbols:wb-sunny-outline-rounded" />
+			<Icon slot="dark" name="material-symbols:dark-mode-outline-rounded" />
+			<Icon slot="auto" name="material-symbols:desktop-windows-outline-rounded" />
+		</LightDarkSwitch>
 		<BackgroundSettings />
 		<button
 			type="button"

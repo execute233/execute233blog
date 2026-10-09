@@ -1,4 +1,46 @@
-:root.rose-theme,
+:root.rose-theme {
+	color-scheme: light;
+	--primary: oklch(0.51 0.17 var(--hue));
+	--page-bg: var(--blog-background, #fff8fa);
+	--card-bg: rgb(255 255 255 / 92%);
+	--float-panel-bg: rgb(255 255 255 / 96%);
+	--bg: var(--page-bg);
+	--surface: var(--card-bg);
+	--ink: oklch(0.24 0.045 var(--hue));
+	--muted: oklch(0.45 0.035 var(--hue));
+	--subtle: oklch(0.49 0.035 var(--hue));
+	--accent: var(--primary);
+	--accent-content: #fff8fa;
+	--accent-hover: color-mix(in srgb, var(--accent), black 12%);
+	--terminal-bg: var(--codeblock-bg);
+	--star-opacity: 0.08;
+	--star-reading-opacity: 0.025;
+	--sakura-opacity: 0.24;
+	--sakura-reading-opacity: 0.14;
+	--line: color-mix(in srgb, var(--ink) 14%, transparent);
+	--shadow: oklch(0.44 0.065 var(--hue) / 15%);
+	--radius: 30px;
+	--radius-large: 1.875rem;
+	--line-color: var(--line);
+	--line-divider: var(--line);
+	--btn-regular-bg: oklch(0.94 0.025 var(--hue));
+	--btn-regular-bg-hover: oklch(0.9 0.035 var(--hue));
+	--btn-regular-bg-active: oklch(0.86 0.045 var(--hue));
+	--btn-card-bg-hover: oklch(0.96 0.018 var(--hue));
+	--btn-card-bg-active: oklch(0.92 0.025 var(--hue));
+	--btn-plain-bg-hover: color-mix(in srgb, var(--accent) 9%, transparent);
+	--btn-plain-bg-active: color-mix(in srgb, var(--accent) 14%, transparent);
+	--btn-content: var(--primary);
+	--toc-width: 185px;
+	--toc-btn-hover: var(--btn-regular-bg);
+	--toc-btn-active: var(--btn-regular-bg-active);
+	--toc-badge-bg: var(--btn-regular-bg);
+	--admonitions-color-tip: oklch(0.44 0.08 180);
+	--admonitions-color-note: oklch(0.48 0.12 250);
+	--admonitions-color-important: oklch(0.48 0.14 310);
+	--admonitions-color-warning: oklch(0.47 0.11 60);
+	--admonitions-color-caution: oklch(0.48 0.18 25);
+}
 :root.rose-theme.dark {
 	color-scheme: dark;
 	--primary: oklch(0.82 0.085 var(--hue));
@@ -11,6 +53,13 @@
 	--muted: oklch(0.75 0.026 var(--hue));
 	--subtle: oklch(0.67 0.035 var(--hue));
 	--accent: var(--primary);
+	--accent-content: #100d14;
+	--accent-hover: color-mix(in srgb, var(--accent), white 15%);
+	--terminal-bg: color-mix(in srgb, var(--surface) 70%, #000);
+	--star-opacity: 0.12;
+	--star-reading-opacity: 0.04;
+	--sakura-opacity: 0.34;
+	--sakura-reading-opacity: 0.2;
 	--line: color-mix(in srgb, var(--accent) 16%, transparent);
 	--shadow: oklch(0.34 0.045 var(--hue));
 	--radius: 30px;
@@ -29,6 +78,11 @@
 	--toc-btn-hover: oklch(0.285 0.025 var(--hue));
 	--toc-btn-active: oklch(0.335 0.035 var(--hue));
 	--toc-badge-bg: var(--btn-regular-bg);
+	--admonitions-color-tip: oklch(0.75 0.14 180);
+	--admonitions-color-note: oklch(0.75 0.14 250);
+	--admonitions-color-important: oklch(0.75 0.14 310);
+	--admonitions-color-warning: oklch(0.75 0.14 60);
+	--admonitions-color-caution: oklch(0.65 0.2 25);
 }
 :root.rose-theme {
 	font-synthesis: none;

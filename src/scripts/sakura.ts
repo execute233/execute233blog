@@ -39,13 +39,13 @@ function readHue(): number {
 	return Number.isFinite(hue) ? ((hue % 360) + 360) % 360 : 0;
 }
 
-function createBlossomSprite(hue: number): HTMLCanvasElement {
+function createBlossomSprite(hue: number, dark: boolean): HTMLCanvasElement {
 	const sprite = document.createElement("canvas");
 	sprite.width = sprite.height = SPRITE_RADIUS * 2;
 	const context = sprite.getContext("2d");
 	if (!context) return sprite;
 	context.translate(SPRITE_RADIUS, SPRITE_RADIUS);
-	context.strokeStyle = `hsl(${hue} 58% 74%)`;
+	context.strokeStyle = `hsl(${hue} 58% ${dark ? 74 : 42}%)`;
 	context.lineWidth = 1.15;
 	for (let petal = 0; petal < 5; petal++) {
 		context.save();
@@ -60,7 +60,8 @@ function createBlossomSprite(hue: number): HTMLCanvasElement {
 			0,
 			Math.PI * 2,
 		);
-		context.fillStyle = `hsl(${hue} 66% ${petal % 2 === 0 ? 76 : 87}%)`;
+		const lightness = (petal % 2 === 0 ? 76 : 87) - (dark ? 0 : 20);
+		context.fillStyle = `hsl(${hue} 66% ${lightness}%)`;
 		context.fill();
 		context.stroke();
 		context.restore();
@@ -90,7 +91,10 @@ export function initSakura(
 	let width = 0;
 	let height = 0;
 	let hue = readHue();
-	let sprites = [0, 20, -25].map((offset) => createBlossomSprite(hue + offset));
+	let dark = document.documentElement.classList.contains("dark");
+	let sprites = [0, 20, -25].map((offset) =>
+		createBlossomSprite(hue + offset, dark),
+	);
 	let blossoms: Blossom[] = [];
 	let petals: Petal[] = [];
 	let frame = 0;
@@ -214,7 +218,7 @@ export function initSakura(
 			);
 			context.restore();
 		}
-		context.fillStyle = `hsl(${hue} 72% 85%)`;
+		context.fillStyle = `hsl(${hue} 72% ${dark ? 85 : 45}%)`;
 		for (const petal of petals) {
 			petal.y += petal.speed * dt;
 			if (dt > 0 && petal.y > height + 12) {
@@ -274,13 +278,17 @@ export function initSakura(
 
 	new MutationObserver(() => {
 		const nextHue = readHue();
-		if (nextHue === hue) return;
+		const nextDark = document.documentElement.classList.contains("dark");
+		if (nextHue === hue && nextDark === dark) return;
 		hue = nextHue;
-		sprites = [0, 20, -25].map((offset) => createBlossomSprite(hue + offset));
+		dark = nextDark;
+		sprites = [0, 20, -25].map((offset) =>
+			createBlossomSprite(hue + offset, dark),
+		);
 		requestDraw();
 	}).observe(document.documentElement, {
 		attributes: true,
-		attributeFilter: ["style"],
+		attributeFilter: ["style", "class"],
 	});
 	new ResizeObserver(() => {
 		if (mobile.matches || !measureContent()) return;

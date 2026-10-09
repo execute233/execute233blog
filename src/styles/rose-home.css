@@ -138,7 +138,7 @@
 	overflow: hidden;
 	border: 1px solid color-mix(in srgb, var(--accent) 25%, transparent);
 	border-radius: 14px;
-	background: color-mix(in srgb, var(--surface) 70%, #000);
+	background: var(--terminal-bg);
 }
 .rose-home .profile-terminal-header {
 	display: flex;
@@ -147,7 +147,7 @@
 	gap: 12px;
 	padding: 8px 12px;
 	border-bottom: 1px solid var(--line);
-	color: var(--subtle);
+	color: oklch(0.75 0.026 var(--hue));
 	font-size: var(--text-label);
 }
 .rose-home .profile-terminal-dots {
@@ -183,7 +183,7 @@
 	display: inline-block;
 	width: 2ch;
 	margin-right: 12px;
-	color: var(--subtle);
+	color: oklch(0.67 0.035 var(--hue));
 	user-select: none;
 }
 .rose-home .manifest-card {

@@ -1,80 +1,75 @@
 import {
 	APPEARANCE_STORAGE_KEY,
 	appearanceOptions,
-	isAppearanceColor,
+	backgroundDefaults,
+	LEGACY_APPEARANCE_STORAGE_KEY,
+	parseAppearanceSettings,
 } from "@/data/appearance";
 import { initColorSetting } from "@/scripts/color-setting";
 import { readStoredJson, writeStoredJson } from "@/utils/local-storage";
+import { THEME_CHANGE_EVENT } from "@/utils/setting-utils";
 
 export function initAppearanceSettings(): void {
 	const panel = document.querySelector<HTMLElement>("#appearance-settings");
 	if (!panel || panel.dataset.initialized) return;
 	panel.dataset.initialized = "true";
-	const values: Record<string, string> = {};
-	const parsed = readStoredJson(APPEARANCE_STORAGE_KEY);
-	const saved =
-		parsed && typeof parsed === "object"
-			? (parsed as Record<string, unknown>)
-			: {};
-	const syncRows: (() => void)[] = [];
 	const defaultHue = Number(panel.dataset.defaultHue);
+	const settings = parseAppearanceSettings(
+		readStoredJson(APPEARANCE_STORAGE_KEY),
+		readStoredJson(LEGACY_APPEARANCE_STORAGE_KEY),
+		defaultHue,
+	);
+	const root = document.documentElement;
+	const activeMode = (): "light" | "dark" =>
+		root.classList.contains("dark") ? "dark" : "light";
+	let mode = activeMode();
 	const hueInput = panel.querySelector<HTMLInputElement>("#theme-hue");
 	const hueOutput = panel.querySelector<HTMLOutputElement>("#theme-hue-value");
 	const currentHue = Number(
 		document.documentElement.style.getPropertyValue("--hue") || defaultHue,
 	);
-	let hue = hueInput ? currentHue : defaultHue;
-	const save = () =>
-		writeStoredJson(APPEARANCE_STORAGE_KEY, { ...values, hue });
+	settings.hue = hueInput ? currentHue : defaultHue;
+	const save = () => writeStoredJson(APPEARANCE_STORAGE_KEY, settings);
 	const syncHue = () => {
-		document.documentElement.style.setProperty("--hue", String(hue));
-		if (hueInput) hueInput.value = String(hue);
-		if (hueOutput) hueOutput.value = `${hue}°`;
+		root.style.setProperty("--hue", String(settings.hue));
+		if (hueInput) hueInput.value = String(settings.hue);
+		if (hueOutput) hueOutput.value = `${settings.hue}°`;
 	};
 	hueInput?.addEventListener("input", () => {
-		hue = Number(hueInput.value);
+		settings.hue = Number(hueInput.value);
 		syncHue();
 		save();
 	});
 	syncHue();
-	for (const option of appearanceOptions) {
-		const row = panel.querySelector<HTMLElement>(
-			`[data-color-setting="${option.key}"]`,
-		);
-		if (!row) continue;
-		const savedValue = saved[option.key];
-		// 旧默认色随主题更新；保留用户自行选择的其他颜色。
-		values[option.key] =
-			isAppearanceColor(savedValue) &&
-			savedValue.toLowerCase() !== option.legacyDefaultValue
-				? savedValue
-				: option.defaultValue;
-		const apply = () =>
-			document.documentElement.style.setProperty(
-				option.cssVariable,
-				values[option.key],
-			);
-		const syncRow = initColorSetting(
-			row,
-			() => values[option.key],
-			(value) => {
-				values[option.key] = value;
-				apply();
-				save();
-			},
-		);
-		syncRows.push(() => {
-			apply();
-			syncRow?.();
-		});
-		apply();
-	}
+	const option = appearanceOptions[0];
+	const applyBackground = () =>
+		root.style.setProperty(option.cssVariable, settings.backgrounds[mode]);
+	const row = panel.querySelector<HTMLElement>(
+		`[data-color-setting="${option.key}"]`,
+	);
+	const syncRow = row
+		? initColorSetting(
+				row,
+				() => settings.backgrounds[mode],
+				(value) => {
+					settings.backgrounds[mode] = value;
+					applyBackground();
+					save();
+				},
+			)
+		: undefined;
+	const syncBackground = () => {
+		mode = activeMode();
+		applyBackground();
+		syncRow?.();
+	};
+	document.addEventListener(THEME_CHANGE_EVENT, syncBackground);
+	syncBackground();
 	panel.querySelector("#appearance-reset")?.addEventListener("click", () => {
-		hue = defaultHue;
+		settings.hue = defaultHue;
 		syncHue();
-		for (const option of appearanceOptions)
-			values[option.key] = option.defaultValue;
-		for (const sync of syncRows) sync();
+		settings.backgrounds[mode] = backgroundDefaults[mode];
+		syncBackground();
 		save();
 	});
 }

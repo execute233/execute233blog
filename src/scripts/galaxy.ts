@@ -1,6 +1,7 @@
 import { initSakura } from "@/scripts/sakura";
 import { setDetailsOpen } from "@/utils/disclosure-animation";
 import { readStoredJson, writeStoredJson } from "@/utils/local-storage";
+import { THEME_CHANGE_EVENT } from "@/utils/setting-utils";
 
 // 银河粒子、视差和鼠标交互来自用户提供的 background.html。
 // 此模块只初始化一次：Canvas 与顶栏均位于 Swup 替换容器之外。
@@ -127,21 +128,33 @@ export function initGalaxy(): void {
 		};
 	}
 
-	// 小型星光纹理仅生成一次，避免每帧为每颗星创建渐变。
-	const sprites = CONFIG.palette.map((color) => {
-		const c = document.createElement("canvas");
-		c.width = c.height = 48;
-		const g = c.getContext("2d");
-		if (!g) return c;
-		const glow = g.createRadialGradient(24, 24, 0, 24, 24, 24);
-		glow.addColorStop(0, "#ffffff");
-		glow.addColorStop(0.07, color);
-		glow.addColorStop(0.22, `${color}8c`);
-		glow.addColorStop(0.5, `${color}20`);
-		glow.addColorStop(1, `${color}00`);
-		g.fillStyle = glow;
-		g.fillRect(0, 0, 48, 48);
-		return c;
+	let dark = document.documentElement.classList.contains("dark");
+	// Cache the current theme's small textures instead of creating per-star gradients.
+	const createSprites = () =>
+		(dark ? CONFIG.palette : ["#b04a74", "#845f9d", "#d98bb2", "#9b607f"]).map(
+			(color) => {
+				const c = document.createElement("canvas");
+				c.width = c.height = 48;
+				const g = c.getContext("2d");
+				if (!g) return c;
+				const glow = g.createRadialGradient(24, 24, 0, 24, 24, 24);
+				glow.addColorStop(0, dark ? "#ffffff" : color);
+				glow.addColorStop(0.07, color);
+				glow.addColorStop(0.22, `${color}8c`);
+				glow.addColorStop(0.5, `${color}20`);
+				glow.addColorStop(1, `${color}00`);
+				g.fillStyle = glow;
+				g.fillRect(0, 0, 48, 48);
+				return c;
+			},
+		);
+	let sprites = createSprites();
+	document.addEventListener(THEME_CHANGE_EVENT, () => {
+		const nextDark = document.documentElement.classList.contains("dark");
+		if (nextDark === dark) return;
+		dark = nextDark;
+		sprites = createSprites();
+		requestDraw();
 	});
 
 	function createStars() {
@@ -229,7 +242,7 @@ export function initGalaxy(): void {
 		const st = Math.sin(tilt);
 		const co = Math.cos(orientation);
 		const so = Math.sin(orientation);
-		ctx.globalCompositeOperation = "lighter";
+		ctx.globalCompositeOperation = dark ? "lighter" : "source-over";
 		// 银心柔光不随盘面压扁，保留核球的体积感。
 		ctx.globalAlpha = settings.galaxyBrightness * 0.34;
 		ctx.drawImage(

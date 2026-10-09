@@ -6,7 +6,12 @@ import FontFaces from "@components/FontFaces.astro";
 import GalaxyBackground from "@components/GalaxyBackground.astro";
 import MusicIsland from "@components/MusicIsland.astro";
 import { profileConfig, siteConfig } from "@/config";
-import { APPEARANCE_STORAGE_KEY } from "@/data/appearance";
+import {
+	APPEARANCE_STORAGE_KEY,
+	appearanceOptions,
+	backgroundDefaults,
+	LEGACY_APPEARANCE_STORAGE_KEY,
+} from "@/data/appearance";
 import {
 	AUTO_MODE,
 	BANNER_HEIGHT,
@@ -119,29 +124,54 @@ const bannerOffset =
 		PAGE_WIDTH,
 		configHue,
 		themeColorFixed: siteConfig.themeColor.fixed,
-		APPEARANCE_STORAGE_KEY
+		APPEARANCE_STORAGE_KEY,
+		LEGACY_APPEARANCE_STORAGE_KEY,
+		backgroundDefaults,
+		legacyBackground: appearanceOptions[0].legacyDefaultValue
 	}}>
 		// is:inline — emitted verbatim, so this must stay plain JS
 		// Load the theme from local storage
-		let theme = DEFAULT_THEME;
+		let theme = document.documentElement.dataset.themeMode || DEFAULT_THEME;
 		try {
-			theme = localStorage.getItem("theme") || DEFAULT_THEME;
+			theme = document.documentElement.dataset.themeMode ||
+				localStorage.getItem("theme") || DEFAULT_THEME;
 		} catch {
 			// Keep the configured default when browser storage is unavailable.
 		}
-		switch (theme) {
-			case LIGHT_MODE:
-				document.documentElement.classList.remove("dark");
-				break;
-			case DARK_MODE:
-				document.documentElement.classList.add("dark");
-				break;
-			case AUTO_MODE:
-				if (window.matchMedia("(prefers-color-scheme: dark)").matches) {
-					document.documentElement.classList.add("dark");
-				} else {
-					document.documentElement.classList.remove("dark");
-				}
+		if (![LIGHT_MODE, DARK_MODE, AUTO_MODE].includes(theme)) {
+			theme = DEFAULT_THEME;
+		}
+		document.documentElement.dataset.themeMode = theme;
+		document.documentElement.classList.toggle(
+			"dark",
+			theme === DARK_MODE || (theme === AUTO_MODE &&
+				window.matchMedia("(prefers-color-scheme: dark)").matches),
+		);
+
+		const readAppearance = (key) => {
+			try {
+				return JSON.parse(localStorage.getItem(key) || "null");
+			} catch {
+				return null;
+			}
+		};
+		const savedAppearance = readAppearance(APPEARANCE_STORAGE_KEY);
+		const legacyAppearance = readAppearance(LEGACY_APPEARANCE_STORAGE_KEY);
+		const validColor = (color) =>
+			typeof color === "string" && /^#[0-9a-f]{8}$/i.test(color);
+		const mode = document.documentElement.classList.contains("dark")
+			? DARK_MODE : LIGHT_MODE;
+		const savedBackground = savedAppearance?.backgrounds?.[mode];
+		const legacyDark = legacyAppearance?.blog;
+		let background = backgroundDefaults[mode];
+		if (validColor(savedBackground)) {
+			background = savedBackground;
+		} else if (mode === DARK_MODE && validColor(legacyDark) &&
+			legacyDark.toLowerCase() !== legacyBackground) {
+			background = legacyDark;
+		}
+		if (!document.documentElement.style.getPropertyValue("--blog-background")) {
+			document.documentElement.style.setProperty("--blog-background", background);
 		}
 
 		// Keep the current color during Swup navigation; restore saved color before paint.
@@ -149,15 +179,13 @@ const bannerOffset =
 		if (!themeColorFixed) {
 			const currentHue = document.documentElement.style.getPropertyValue("--hue");
 			let hue = currentHue ? Number(currentHue) : configHue;
-			try {
-				if (!currentHue) {
-					const saved = JSON.parse(
-						localStorage.getItem(APPEARANCE_STORAGE_KEY) || "null",
-					);
-					hue = saved?.hue;
+			if (!currentHue) {
+				for (const candidate of [legacyAppearance?.hue, savedAppearance?.hue]) {
+					if (typeof candidate === "number" && Number.isInteger(candidate) &&
+						candidate >= 0 && candidate <= 360) {
+						hue = candidate;
+					}
 				}
-			} catch {
-				// Unavailable or invalid storage falls back to the configured color.
 			}
 			if (
 				typeof hue === "number" &&
@@ -252,7 +280,7 @@ const bannerOffset =
         // SizeObserverPlugin,
         // ClickScrollPlugin
     } from 'overlayscrollbars';
-    import {getStoredTheme, setTheme} from "../utils/setting-utils";
+    import {getStoredTheme, applyThemeToDocument} from "../utils/setting-utils";
     import {pathsEqual, url} from "../utils/url-utils";
     import {
         BANNER_HEIGHT,
@@ -329,7 +357,7 @@ const bannerOffset =
 
     function loadTheme(): void {
         const theme = getStoredTheme()
-        setTheme(theme)
+        applyThemeToDocument(theme)
     }
 
     function initCustomScrollbar(): void {

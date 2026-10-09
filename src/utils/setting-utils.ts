@@ -1,41 +1,47 @@
 import {
-    AUTO_MODE,
-    DARK_MODE,
-    DEFAULT_THEME,
-    LIGHT_MODE,
+	AUTO_MODE,
+	DARK_MODE,
+	DEFAULT_THEME,
+	LIGHT_MODE,
 } from "@constants/constants.ts";
-import {expressiveCodeConfig} from "@/config";
-import type {LIGHT_DARK_MODE} from "@/types/config";
+import { expressiveCodeConfig } from "@/config";
+import type { LIGHT_DARK_MODE } from "@/types/config";
 
-export function applyThemeToDocument(theme: LIGHT_DARK_MODE) {
-    switch (theme) {
-        case LIGHT_MODE:
-            document.documentElement.classList.remove("dark");
-            break;
-        case DARK_MODE:
-            document.documentElement.classList.add("dark");
-            break;
-        case AUTO_MODE:
-            if (window.matchMedia("(prefers-color-scheme: dark)").matches) {
-                document.documentElement.classList.add("dark");
-            } else {
-                document.documentElement.classList.remove("dark");
-            }
-            break;
-    }
+export const THEME_CHANGE_EVENT = "execute233:theme-change";
 
-    // Set the theme for Expressive Code
-    document.documentElement.setAttribute(
-        "data-theme",
-        expressiveCodeConfig.theme,
-    );
+export function applyThemeToDocument(theme: LIGHT_DARK_MODE): void {
+	const root = document.documentElement;
+	root.classList.toggle(
+		"dark",
+		theme === DARK_MODE ||
+			(theme === AUTO_MODE &&
+				window.matchMedia("(prefers-color-scheme: dark)").matches),
+	);
+	root.dataset.themeMode = theme;
+	// Code blocks retain their independent dark theme.
+	root.setAttribute("data-theme", expressiveCodeConfig.theme);
+	document.dispatchEvent(new Event(THEME_CHANGE_EVENT));
 }
 
 export function setTheme(theme: LIGHT_DARK_MODE): void {
-    localStorage.setItem("theme", theme);
-    applyThemeToDocument(theme);
+	applyThemeToDocument(theme);
+	try {
+		localStorage.setItem("theme", theme);
+	} catch {
+		// The DOM keeps the current session's choice when storage is unavailable.
+	}
 }
 
 export function getStoredTheme(): LIGHT_DARK_MODE {
-    return (localStorage.getItem("theme") as LIGHT_DARK_MODE) || DEFAULT_THEME;
+	let theme: string | null = document.documentElement.dataset.themeMode ?? null;
+	if (!theme) {
+		try {
+			theme = localStorage.getItem("theme");
+		} catch {
+			return DEFAULT_THEME;
+		}
+	}
+	return theme === LIGHT_MODE || theme === DARK_MODE || theme === AUTO_MODE
+		? theme
+		: DEFAULT_THEME;
 }

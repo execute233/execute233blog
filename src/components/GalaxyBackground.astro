@@ -14,7 +14,7 @@
 		height: 100%;
 		pointer-events: none;
 		z-index: 0;
-		background: var(--blog-background, #03080e);
+		background: var(--page-bg);
 	}
 
 	#galaxy-veil {
@@ -38,7 +38,7 @@
 		height: 100%;
 		pointer-events: none;
 		z-index: 0;
-		opacity: 0.34;
+		opacity: var(--sakura-opacity);
 		filter: saturate(0.9) contrast(0.96) blur(0.3px);
 		--sakura-mask: linear-gradient(
 			to right,
@@ -54,7 +54,7 @@
 	}
 
 	.rose-theme:has([data-post-section]) #sakura-canvas {
-		opacity: 0.2;
+		opacity: var(--sakura-reading-opacity);
 	}
 
 	.stars-only #sakura-canvas {
