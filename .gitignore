@@ -34,6 +34,9 @@ yarn.lock
 /tmp/
 /.playwright-mcp/
 
+# 本地规格与开发计划
+/docs/sdd/
+
 # 本地音乐资源
 /public/media/island/
 

@@ -4,7 +4,7 @@
 
 ## 项目概览
 
-本项目是基于 **Fuwari** 的静态博客，使用 **Astro 5**、**Tailwind CSS** 和 **Svelte 5**（交互组件）。站点设置位于 `src/config.ts`，请以当前配置为准。构建产物位于 `dist/`，采用静态部署，仓库包含 Vercel 配置。
+本项目是基于 **Fuwari** 的静态博客，使用 **Astro 5**、**Tailwind CSS**、**Vue 3**（主题切换、归档）和 **Svelte 5**（搜索）。站点设置位于 `src/config.ts`，请以当前配置为准。构建产物位于 `dist/`，采用静态部署，仓库包含 Vercel 配置。
 
 **仅使用 pnpm**，版本由 `package.json` 中的 `packageManager` 指定（`pnpm@9.14.4`）。`preinstall` 钩子通过 `npx only-allow pnpm` 拒绝 npm/yarn 安装。
 
@@ -28,6 +28,7 @@
 | `pnpm install --frozen-lockfile` | 按锁文件安装依赖 |
 | `pnpm dev` | 启动开发服务器，默认地址为 `http://localhost:4321`，实际端口以终端输出为准 |
 | `pnpm check` / `pnpm astro check` | 检查类型、内容及 schema，不生成构建产物 |
+| `pnpm check:vue` | 执行 Vue 组件及模板的严格类型检查 |
 | `pnpm type-check` | 执行 `tsc --noEmit --isolatedDeclarations` |
 | `pnpm build` | 执行 `astro build && pagefind --site dist`，先构建页面，再生成搜索索引 |
 | `pnpm preview` | 在本地预览已构建的 `dist/` |
@@ -92,7 +93,7 @@
 - `src/pages/index.astro`：个人介绍与栏目入口首页。
 - `src/pages/blog/[...page].astro`、`src/pages/learning/[...page].astro`：按 `section` 筛选的分页列表，共用 `ArticleList.astro`、`PostPage.astro` 和原有分页组件。旧的数字分页路径由 `src/pages/[...page].astro` 重定向。
 - `src/pages/posts/[...slug].astro`：文章页，调用 `entry.render()`，输出 JSON-LD 和文章元数据。
-- `src/pages/archive.astro`：将文章传给 `ArchivePanel.svelte`（`client:only="svelte"`），客户端通过查询参数筛选分类与标签。
+- `src/pages/archive.astro`：将文章传给 `ArchivePanel.vue`（`client:only="vue"`），客户端通过查询参数筛选分类与标签。
 - `src/pages/about.astro`：展示个人介绍、兴趣与技术经历，和首页共用 `src/config.ts` 中的 `profileConfig.interests` 及 `ProfileInterests.astro`；完整技术列表由 `profileConfig.technologies` 配置。
 - `src/pages/tools.astro`：使用 `ToolCard.astro` 渲染 `src/data/tools.ts`。
 - `src/pages/rss.xml.ts`、`src/pages/robots.txt.ts`：生成对应的静态端点。
