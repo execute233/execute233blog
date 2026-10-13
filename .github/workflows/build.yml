@@ -40,6 +40,9 @@ jobs:
       - name: Run Astro Check
         run: pnpm astro check
 
+      - name: Run Vue Check
+        run: pnpm check:vue
+
   build:
     strategy:
       matrix:
