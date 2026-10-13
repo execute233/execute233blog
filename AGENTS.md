@@ -4,7 +4,7 @@
 
 ## 项目概览
 
-本项目是基于 **Fuwari** 的静态博客，使用 **Astro 5**、**Tailwind CSS**、**Vue 3**（主题切换、归档）和 **Svelte 5**（搜索）。站点设置位于 `src/config.ts`，请以当前配置为准。构建产物位于 `dist/`，采用静态部署，仓库包含 Vercel 配置。
+本项目是基于 **Fuwari** 的静态博客，使用 **Astro 5**、**Tailwind CSS** 和 **Vue 3**（主题切换、归档、搜索）。站点设置位于 `src/config.ts`，请以当前配置为准。构建产物位于 `dist/`，采用静态部署，仓库包含 Vercel 配置。
 
 **仅使用 pnpm**，版本由 `package.json` 中的 `packageManager` 指定（`pnpm@9.14.4`）。`preinstall` 钩子通过 `npx only-allow pnpm` 拒绝 npm/yarn 安装。
 
@@ -130,7 +130,7 @@
 
 ### Pagefind 搜索
 
-搜索索引**仅在构建时生成**：`pnpm build` 在 `astro build` 之后执行 `pagefind --site dist`。生产模式下 `Search.svelte` 调用 `window.pagefind.search()`；开发模式显示预设的模拟结果。
+搜索索引**仅在构建时生成**：`pnpm build` 在 `astro build` 之后执行 `pagefind --site dist`。生产模式下 `Search.vue` 调用 `window.pagefind.search()`；开发模式显示预设的模拟结果。搜索组件常驻 Navbar，复用外部点击与 Swup 导航关闭面板的逻辑，保持 aria、inert 与面板状态同步；仅采用当前查询的异步结果，卸载时清除监听、定时器和观察器。
 
 `pagefind.yml` 排除 KaTeX、`.search-panel` 和带有 `[data-pagefind-ignore]` 的内容。
 
@@ -144,7 +144,7 @@
 - **内部 URL**：通过 `src/utils/url-utils.ts` 的 `url()` 生成链接，以兼容 `import.meta.env.BASE_URL` 子路径部署；`site` 和 `trailingSlash: "always"` 配置位于 `astro.config.mjs`。
 - **样式**：使用 Tailwind 工具类和 `src/styles/` 中的 CSS 变量。新增颜色尽量由 `--hue` 派生，兼顾明暗模式，复用 `--primary`、`--card-bg` 等变量。
 - **格式与检查**：新增及修改代码必须遵循项目当前格式，以 `biome.json` 和目标文件的既有风格为准，使用制表符缩进和双引号，保持换行、分号、导入顺序及多行属性排版一致。写入后先针对本次修改的文件运行格式化，再执行不写入文件的检查（例如 `pnpm exec biome format --write <文件路径...>`、`pnpm exec biome ci <文件路径...>`），确认通过后再进行实际运行或浏览器测试。不要用全量 `pnpm format` 或 `pnpm lint` 顺带修改无关文件。
-- **格式检查覆盖范围**：当前 Biome 配置排除了 CSS；对于 CSS 以及工具未覆盖的 `.astro`、`.svelte` 模板区域，必须另行检查缩进、属性换行和排版，沿用项目已有格式或适用的格式化工具。不能仅凭 Biome 检查通过就认定这些区域的格式正确。
+- **格式检查覆盖范围**：当前 Biome 配置排除了 CSS；对于 CSS 以及工具未覆盖的 `.astro`、`.vue` 模板区域，必须另行检查缩进、属性换行和排版，沿用项目已有格式或适用的格式化工具。不能仅凭 Biome 检查通过就认定这些区域的格式正确。
 - **构建产物**：`dist/` 仅用于输出，不直接编辑。
 - **已有改动**：开始修改前检查 Git 状态，保留用户已有的未提交改动，不随意覆盖或还原。
 

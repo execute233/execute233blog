@@ -1,5 +1,4 @@
 import sitemap from "@astrojs/sitemap";
-import svelte from "@astrojs/svelte";
 import tailwind from "@astrojs/tailwind";
 import vue from "@astrojs/vue";
 import { pluginCollapsibleSections } from "@expressive-code/plugin-collapsible-sections";
@@ -53,7 +52,6 @@ export default defineConfig({
 		}),
 		icon({
 			include: {
-				"preprocess: vitePreprocess(),": ["*"],
 				"fa6-brands": ["*"],
 				"fa6-regular": ["*"],
 				"fa6-solid": ["*"],
@@ -104,7 +102,6 @@ export default defineConfig({
 				showCopyToClipboardButton: false,
 			},
 		}),
-		svelte(),
 		sitemap(),
 		vue(),
 	],

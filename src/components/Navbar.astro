@@ -7,7 +7,7 @@ import { Icon } from "astro-icon/components";
 import { navBarConfig, siteConfig } from "@/config";
 import BackgroundSettings from "./BackgroundSettings.astro";
 import LightDarkSwitch from "./LightDarkSwitch.vue";
-import Search from "./Search.svelte";
+import Search from "./Search.vue";
 import NavMenuPanel from "./widget/NavMenuPanel.astro";
 
 const logoTitle = "execute233";
@@ -48,7 +48,29 @@ const links = navBarConfig.links.map((link) =>
 		<span class="logo-title" aria-hidden="true">{logoTitle}</span>
 	</a>
 	<div class="rose-header-actions">
-		<div class="navbar-search"><Search client:load /></div>
+		<div class="navbar-search">
+			<Search client:load>
+				<Icon
+					slot="desktop-search"
+					name="material-symbols:search"
+					is:inline
+					class="absolute text-[1.25rem] pointer-events-none ml-3 transition my-auto text-black/30 dark:text-white/30"
+				/>
+				<Icon slot="search" name="material-symbols:search" is:inline class="text-[1.25rem]" />
+				<Icon
+					slot="panel-search"
+					name="material-symbols:search"
+					is:inline
+					class="absolute text-[1.25rem] pointer-events-none ml-3 transition my-auto text-black/30 dark:text-white/30"
+				/>
+				<Icon
+					slot="chevron"
+					name="fa6-solid:chevron-right"
+					is:inline
+					class="transition text-[0.75rem] translate-x-1 my-auto text-[var(--primary)]"
+				/>
+			</Search>
+		</div>
 		<LightDarkSwitch client:load>
 			<Icon slot="light" name="material-symbols:wb-sunny-outline-rounded" />
 			<Icon slot="dark" name="material-symbols:dark-mode-outline-rounded" />
