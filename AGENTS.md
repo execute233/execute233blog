@@ -88,6 +88,14 @@
 - `getSortedPosts()` 统一处理排序和前后文章关联，列表、归档与文章页共用该逻辑。
 - 支持 `guide/index.md` 等子目录文章，URL 由 `src/utils/url-utils.ts` 的 `getPostUrlBySlug`、`getDir` 等函数处理。
 
+### 文章编写参考
+
+新增或修改文章前，先阅读 [内容维护](docs/content-editing.md) 和 [Markdown 示例与编写规范](docs/examples/README.md)，再按需要查阅其中链接的示例源文件。
+
+- `docs/examples/posts/` 保存原有示例文章与配套图片，仅作语法和结构参考，不参与站点构建、RSS 或搜索索引。
+- 正式文章写入 `src/content/posts/`；不要把参考示例整批复制回内容目录，也不要将示例日期、标题与占位内容直接作为正式文章发布。
+- frontmatter 字段以 `src/content/config.ts` 为准，扩展语法以当前 `astro.config.mjs` 和 `src/plugins/` 为准；历史示例中的说明不覆盖当前实现。
+
 ### 静态路由与布局
 
 - `src/pages/index.astro`：个人介绍与栏目入口首页。
@@ -117,8 +125,8 @@
 
 - `remark-reading-time`：生成 `minutes`、`words`，用于文章阅读信息。
 - `remark-excerpt`：将首段写入 `excerpt`。
-- `:::note`、`:::tip`、`:::important`、`:::caution`、`:::warning`：使用 GitLab 风格指令语法，可附加 `{name="..."}`，通过 `rehype-component-admonition.mjs` 渲染提示块。
-- `:::github user/repo`：通过 `rehype-component-github-card.mjs` 渲染 GitHub 仓库卡片。
+- `:::note`、`:::tip`、`:::important`、`:::caution`、`:::warning`：使用 GitLab 风格指令语法，可用 `:::note[标题]` 自定义标题，通过 `rehype-component-admonition.mjs` 渲染提示块。
+- `::github{repo="user/repo"}`：通过 `rehype-component-github-card.mjs` 渲染 GitHub 仓库卡片。
 - `remark-math` 与 `rehype-katex`：渲染数学公式；`remark-sectionize`：按标题组织章节。
 - `astro-expressive-code`：渲染代码块，样式使用博客 CSS 变量，并结合 `language-badge`、`custom-copy-button` 等自定义插件。
 

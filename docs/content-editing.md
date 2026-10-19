@@ -14,7 +14,7 @@
 - 填写 `section: learning`：出现在 `/learning/`。
 - 两个列表均按 `published` 倒序排列并分页；上一篇、下一篇只关联同栏目文章。
 - 归档、分类、标签和 RSS 包含两个栏目的文章；Pagefind 在构建时为文章生成搜索索引。
-- `learning-start.md`、`learning-review.md` 是示例文章，可直接替换或删除。
+- 原有示例已迁至 [`docs/examples/posts/`](examples/posts/)，仅供编写参考，不参与站点发布。新增文章前请阅读 [Markdown 示例与编写规范](examples/README.md)，其中包含完整 frontmatter 模板和示例索引。
 
 示例 frontmatter：
 
