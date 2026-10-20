@@ -2,6 +2,8 @@ import Key from "../i18nKey";
 import type { Translation } from "../translation";
 
 export const vi: Translation = {
+	[Key.apiProtocol]: "Giao thức API",
+	[Key.referenceVerified]: "Ngày kiểm tra nguồn",
 	[Key.navigation]: "Điều hướng",
 	[Key.contact]: "Liên hệ",
 	[Key.menu]: "Menu",

@@ -60,7 +60,25 @@ async function search(keyword: string, desktop: boolean): Promise<void> {
 		} else if (window.pagefind) {
 			const response = await window.pagefind.search(keyword);
 			if (id !== requestId) return;
-			items = await Promise.all(response.results.map((item) => item.data()));
+			const pages = await Promise.all(
+				response.results.map((item) => item.data()),
+			);
+			items = pages.map((item) => {
+				const sections =
+					item.meta.tabbed === "true"
+						? item.sub_results?.filter((entry) => entry.url.includes("--"))
+						: undefined;
+				const section =
+					sections?.find((entry) =>
+						entry.excerpt
+							.replace(/<\/?mark>/g, "")
+							.toLowerCase()
+							.includes(keyword.trim().toLowerCase()),
+					) ?? sections?.[0];
+				return section
+					? { ...item, url: section.url, excerpt: section.excerpt }
+					: item;
+			});
 		}
 		if (id !== requestId) return;
 		result.value = items;

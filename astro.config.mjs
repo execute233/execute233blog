@@ -21,6 +21,7 @@ import { pluginLanguageBadge } from "./src/plugins/expressive-code/language-badg
 import { musicAssets } from "./src/plugins/music-assets.ts";
 import { AdmonitionComponent } from "./src/plugins/rehype-component-admonition.mjs";
 import { GithubCardComponent } from "./src/plugins/rehype-component-github-card.mjs";
+import { rehypeTabHeadings } from "./src/plugins/rehype-tab-headings.mjs";
 import { parseDirectiveNode } from "./src/plugins/remark-directive-rehype.js";
 import { remarkExcerpt } from "./src/plugins/remark-excerpt.js";
 import { remarkReadingTime } from "./src/plugins/remark-reading-time.mjs";
@@ -118,6 +119,7 @@ export default defineConfig({
 		rehypePlugins: [
 			rehypeKatex,
 			rehypeSlug,
+			rehypeTabHeadings,
 			[
 				rehypeComponents,
 				{

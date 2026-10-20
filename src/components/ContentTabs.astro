@@ -1,0 +1,171 @@
+---
+import Key from "@i18n/i18nKey";
+import { i18n } from "@i18n/translation";
+
+interface Props {
+	tabs: { id: string; label: string }[];
+}
+
+const { tabs } = Astro.props;
+---
+
+<content-tabs
+	class={`block min-w-0 [&_[data-tab-panel][hidden]]:!hidden
+		[&_.custom-md_h2:first-child]:mt-0
+		[&_.custom-md_table]:block [&_.custom-md_table]:w-full [&_.custom-md_table]:overflow-x-auto
+		[&_.custom-md_td]:min-w-[7rem]
+		[&_.custom-md_:not(pre)>code]:whitespace-normal [&_.custom-md_:not(pre)>code]:[overflow-wrap:anywhere]
+		[&_.custom-md_details]:my-5 [&_.custom-md_details]:rounded-xl [&_.custom-md_details]:border
+		[&_.custom-md_details]:border-line [&_.custom-md_details]:px-[18px] [&_.custom-md_details]:py-[15px]
+		[&_.custom-md_summary]:cursor-pointer [&_.custom-md_summary]:font-[650] [&_.custom-md_summary]:text-[var(--accent)]`}
+>
+	<div
+		class={`sticky top-[86px] z-[5] mb-7 flex scroll-mt-[100px] gap-[5px] rounded-[15px] border border-line bg-surface p-1.5
+			max-600:top-[78px] max-600:gap-[3px] max-600:p-1`}
+		role="tablist"
+		aria-label={i18n(Key.apiProtocol)}
+		data-tab-bar
+	>
+		{tabs.map((tab, index) => (
+			<button
+				type="button"
+				role="tab"
+				class={`min-w-0 flex-1 rounded-[10px] px-2 py-3 text-[0.8rem] font-bold leading-[1.4] text-muted
+					[overflow-wrap:anywhere] transition-[background,color] duration-150 ease-[ease]
+					aria-selected:bg-[var(--accent)] aria-selected:text-[var(--accent-content)]
+					focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--accent)]
+					motion-reduce:transition-none motion-reduce:duration-0 max-600:px-[5px] max-600:py-2.5 max-600:text-[0.7rem]`}
+				id={`tab-${tab.id}`}
+				aria-controls={`panel-${tab.id}`}
+				aria-selected={index === 0 ? "true" : "false"}
+				tabindex={index === 0 ? 0 : -1}
+				data-tab={tab.id}
+			>
+				{tab.label}
+			</button>
+		))}
+	</div>
+	<slot />
+</content-tabs>
+
+<script>
+	class ContentTabs extends HTMLElement {
+		private activePanel?: HTMLElement;
+
+		private get tabs() {
+			return Array.from(this.querySelectorAll<HTMLButtonElement>("[data-tab]"));
+		}
+
+		private get panels() {
+			return Array.from(this.querySelectorAll<HTMLElement>("[data-tab-panel]"));
+		}
+
+		connectedCallback() {
+			this.addEventListener("click", this.onClick);
+			this.addEventListener("keydown", this.onKeydown);
+			window.addEventListener("popstate", this.syncFromUrl);
+			window.addEventListener("hashchange", this.syncFromUrl);
+			this.syncFromUrl();
+		}
+
+		disconnectedCallback() {
+			this.activePanel?.classList.remove("motion-safe:!animate-content-tab-enter");
+			this.activePanel = undefined;
+			this.removeEventListener("click", this.onClick);
+			this.removeEventListener("keydown", this.onKeydown);
+			window.removeEventListener("popstate", this.syncFromUrl);
+			window.removeEventListener("hashchange", this.syncFromUrl);
+		}
+
+		private syncFromUrl = () => {
+			let hash = location.hash.slice(1);
+			try {
+				hash = decodeURIComponent(hash);
+			} catch {
+				// A malformed fragment cannot select a document heading.
+			}
+			const heading = hash ? document.getElementById(hash) : null;
+			const owner = heading?.closest<HTMLElement>("[data-tab-panel]");
+			const requested = this.contains(owner ?? null)
+				? owner?.dataset.tabPanel
+				: new URL(location.href).searchParams.get("protocol");
+			const selected = this.tabs.find((tab) => tab.dataset.tab === requested)
+				?? this.tabs[0];
+			if (!selected?.dataset.tab) return;
+			this.select(selected.dataset.tab);
+			if (heading && this.contains(heading)) {
+				requestAnimationFrame(() => {
+					if (this.isConnected) heading.scrollIntoView({ block: "start" });
+				});
+			}
+		};
+
+		private select(id: string) {
+			for (const tab of this.tabs) {
+				const active = tab.dataset.tab === id;
+				tab.setAttribute("aria-selected", String(active));
+				tab.tabIndex = active ? 0 : -1;
+			}
+			const panels = this.panels;
+			const nextPanel = panels.find((panel) => panel.dataset.tabPanel === id);
+			for (const panel of panels) panel.hidden = panel !== nextPanel;
+			if (nextPanel !== this.activePanel) {
+				this.activePanel?.classList.remove("motion-safe:!animate-content-tab-enter");
+				if (this.activePanel && nextPanel) {
+					// Override the page-wide nth-child animation delays.
+					nextPanel.classList.add("motion-safe:!animate-content-tab-enter");
+				}
+				this.activePanel = nextPanel;
+			}
+			document.dispatchEvent(new Event("content-tabs:change"));
+		}
+
+		private activate(tab: HTMLButtonElement) {
+			const id = tab.dataset.tab;
+			if (!id || tab.getAttribute("aria-selected") === "true") return;
+			const target = new URL(location.href);
+			target.searchParams.set("protocol", id);
+			target.hash = "";
+			history.pushState(null, "", target);
+			this.select(id);
+			this.querySelector("[data-tab-bar]")?.scrollIntoView({ block: "start" });
+		}
+
+		private onClick = (event: MouseEvent) => {
+			const tab = event.target instanceof Element
+				? event.target.closest<HTMLButtonElement>("[data-tab]")
+				: null;
+			if (tab && this.contains(tab)) this.activate(tab);
+		};
+
+		private onKeydown = (event: KeyboardEvent) => {
+			const tabs = this.tabs;
+			const index = tabs.indexOf(event.target as HTMLButtonElement);
+			if (index < 0) return;
+			let next: number;
+			switch (event.key) {
+				case "ArrowRight":
+					next = (index + 1) % tabs.length;
+					break;
+				case "ArrowLeft":
+					next = (index - 1 + tabs.length) % tabs.length;
+					break;
+				case "Home":
+					next = 0;
+					break;
+				case "End":
+					next = tabs.length - 1;
+					break;
+				default:
+					return;
+			}
+			event.preventDefault();
+			tabs[next].focus();
+			this.activate(tabs[next]);
+		};
+	}
+
+	if (!customElements.get("content-tabs")) {
+		customElements.define("content-tabs", ContentTabs);
+	}
+</script>

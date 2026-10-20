@@ -1,11 +1,12 @@
 ---
 import path from "node:path";
+import ContentTabs from "@components/ContentTabs.astro";
 import License from "@components/misc/License.astro";
 import Markdown from "@components/misc/Markdown.astro";
 import I18nKey from "@i18n/i18nKey";
 import { i18n } from "@i18n/translation";
 import MainGridLayout from "@layouts/MainGridLayout.astro";
-import { getSortedPosts } from "@utils/content-utils";
+import { getPostVariants, getSortedPosts } from "@utils/content-utils";
 import { getDir, getPostUrlBySlug, url } from "@utils/url-utils";
 import { licenseConfig } from "src/config";
 import ImageWrapper from "../../components/misc/ImageWrapper.astro";
@@ -22,7 +23,35 @@ export async function getStaticPaths() {
 }
 
 const { entry } = Astro.props;
-const { Content, headings, remarkPluginFrontmatter } = await entry.render();
+const variants = await getPostVariants(entry);
+const rendered = await Promise.all(
+	variants.map(async (variant) => ({
+		entry: variant,
+		...(await variant.render()),
+	})),
+);
+const { Content } = rendered[0];
+const headings = rendered.flatMap((variant) =>
+	variant.headings.map((heading) => {
+		const prefix = variant.entry.data.tabGroup
+			? `${variant.entry.data.tabGroup.id}--`
+			: "";
+		return {
+			...heading,
+			slug: heading.slug.startsWith(prefix)
+				? heading.slug
+				: `${prefix}${heading.slug}`,
+		};
+	}),
+);
+const words = rendered.reduce(
+	(total, variant) => total + (variant.remarkPluginFrontmatter.words ?? 0),
+	0,
+);
+const minutes = rendered.reduce(
+	(total, variant) => total + (variant.remarkPluginFrontmatter.minutes ?? 0),
+	0,
+);
 
 const jsonLd = {
 	"@context": "https://schema.org",
@@ -36,6 +65,9 @@ const jsonLd = {
 		url: Astro.site,
 	},
 	datePublished: formatDateToYYYYMMDD(entry.data.published),
+	...(entry.data.updated
+		? { dateModified: formatDateToYYYYMMDD(entry.data.updated) }
+		: {}),
 	inLanguage: entry.data.lang
 		? entry.data.lang.replace("_", "-")
 		: siteConfig.lang.replace("_", "-"),
@@ -58,7 +90,11 @@ const jsonLd = {
 		set:html={JSON.stringify(jsonLd)}
 	></script>
 	<div data-post-section={entry.data.section}>
-		<article id="post-container" class="rose-reading card-base">
+		<article
+			id="post-container"
+			class="rose-reading card-base"
+			data-pagefind-meta={entry.data.tabGroup ? "tabbed:true" : undefined}
+		>
 			<header class="rose-reading-header">
 				<a class="rose-reading-back" href={url(`/${entry.data.section}/`)}>← {i18n(I18nKey.backToList)}</a>
 				<h1 data-pagefind-body data-pagefind-weight="10" data-pagefind-meta="title">{entry.data.title}</h1>
@@ -70,8 +106,8 @@ const jsonLd = {
 					category={entry.data.category}
 				/>
 				<div class="rose-reading-stats">
-					<span>{remarkPluginFrontmatter.words} {i18n(I18nKey.wordsCount)}</span>
-					<span>{remarkPluginFrontmatter.minutes} {i18n(remarkPluginFrontmatter.minutes === 1 ? I18nKey.minuteCount : I18nKey.minutesCount)}</span>
+					<span>{words} {i18n(I18nKey.wordsCount)}</span>
+					<span>{minutes} {i18n(minutes === 1 ? I18nKey.minuteCount : I18nKey.minutesCount)}</span>
 					<span>{profileConfig.name}</span>
 				</div>
 			</header>
@@ -83,7 +119,37 @@ const jsonLd = {
 					class="mb-8 rounded-xl"
 				/>
 			)}
-			<Markdown class="mb-6 markdown-content"><Content /></Markdown>
+			{entry.data.tabGroup ? (
+				<ContentTabs
+					tabs={variants.map((variant) => ({
+						id: variant.data.tabGroup!.id,
+						label: variant.data.tabGroup!.label,
+					}))}
+				>
+					{rendered.map(({ entry: variant, Content: TabContent }) => (
+						<section
+							id={`panel-${variant.data.tabGroup!.id}`}
+							role="tabpanel"
+							aria-labelledby={`tab-${variant.data.tabGroup!.id}`}
+							tabindex="0"
+							data-tab-panel={variant.data.tabGroup!.id}
+						>
+							<div class="mb-6 flex flex-wrap gap-x-5 gap-y-2 text-caption text-subtle" data-pagefind-ignore>
+								<span>{variant.data.tabGroup!.label}</span>
+								{variant.data.verified && (
+									<span>
+										{i18n(I18nKey.referenceVerified)}:
+										<time datetime={formatDateToYYYYMMDD(variant.data.verified)}>
+											{formatDateToYYYYMMDD(variant.data.verified)}
+										</time>
+									</span>
+								)}
+							</div>
+							<Markdown class="mb-6 markdown-content"><TabContent /></Markdown>
+						</section>
+					))}
+				</ContentTabs>
+			) : <Markdown class="mb-6 markdown-content"><Content /></Markdown>}
 			{licenseConfig.enable && (
 				<License
 					title={entry.data.title}

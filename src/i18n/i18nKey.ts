@@ -5,6 +5,8 @@ enum I18nKey {
 	skipToContent = "skipToContent",
 	tableOfContents = "tableOfContents",
 	backToList = "backToList",
+	apiProtocol = "apiProtocol",
+	referenceVerified = "referenceVerified",
 
 	music = "music",
 	musicEmpty = "musicEmpty",

@@ -4,6 +4,16 @@ module.exports = {
 	darkMode: "class", // allows toggling dark mode manually
 	theme: {
 		extend: {
+			keyframes: {
+				"content-tab-enter": {
+					from: { opacity: "0", transform: "translateY(8px)" },
+					to: { opacity: "1", transform: "translateY(0)" },
+				},
+			},
+			animation: {
+				"content-tab-enter":
+					"content-tab-enter 240ms cubic-bezier(0.16, 1, 0.3, 1)",
+			},
 			fontFamily: {
 				sans: ["var(--font-site)"],
 				mono: ["var(--font-site)"],

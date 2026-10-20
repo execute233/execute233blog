@@ -2,6 +2,8 @@ import Key from "../i18nKey";
 import type { Translation } from "../translation";
 
 export const ko: Translation = {
+	[Key.apiProtocol]: "API 프로토콜",
+	[Key.referenceVerified]: "자료 확인일",
 	[Key.navigation]: "탐색",
 	[Key.contact]: "연락처",
 	[Key.menu]: "메뉴",

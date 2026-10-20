@@ -2,6 +2,8 @@ import Key from "../i18nKey";
 import type { Translation } from "../translation";
 
 export const zh_TW: Translation = {
+	[Key.apiProtocol]: "API 協定",
+	[Key.referenceVerified]: "資料核對",
 	[Key.navigation]: "導覽",
 	[Key.contact]: "聯絡",
 	[Key.menu]: "選單",

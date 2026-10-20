@@ -2,6 +2,8 @@ import Key from "../i18nKey";
 import type { Translation } from "../translation";
 
 export const ja: Translation = {
+	[Key.apiProtocol]: "API プロトコル",
+	[Key.referenceVerified]: "資料確認日",
 	[Key.navigation]: "ナビゲーション",
 	[Key.contact]: "連絡先",
 	[Key.menu]: "メニュー",

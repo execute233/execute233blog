@@ -2,6 +2,8 @@ import Key from "../i18nKey";
 import type { Translation } from "../translation";
 
 export const th: Translation = {
+	[Key.apiProtocol]: "โปรโตคอล API",
+	[Key.referenceVerified]: "วันที่ตรวจสอบแหล่งข้อมูล",
 	[Key.navigation]: "การนำทาง",
 	[Key.contact]: "ติดต่อ",
 	[Key.menu]: "เมนู",

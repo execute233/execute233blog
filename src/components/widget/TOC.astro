@@ -1,33 +1,41 @@
 ---
-import type {MarkdownHeading} from "astro";
-import {siteConfig} from "../../config";
-import {url} from "../../utils/url-utils";
+import type { MarkdownHeading } from "astro";
+import { siteConfig } from "../../config";
+import { url } from "../../utils/url-utils";
 
 interface Props {
-    class?: string;
-    headings: MarkdownHeading[];
+	class?: string;
+	headings: MarkdownHeading[];
 }
 
-let {headings = []} = Astro.props;
+let { headings = [] } = Astro.props;
 
 let minDepth = 10;
 for (const heading of headings) {
-    minDepth = Math.min(minDepth, heading.depth);
+	minDepth = Math.min(minDepth, heading.depth);
 }
 
 const className = Astro.props.class;
 const isPostsRoute = Astro.url.pathname.startsWith(url("/posts/"));
 
 const removeTailingHash = (text: string) => {
-    let lastIndexOfHash = text.lastIndexOf("#");
-    if (lastIndexOfHash !== text.length - 1) {
-        return text;
-    }
+	let lastIndexOfHash = text.lastIndexOf("#");
+	if (lastIndexOfHash !== text.length - 1) {
+		return text;
+	}
 
-    return text.substring(0, lastIndexOfHash);
+	return text.substring(0, lastIndexOfHash);
 };
 
-let heading1Count = 1;
+const headingNumbers = new Map<string, number>();
+const groupCounts = new Map<string, number>();
+for (const heading of headings) {
+	if (heading.depth !== minDepth) continue;
+	const group = heading.slug.includes("--") ? heading.slug.split("--")[0] : "";
+	const number = (groupCounts.get(group) ?? 0) + 1;
+	groupCounts.set(group, number);
+	headingNumbers.set(heading.slug, number);
+}
 
 const maxLevel = siteConfig.toc.depth;
 ---
@@ -45,7 +53,7 @@ const maxLevel = siteConfig.toc.depth;
                     }
                 ]}
                 >
-                    {heading.depth == minDepth && heading1Count++}
+                    {heading.depth == minDepth && headingNumbers.get(heading.slug)}
                     {heading.depth == minDepth + 1 &&
                             <div class="transition w-2 h-2 rounded-[0.1875rem] bg-[var(--toc-badge-bg)]"></div>}
                     {heading.depth == minDepth + 2 &&
@@ -118,8 +126,8 @@ const maxLevel = siteConfig.toc.depth;
             if (min > max) {
                 this.activeIndicator?.setAttribute("style", `opacity: 0`);
             } else {
-                let parentOffset = this.tocEl?.getBoundingClientRect().top || 0;
-                let scrollOffset = this.tocEl?.scrollTop || 0;
+                let parentOffset = this.getBoundingClientRect().top;
+                let scrollOffset = this.scrollTop;
                 let top = this.tocEntries[min].getBoundingClientRect().top - parentOffset + scrollOffset;
                 let bottom = this.tocEntries[max].getBoundingClientRect().bottom - parentOffset + scrollOffset;
                 this.activeIndicator?.setAttribute("style", `top: ${top}px; height: ${bottom - top}px`);
@@ -203,6 +211,8 @@ const maxLevel = siteConfig.toc.depth;
         };
 
         connectedCallback() {
+            document.addEventListener("content-tabs:change", this.init);
+            requestAnimationFrame(this.init);
             // wait for the onload animation to finish, which makes the `getBoundingClientRect` return correct values
             const element = document.querySelector('.prose');
             if (element) {
@@ -214,7 +224,11 @@ const maxLevel = siteConfig.toc.depth;
             }
         };
 
-        init() {
+        init = () => {
+            if (!this.isConnected) return;
+            this.observer.disconnect();
+            this.headingIdxMap.clear();
+            this.anchorNavTarget = null;
             this.tocEl = document.getElementById(
                 "toc-inner-wrapper"
             );
@@ -227,9 +241,17 @@ const maxLevel = siteConfig.toc.depth;
 
             this.activeIndicator = document.getElementById("active-indicator");
 
-            this.tocEntries = Array.from(
+            const entries = Array.from(
                 document.querySelectorAll<HTMLAnchorElement>("#toc a[href^='#']")
             );
+            this.tocEntries = entries.filter((entry) => {
+                entry.classList.remove(this.visibleClass);
+                const heading = document.getElementById(decodeURIComponent(entry.hash.slice(1)));
+                const panel = heading?.closest<HTMLElement>("[data-tab-panel]");
+                entry.hidden = panel?.hidden ?? false;
+                entry.style.display = entry.hidden ? "none" : "";
+                return !entry.hidden;
+            });
 
             if (this.tocEntries.length === 0) return;
 
@@ -256,11 +278,12 @@ const maxLevel = siteConfig.toc.depth;
         };
 
         disconnectedCallback() {
+            document.removeEventListener("content-tabs:change", this.init);
             this.sections.forEach((section) =>
                 this.observer.unobserve(section)
             );
             this.observer.disconnect();
-            this.tocEl?.removeEventListener("click", this.handleAnchorClick);
+            this.tocEl?.removeEventListener("click", this.handleAnchorClick, true);
         };
     }
 

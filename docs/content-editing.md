@@ -27,6 +27,31 @@ tags: [学习笔记]
 category: 学习记录
 ```
 
+## 多页签参考文档
+
+大模型生成 API 参考位于 `src/content/posts/ai/llm/api/`，三个 Markdown 文件分别维护 Chat Completions、Responses、Anthropic Messages；没有额外的入口 Markdown 或共同导言。对外使用 `/posts/ai/llm/api/`，归入博客，并在列表、归档、标签统计和 RSS 中合并为一篇文章。
+
+每份正文保留普通文章的 frontmatter，并增加：
+
+```yaml
+verified: 2026-10-20
+tabGroup:
+  slug: ai/llm/api
+  title: "大模型生成 API 参考"
+  id: chat-completions
+  label: Chat Completions
+  order: 0
+```
+
+- `slug` 是组文章的路径，不含 `/posts/` 前缀及首尾斜杠。同组的 `title`、`section` 保持一致；`id` 在组内唯一，使用小写字母、数字和连字符。
+- `label` 是页签名，`order` 决定顺序；最前面的文档提供文章的发布日期、摘要、封面和分类。标签取所有页签的并集，`updated` 取最近日期，任一文档是草稿时整组在生产环境隐藏。
+- `verified` 是实际核对资料的日期，`updated` 是正文修改日期。正文末尾列出对应官方资料，使用 SDK 类型核对时保留固定版本链接；示例返回与真实调用结果明确区分。
+- Markdown 正文从 `##` 开始，三个页签可使用相同标题。构建插件为标题自动增加 `<id>--` 前缀，不能手动再加一遍。
+- `?protocol=responses` 可以直接选择页签；章节锚点自带协议前缀，直接打开和浏览器历史操作会恢复相应正文。搜索在构建时索引三个页签，命中章节链接后会展开其所属页签。
+- 关闭 JavaScript 时，三个协议的正文顺序展示。新增同类文章可使用新的 `tabGroup.slug`，不用添加新的页面路由。
+
+新增或修改分组规则后，运行 `node --experimental-strip-types --test scripts/tests/post-grouping.test.mjs`。页面验证需覆盖页签键盘操作、目录、章节深链接、Swup、前进后退和构建后的真实搜索。
+
 ## 关于与工具
 
 - 关于页：个人介绍位于 `src/pages/about.astro`，完整技术列表维护在 `src/config.ts` 的 `profileConfig.technologies` 中，按语言、框架、数据库和开发工具分组。列表表示接触与使用经历，不代表熟练程度。

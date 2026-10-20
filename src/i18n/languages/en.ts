@@ -2,6 +2,8 @@ import Key from "../i18nKey";
 import type { Translation } from "../translation";
 
 export const en: Translation = {
+	[Key.apiProtocol]: "API protocol",
+	[Key.referenceVerified]: "Sources checked",
 	[Key.navigation]: "Navigation",
 	[Key.contact]: "Find me",
 	[Key.menu]: "Menu",
