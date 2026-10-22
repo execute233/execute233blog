@@ -4,7 +4,7 @@
 
 ## 项目概览
 
-本项目是基于 **Fuwari** 的静态博客，使用 **Astro 5**、**Tailwind CSS** 和 **Vue 3**（主题切换、归档、搜索）。站点设置位于 `src/config.ts`，请以当前配置为准。构建产物位于 `dist/`，采用静态部署，仓库包含 Vercel 配置。
+本项目是基于 **Fuwari** 的静态博客，使用 **Astro 5**、**Tailwind CSS** 和原生 TypeScript（主题切换、归档、搜索）。站点设置位于 `src/config.ts`，请以当前配置为准。构建产物位于 `dist/`，采用静态部署，仓库包含 Vercel 配置。
 
 **仅使用 pnpm**，版本由 `package.json` 中的 `packageManager` 指定（`pnpm@9.14.4`）。`preinstall` 钩子通过 `npx only-allow pnpm` 拒绝 npm/yarn 安装。
 
@@ -28,7 +28,6 @@
 | `pnpm install --frozen-lockfile` | 按锁文件安装依赖 |
 | `pnpm dev` | 启动开发服务器，默认地址为 `http://localhost:4321`，实际端口以终端输出为准 |
 | `pnpm check` / `pnpm astro check` | 检查类型、内容及 schema，不生成构建产物 |
-| `pnpm check:vue` | 执行 Vue 组件及模板的严格类型检查 |
 | `pnpm type-check` | 执行 `tsc --noEmit --isolatedDeclarations` |
 | `pnpm build` | 执行 `astro build && pagefind --site dist`，先构建页面，再生成搜索索引 |
 | `pnpm preview` | 在本地预览已构建的 `dist/` |
@@ -101,7 +100,7 @@
 - `src/pages/index.astro`：个人介绍与栏目入口首页。
 - `src/pages/blog/[...page].astro`、`src/pages/learning/[...page].astro`：按 `section` 筛选的分页列表，共用 `ArticleList.astro`、`PostPage.astro` 和原有分页组件。旧的数字分页路径由 `src/pages/[...page].astro` 重定向。
 - `src/pages/posts/[...slug].astro`：文章页，调用 `entry.render()`，输出 JSON-LD 和文章元数据。
-- `src/pages/archive.astro`：将文章传给 `ArchivePanel.vue`（`client:only="vue"`），客户端通过查询参数筛选分类与标签。
+- `src/pages/archive.astro`：将文章传给 `ArchivePanel.astro`，静态输出文章列表，客户端自定义元素通过查询参数筛选分类与标签，并按读者本地时区更新日期与年份分组。
 - `src/pages/about.astro`：展示个人介绍、兴趣与技术经历，和首页共用 `src/config.ts` 中的 `profileConfig.interests` 及 `ProfileInterests.astro`；完整技术列表由 `profileConfig.technologies` 配置。
 - `src/pages/tools.astro`：使用 `ToolCard.astro` 渲染 `src/data/tools.ts`。
 - `src/pages/rss.xml.ts`、`src/pages/robots.txt.ts`：生成对应的静态端点。
@@ -138,7 +137,7 @@
 
 ### Pagefind 搜索
 
-搜索索引**仅在构建时生成**：`pnpm build` 在 `astro build` 之后执行 `pagefind --site dist`。生产模式下 `Search.vue` 调用 `window.pagefind.search()`；开发模式显示预设的模拟结果。搜索组件常驻 Navbar，复用外部点击与 Swup 导航关闭面板的逻辑，保持 aria、inert 与面板状态同步；仅采用当前查询的异步结果，卸载时清除监听、定时器和观察器。
+搜索索引**仅在构建时生成**：`pnpm build` 在 `astro build` 之后执行 `pagefind --site dist`。`Search.astro` 输出搜索界面，`src/scripts/search.ts` 中的自定义元素在生产模式下调用 `window.pagefind.search()`；开发模式显示预设的模拟结果。搜索组件常驻 Navbar，复用外部点击与 Swup 导航关闭面板的逻辑，保持 aria、inert 与面板状态同步；仅采用当前查询的异步结果，卸载时清除监听、定时器和观察器。
 
 `pagefind.yml` 排除 KaTeX、`.search-panel` 和带有 `[data-pagefind-ignore]` 的内容。
 
@@ -152,7 +151,7 @@
 - **内部 URL**：通过 `src/utils/url-utils.ts` 的 `url()` 生成链接，以兼容 `import.meta.env.BASE_URL` 子路径部署；`site` 和 `trailingSlash: "always"` 配置位于 `astro.config.mjs`。
 - **样式**：使用 Tailwind 工具类和 `src/styles/` 中的 CSS 变量。新增颜色尽量由 `--hue` 派生，兼顾明暗模式，复用 `--primary`、`--card-bg` 等变量。
 - **格式与检查**：新增及修改代码必须遵循项目当前格式，以 `biome.json` 和目标文件的既有风格为准，使用制表符缩进和双引号，保持换行、分号、导入顺序及多行属性排版一致。写入后先针对本次修改的文件运行格式化，再执行不写入文件的检查（例如 `pnpm exec biome format --write <文件路径...>`、`pnpm exec biome ci <文件路径...>`），确认通过后再进行实际运行或浏览器测试。不要用全量 `pnpm format` 或 `pnpm lint` 顺带修改无关文件。
-- **格式检查覆盖范围**：当前 Biome 配置排除了 CSS；对于 CSS 以及工具未覆盖的 `.astro`、`.vue` 模板区域，必须另行检查缩进、属性换行和排版，沿用项目已有格式或适用的格式化工具。不能仅凭 Biome 检查通过就认定这些区域的格式正确。
+- **格式检查覆盖范围**：当前 Biome 配置排除了 CSS；对于 CSS 以及工具未覆盖的 `.astro` 模板区域，必须另行检查缩进、属性换行和排版，沿用项目已有格式或适用的格式化工具。不能仅凭 Biome 检查通过就认定这些区域的格式正确。
 - **构建产物**：`dist/` 仅用于输出，不直接编辑。
 - **已有改动**：开始修改前检查 Git 状态，保留用户已有的未提交改动，不随意覆盖或还原。
 

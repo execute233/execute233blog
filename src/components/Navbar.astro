@@ -6,8 +6,8 @@ import { pathsEqual, url } from "@utils/url-utils";
 import { Icon } from "astro-icon/components";
 import { navBarConfig, siteConfig } from "@/config";
 import BackgroundSettings from "./BackgroundSettings.astro";
-import LightDarkSwitch from "./LightDarkSwitch.vue";
-import Search from "./Search.vue";
+import LightDarkSwitch from "./LightDarkSwitch.astro";
+import Search from "./Search.astro";
 import NavMenuPanel from "./widget/NavMenuPanel.astro";
 
 const logoTitle = "execute233";
@@ -49,7 +49,7 @@ const links = navBarConfig.links.map((link) =>
 	</a>
 	<div class="rose-header-actions">
 		<div class="navbar-search">
-			<Search client:load>
+			<Search>
 				<Icon
 					slot="desktop-search"
 					name="material-symbols:search"
@@ -71,7 +71,7 @@ const links = navBarConfig.links.map((link) =>
 				/>
 			</Search>
 		</div>
-		<LightDarkSwitch client:load>
+		<LightDarkSwitch>
 			<Icon slot="light" name="material-symbols:wb-sunny-outline-rounded" />
 			<Icon slot="dark" name="material-symbols:dark-mode-outline-rounded" />
 			<Icon slot="auto" name="material-symbols:desktop-windows-outline-rounded" />

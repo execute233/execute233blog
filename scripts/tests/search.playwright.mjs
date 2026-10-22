@@ -17,7 +17,7 @@ export default async function testSearch(
 	page,
 	{
 		phase = "final",
-		artifactDir = "tmp/vue-search/playwright",
+		artifactDir = "tmp/astro-components/search",
 		baselinePath,
 	} = {},
 ) {
@@ -48,11 +48,7 @@ export default async function testSearch(
 			await page.setViewportSize({ width, height: width === 390 ? 844 : 900 });
 			await page.goto(`${origin}/`, { waitUntil: "domcontentloaded" });
 			await page.waitForFunction(
-				() =>
-					window.pagefind &&
-					document.querySelector(
-						'astro-island[component-url*="Search"]:not([ssr])',
-					),
+				() => window.pagefind && document.querySelector("site-search:defined"),
 			);
 			await page.locator("#scheme-switch:not([disabled])").waitFor();
 			await page.locator("#search-switch").click();
@@ -63,17 +59,32 @@ export default async function testSearch(
 				await page.locator("#search-switch").getAttribute("aria-expanded"),
 				"true",
 			);
-			for (const query of ["Markdown", "学习", "zzzznoresults998877"]) {
+			for (const query of ["API", "学习", "zzzznoresults998877"]) {
 				const expected = await page.evaluate(async (query) => {
 					const response = await window.pagefind.search(query);
 					const items = await Promise.all(
 						response.results.map((item) => item.data()),
 					);
-					return items.map((item) => ({
-						url: item.url,
-						title: item.meta.title,
-						excerpt: item.excerpt.trim(),
-					}));
+					return items.map((item) => {
+						const sections =
+							item.meta.tabbed === "true"
+								? item.sub_results?.filter((section) =>
+										section.url.includes("--"),
+									)
+								: [];
+						const section =
+							sections?.find((section) =>
+								section.excerpt
+									.replace(/<\/?mark>/g, "")
+									.toLowerCase()
+									.includes(query.trim().toLowerCase()),
+							) ?? sections?.[0];
+						return {
+							url: section?.url ?? item.url,
+							title: item.meta.title,
+							excerpt: (section?.excerpt ?? item.excerpt).trim(),
+						};
+					});
 				}, query);
 				await page.locator("#search-panel input").fill(query);
 				await page.waitForFunction((expected) => {
@@ -96,7 +107,7 @@ export default async function testSearch(
 				if (baseline) assert.deepEqual(actual, baseline.snapshots[key], key);
 				report.checks.push(key);
 			}
-			await page.locator("#search-panel input").fill("Markdown");
+			await page.locator("#search-panel input").fill("API");
 			await page.locator("#search-panel a").first().waitFor();
 			for (const mode of ["light", "dark"]) {
 				for (
@@ -153,9 +164,7 @@ export default async function testSearch(
 			.getAttribute("href");
 		await page.evaluate(() => {
 			window.__searchDocument = true;
-			window.__searchIsland = document.querySelector(
-				'astro-island[component-url*="Search"]',
-			);
+			window.__searchIsland = document.querySelector("site-search");
 		});
 		await page.locator("#search-panel a").first().focus();
 		await page.locator("#search-panel a").first().press("Enter");
@@ -167,8 +176,7 @@ export default async function testSearch(
 			await page.evaluate(
 				() =>
 					window.__searchDocument &&
-					window.__searchIsland ===
-						document.querySelector('astro-island[component-url*="Search"]'),
+					window.__searchIsland === document.querySelector("site-search"),
 			),
 			true,
 		);
@@ -178,7 +186,7 @@ export default async function testSearch(
 		await page.waitForURL(`${origin}${target}`);
 		assert.equal(await page.locator("#search-panel").count(), 1);
 		assert.equal(await page.locator("#toc").count(), 1);
-		report.checks.push("keyboard-swup-history-persistent-island");
+		report.checks.push("keyboard-swup-history-persistent-component");
 		if (phase !== "baseline") {
 			await page.locator("#search-switch").click();
 			await page.locator("#search-panel input").fill("");

@@ -1,6 +1,5 @@
 import sitemap from "@astrojs/sitemap";
 import tailwind from "@astrojs/tailwind";
-import vue from "@astrojs/vue";
 import { pluginCollapsibleSections } from "@expressive-code/plugin-collapsible-sections";
 import { pluginLineNumbers } from "@expressive-code/plugin-line-numbers";
 import swup from "@swup/astro";
@@ -76,6 +75,7 @@ export default defineConfig({
 				},
 			},
 			styleOverrides: {
+				codePaddingInline: "0.5rem",
 				codeBackground: "var(--codeblock-bg)",
 				borderRadius: "0.75rem",
 				borderColor: "none",
@@ -104,7 +104,6 @@ export default defineConfig({
 			},
 		}),
 		sitemap(),
-		vue(),
 	],
 	markdown: {
 		remarkPlugins: [

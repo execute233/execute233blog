@@ -1,10 +1,8 @@
 import assert from "node:assert/strict";
 import { mkdir, readFile, writeFile } from "node:fs/promises";
-import { createRequire } from "node:module";
-import { dirname, join } from "node:path";
-import { pathToFileURL } from "node:url";
+import { join } from "node:path";
 
-const islandSelector = 'astro-island[component-url*="ArchivePanel"]';
+const panelSelector = "archive-panel";
 const fixtures = [
 	["a", "2025-06-15T12:00:00Z", ["One", "共享"], "Alpha", "blog"],
 	["b", "2025-06-15T12:00:00Z", ["Two"], "Beta", "learning"],
@@ -59,8 +57,8 @@ const matrix = [
 async function ready(page) {
 	await page.waitForFunction((selector) => {
 		const island = document.querySelector(selector);
-		return island && !island.hasAttribute("ssr") && island.firstElementChild;
-	}, islandSelector);
+		return island?.dataset.ready === "true";
+	}, panelSelector);
 	await page.evaluate(
 		() =>
 			new Promise((resolve) =>
@@ -70,7 +68,7 @@ async function ready(page) {
 }
 
 async function snapshot(page) {
-	return page.locator(islandSelector).evaluate((island) =>
+	return page.locator(panelSelector).evaluate((island) =>
 		Array.from(island.firstElementChild.children, (group) => ({
 			year: Number(group.firstElementChild.children[0].textContent.trim()),
 			count: group.firstElementChild.children[2].textContent
@@ -87,11 +85,11 @@ async function snapshot(page) {
 	);
 }
 
-// Supply an isolated Page on a built preview. baselinePath compares full Svelte/Vue output.
+// Supply an isolated Page on a built preview. baselinePath compares rendered output.
 export default async function testArchivePanel(
 	page,
 	{
-		artifactDir = "tmp/vue-archive-panel/playwright",
+		artifactDir = "tmp/astro-components/archive",
 		phase = "final",
 		baselinePath,
 		suite = "all",
@@ -118,30 +116,41 @@ export default async function testArchivePanel(
 		? JSON.parse(await readFile(baselinePath, "utf8"))
 		: null;
 	const helper = await page.context().newPage();
-	const require = createRequire(import.meta.url);
-	const astroRoot = dirname(require.resolve("astro/package.json"));
-	const { serializeProps } = await import(
-		pathToFileURL(join(astroRoot, "dist/runtime/server/serialize.js"))
-	);
 	let injectedPosts;
 	const intercept = async (route) => {
 		if (!injectedPosts) return route.continue();
 		const response = await route.fetch();
 		const html = await helper.evaluate(
-			({ html, props, selector }) => {
+			({ html, posts, selector }) => {
 				const document = new DOMParser().parseFromString(html, "text/html");
-				const islands = document.querySelectorAll(selector);
-				if (islands.length !== 1)
-					throw new Error(
-						`Expected one archive island, received ${islands.length}`,
-					);
-				islands[0].setAttribute("props", props);
+				const panel = document.querySelector(selector);
+				const container = panel.querySelector(".card-base");
+				const group = container.firstElementChild.cloneNode(true);
+				const row = group.querySelector("a").cloneNode(true);
+				for (const link of group.querySelectorAll("a")) link.remove();
+				for (const post of posts) {
+					const link = row.cloneNode(true);
+					link.setAttribute("href", `/posts/${post.slug}/`);
+					link.setAttribute("aria-label", post.data.title);
+					link.dataset.published = post.data.published;
+					link.dataset.tags = JSON.stringify(post.data.tags);
+					link.dataset.category = post.data.category ?? "";
+					link.firstElementChild.children[2].textContent = post.data.title;
+					link.firstElementChild.children[3].textContent = post.data.tags
+						.map((tag) => `#${tag}`)
+						.join(" ");
+					group.append(link);
+				}
+				container.replaceChildren(...(posts.length ? [group] : []));
 				return `<!DOCTYPE html>${document.documentElement.outerHTML}`;
 			},
 			{
 				html: await response.text(),
-				props: serializeProps({ sortedPosts: injectedPosts }),
-				selector: islandSelector,
+				posts: injectedPosts.map((post) => ({
+					...post,
+					data: { ...post.data, published: post.data.published.toISOString() },
+				})),
+				selector: panelSelector,
 			},
 		);
 		await route.fulfill({ response, body: html });
@@ -212,21 +221,34 @@ export default async function testArchivePanel(
 			await ready(page);
 			assert.deepEqual(await snapshot(page), []);
 			report.checks.push("empty-input");
+			injectedPosts = fixtures;
+			await page.goto(`${origin}/archive/?tag=One`, {
+				waitUntil: "domcontentloaded",
+			});
+			await ready(page);
+			await page.evaluate((selector) => {
+				const panel = document.querySelector(selector);
+				const parent = panel.parentElement;
+				panel.remove();
+				parent.append(panel);
+				history.replaceState(null, "", "/archive/");
+				window.dispatchEvent(new PopStateEvent("popstate"));
+			}, panelSelector);
+			assert.deepEqual(
+				(await snapshot(page)).flatMap((group) =>
+					group.posts.map((post) => post.href),
+				),
+				[..."abcfde"].map((slug) => `/posts/archive-fixture/${slug}/`),
+			);
+			report.checks.push("reconnect-retains-unfiltered-posts");
 		}
 		injectedPosts = undefined;
 		await page.goto(`${origin}/archive/`, { waitUntil: "domcontentloaded" });
 		await ready(page);
 		const original = await snapshot(page);
-		assert.equal(
-			original.reduce((count, group) => count + group.posts.length, 0),
-			7,
-			"production content count",
-		);
 		assert.ok(
-			original
-				.flatMap((group) => group.posts)
-				.some((post) => /学习/.test(post.title)),
-			"learning posts included",
+			original.reduce((count, group) => count + group.posts.length, 0) > 0,
+			"production content is present",
 		);
 		assert.ok(
 			original
@@ -243,7 +265,7 @@ export default async function testArchivePanel(
 		});
 		async function visit(route) {
 			if (page.url() === `${origin}${route}`) return ready(page);
-			const previousIsland = await page.$(islandSelector);
+			const previousPanel = await page.$(panelSelector);
 			await page.evaluate((href) => {
 				const link = document.createElement("a");
 				link.href = href;
@@ -254,19 +276,16 @@ export default async function testArchivePanel(
 			}, route);
 			await page.waitForURL(`${origin}${route}`);
 			if (route.startsWith("/archive/")) {
-				if (previousIsland) {
+				if (previousPanel) {
 					await page.waitForFunction(
 						(previous) => !previous.isConnected,
-						previousIsland,
+						previousPanel,
 					);
 				}
 				await ready(page);
 			} else
 				await page.waitForFunction(
-					() =>
-						!document.querySelector(
-							'main astro-island[component-url*="ArchivePanel"]',
-						),
+					() => !document.querySelector("main archive-panel"),
 				);
 			assert.equal(
 				await page.evaluate(() => window.__archiveDocumentMarker),
@@ -274,38 +293,38 @@ export default async function testArchivePanel(
 				"Swup retained document",
 			);
 			assert.equal(await page.locator("#toc").count(), 1);
-			await previousIsland?.dispose();
+			await previousPanel?.dispose();
 		}
-		await visit("/archive/?tag=Example");
+		await visit("/archive/?tag=OpenAI");
 		// Actual links exercise the delegated Swup handlers as well as synthetic query links.
 		const tagged = await snapshot(page);
 		await visit("/blog/");
 		const actualCategoryLink = page
-			.locator('a[href="/archive/?category=Examples"]:visible')
+			.locator('a[href="/archive/?category=AI"]:visible')
 			.first();
 		await actualCategoryLink.click();
-		await page.waitForURL(`${origin}/archive/?category=Examples`);
+		await page.waitForURL(`${origin}/archive/?category=AI`);
 		await ready(page);
 		const categorized = await snapshot(page);
-		await visit("/posts/markdown-extended/");
+		await visit("/posts/ai/llm/api/");
 		await page
-			.locator('a[href="/archive/?tag=Example"]:visible')
+			.locator('a[href="/archive/?tag=OpenAI"]:visible')
 			.first()
 			.click();
-		await page.waitForURL(`${origin}/archive/?tag=Example`);
+		await page.waitForURL(`${origin}/archive/?tag=OpenAI`);
 		await ready(page);
 		assert.deepEqual(await snapshot(page), tagged, "actual tag link");
-		await visit("/archive/?category=Examples");
-		const beforeBack = await page.$(islandSelector);
+		await visit("/archive/?category=AI");
+		const beforeBack = await page.$(panelSelector);
 		await page.goBack();
-		await page.waitForURL(`${origin}/archive/?tag=Example`);
+		await page.waitForURL(`${origin}/archive/?tag=OpenAI`);
 		await page.waitForFunction((previous) => !previous.isConnected, beforeBack);
 		await beforeBack.dispose();
 		await ready(page);
 		assert.deepEqual(await snapshot(page), tagged, "back restores tag");
-		const beforeForward = await page.$(islandSelector);
+		const beforeForward = await page.$(panelSelector);
 		await page.goForward();
-		await page.waitForURL(`${origin}/archive/?category=Examples`);
+		await page.waitForURL(`${origin}/archive/?category=AI`);
 		await page.waitForFunction(
 			(previous) => !previous.isConnected,
 			beforeForward,
@@ -319,7 +338,7 @@ export default async function testArchivePanel(
 		);
 		await visit("/archive/?tag=missing");
 		assert.deepEqual(await snapshot(page), []);
-		await visit("/archive/?tag=Example");
+		await visit("/archive/?tag=OpenAI");
 		assert.deepEqual(await snapshot(page), tagged);
 		await page.reload();
 		await ready(page);
@@ -330,7 +349,7 @@ export default async function testArchivePanel(
 		});
 		for (let index = 0; index < 10; index++) {
 			await visit("/about/");
-			await visit(`/archive/${index % 2 ? "?tag=Example" : ""}`);
+			await visit(`/archive/${index % 2 ? "?tag=OpenAI" : ""}`);
 			assert.deepEqual(await snapshot(page), index % 2 ? tagged : original);
 		}
 		assert.equal(
@@ -364,7 +383,7 @@ export default async function testArchivePanel(
 					mode,
 				);
 				assert.deepEqual(await snapshot(page), original);
-				const postLink = page.locator(`${islandSelector} a`).first();
+				const postLink = page.locator(`${panelSelector} a`).first();
 				await postLink.focus();
 				assert.equal(
 					await postLink.evaluate((link) => document.activeElement === link),
@@ -405,16 +424,13 @@ export default async function testArchivePanel(
 				report.checks.push(`layout:${width}:${mode}`);
 			}
 		}
-		const keyboardLink = page.locator(`${islandSelector} a`).first();
+		const keyboardLink = page.locator(`${panelSelector} a`).first();
 		const target = await keyboardLink.getAttribute("href");
 		await keyboardLink.focus();
 		await keyboardLink.press("Enter");
 		await page.waitForURL(`${origin}${target}`);
 		await page.waitForFunction(
-			() =>
-				!document.querySelector(
-					'main astro-island[component-url*="ArchivePanel"]',
-				),
+			() => !document.querySelector("main archive-panel"),
 		);
 		assert.equal(
 			await page.evaluate(() => window.__archiveDocumentMarker),

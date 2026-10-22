@@ -1,0 +1,86 @@
+---
+import { AUTO_MODE, DARK_MODE, LIGHT_MODE } from "@constants/constants";
+import I18nKey from "@i18n/i18nKey";
+import { i18n } from "@i18n/translation";
+
+const labels = {
+	[LIGHT_MODE]: i18n(I18nKey.lightMode),
+	[DARK_MODE]: i18n(I18nKey.darkMode),
+	[AUTO_MODE]: i18n(I18nKey.systemMode),
+};
+const label = `${labels[AUTO_MODE]} → ${labels[LIGHT_MODE]}`;
+---
+
+<light-dark-switch class="contents" data-labels={JSON.stringify(labels)}>
+	<button
+		id="scheme-switch"
+		type="button"
+		class="btn-plain scale-animation rounded-lg active:scale-90"
+		aria-label={label}
+		title={label}
+		data-mode={AUTO_MODE}
+		disabled
+	>
+		<span class="theme-icon theme-icon-light" aria-hidden="true"><slot name="light" /></span>
+		<span class="theme-icon theme-icon-dark" aria-hidden="true"><slot name="dark" /></span>
+		<span class="theme-icon theme-icon-auto" aria-hidden="true"><slot name="auto" /></span>
+	</button>
+</light-dark-switch>
+
+<script>
+	import { AUTO_MODE, DARK_MODE, LIGHT_MODE } from "@constants/constants";
+	import {
+		applyThemeToDocument,
+		getStoredTheme,
+		setTheme,
+		THEME_CHANGE_EVENT,
+	} from "@utils/setting-utils";
+	import type { LIGHT_DARK_MODE } from "@/types/config";
+
+	class LightDarkSwitch extends HTMLElement {
+		private button!: HTMLButtonElement;
+		private labels!: Record<LIGHT_DARK_MODE, string>;
+		private preference = window.matchMedia("(prefers-color-scheme: dark)");
+		private sequence: LIGHT_DARK_MODE[] = [LIGHT_MODE, DARK_MODE, AUTO_MODE];
+
+		connectedCallback() {
+			this.button = this.querySelector<HTMLButtonElement>("button")!;
+			this.labels = JSON.parse(this.dataset.labels!);
+			this.button.addEventListener("click", this.toggleScheme);
+			this.preference.addEventListener("change", this.syncSystem);
+			document.addEventListener(THEME_CHANGE_EVENT, this.syncTheme);
+			this.syncTheme();
+			this.button.disabled = false;
+		}
+
+		private nextMode() {
+			return this.sequence[
+				(this.sequence.indexOf(getStoredTheme()) + 1) % this.sequence.length
+			];
+		}
+
+		private syncTheme = () => {
+			const mode = getStoredTheme();
+			const label = `${this.labels[mode]} → ${this.labels[this.nextMode()]}`;
+			this.button.dataset.mode = mode;
+			this.button.title = label;
+			this.button.setAttribute("aria-label", label);
+		};
+
+		private syncSystem = () => {
+			if (getStoredTheme() === AUTO_MODE) applyThemeToDocument(AUTO_MODE);
+		};
+
+		private toggleScheme = () => setTheme(this.nextMode());
+
+		disconnectedCallback() {
+			this.button.removeEventListener("click", this.toggleScheme);
+			this.preference.removeEventListener("change", this.syncSystem);
+			document.removeEventListener(THEME_CHANGE_EVENT, this.syncTheme);
+		}
+	}
+
+	if (!customElements.get("light-dark-switch")) {
+		customElements.define("light-dark-switch", LightDarkSwitch);
+	}
+</script>

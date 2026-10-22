@@ -435,7 +435,7 @@ base64 来源包含 `type: "base64"`、`media_type`、`data`。`data` 只放 bas
 请求设置 `stream: true`。常见顺序为 `message_start`，随后多组内容块事件，再到 `message_delta` 与 `message_stop`。服务端还可能发送
 `ping` 或错误。
 
-```text
+```json
 event: message_start
 data: {"type":"message_start","message":{"id":"msg_example","type":"message","role":"assistant","model":"claude-opus-5-5","content":[],"stop_reason":null,"stop_sequence":null,"usage":{"input_tokens":8,"output_tokens":1}}}
 

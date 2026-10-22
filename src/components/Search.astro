@@ -1,0 +1,68 @@
+---
+import I18nKey from "@i18n/i18nKey";
+import { i18n } from "@i18n/translation";
+---
+
+<site-search class="contents">
+	<div
+		id="search-bar"
+		class="hidden lg:flex transition-all items-center h-11 mr-2 rounded-lg
+			bg-black/[0.04] hover:bg-black/[0.06] focus-within:bg-black/[0.06]
+			dark:bg-white/5 dark:hover:bg-white/10 dark:focus-within:bg-white/10"
+	>
+		<slot name="desktop-search" />
+		<input
+			aria-label={i18n(I18nKey.search)}
+			placeholder={i18n(I18nKey.search)}
+			class="transition-all pl-10 text-sm bg-transparent outline-0 focus:outline-none focus:placeholder:text-transparent
+				h-full w-40 active:w-60 focus:w-60 text-muted"
+		/>
+	</div>
+
+	<button
+		id="search-switch"
+		type="button"
+		aria-label={i18n(I18nKey.search)}
+		aria-expanded="false"
+		aria-controls="search-panel"
+		class="btn-plain scale-animation lg:!hidden rounded-lg w-11 h-11 active:scale-90"
+	>
+		<slot name="search" />
+	</button>
+
+	<div
+		id="search-panel"
+		aria-hidden="true"
+		aria-busy="false"
+		inert
+		class="float-panel float-panel-closed search-panel absolute md:w-[30rem]
+			top-20 left-4 md:left-[unset] right-4 shadow-2xl rounded-2xl p-2 max-h-[calc(100vh-100px)] overflow-y-auto"
+	>
+		<div
+			id="search-bar-inside"
+			class="flex relative lg:hidden transition-all items-center h-11 rounded-xl
+				bg-black/[0.04] hover:bg-black/[0.06] focus-within:bg-black/[0.06]
+				dark:bg-white/5 dark:hover:bg-white/10 dark:focus-within:bg-white/10"
+		>
+			<slot name="panel-search" />
+			<input
+				aria-label={i18n(I18nKey.search)}
+				placeholder={i18n(I18nKey.search)}
+				class="pl-10 absolute inset-0 text-sm bg-transparent outline-0 focus:outline-none focus:placeholder:text-transparent focus:w-60 text-muted"
+			/>
+		</div>
+	</div>
+	<template data-search-result>
+		<a
+			class="transition first-of-type:mt-2 lg:first-of-type:mt-0 group block
+				rounded-xl text-lg px-3 py-2 hover:bg-[var(--btn-plain-bg-hover)] active:bg-[var(--btn-plain-bg-active)]"
+		>
+			<div class="transition text-90 inline-flex font-bold group-hover:text-[var(--primary)]"><slot name="chevron" /></div>
+			<div class="transition text-sm text-50"></div>
+		</a>
+	</template>
+</site-search>
+
+<script>
+	import "@/scripts/search";
+</script>

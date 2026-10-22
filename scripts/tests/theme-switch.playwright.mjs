@@ -5,7 +5,7 @@ import { join } from "node:path";
 // Supply a Page from an isolated browser; no project Playwright dependency is needed.
 export default async function testThemeSwitch(
 	page,
-	artifactDir = "tmp/vue-theme-switch/playwright",
+	artifactDir = "tmp/astro-components/theme",
 ) {
 	const origin = new URL(page.url()).origin;
 	const browser = page.context().browser();
@@ -250,8 +250,8 @@ export default async function testThemeSwitch(
 			await subject.evaluate(() =>
 				document
 					.querySelector("#scheme-switch")
-					.closest("astro-island")
-					.dispatchEvent(new Event("astro:unmount")),
+					.closest("light-dark-switch")
+					.remove(),
 			);
 			const after = await counts();
 			assert.equal(after.system, before.system - 1);
@@ -406,7 +406,7 @@ export default async function testThemeSwitch(
 					"/archive/",
 					"/about/",
 					"/tools/",
-					"/posts/expressive-code/",
+					"/posts/ai/llm/api/",
 				]) {
 					await subject.goto(origin + route);
 					await ready(subject);
@@ -414,7 +414,7 @@ export default async function testThemeSwitch(
 					assert.equal((await state(subject)).codeTheme, "github-dark");
 					assert.equal(await subject.locator("#toc").count(), 1);
 				}
-				await subject.goto(`${origin}/archive/?tag=Example`);
+				await subject.goto(`${origin}/archive/?tag=OpenAI`);
 				await ready(subject);
 				const archiveLinks = subject.locator('main a[href^="/posts/"]');
 				await archiveLinks.first().waitFor();
@@ -422,7 +422,7 @@ export default async function testThemeSwitch(
 				await subject.goto(origin);
 				await ready(subject);
 				await subject.locator("#search-switch").click();
-				await subject.locator("#search-panel input").fill("Markdown");
+				await subject.locator("#search-panel input").fill("API");
 				await subject
 					.locator('#search-panel a[href^="/posts/"]')
 					.first()
@@ -507,27 +507,31 @@ export default async function testThemeSwitch(
 			},
 		);
 
-		await scenario("pre-hydration", { stored: "dark" }, async (subject) => {
-			let release;
-			const hydrationBlocked = new Promise((resolve) => {
-				release = resolve;
-			});
-			await subject.route("**/*LightDarkSwitch*.js", async (route) => {
-				await hydrationBlocked;
-				await route.continue();
-			});
-			await subject.reload({ waitUntil: "domcontentloaded" });
-			await subject.locator("#scheme-switch[disabled]").waitFor();
-			assert.equal((await state(subject)).mode, "dark");
-			assert.equal((await state(subject)).dark, true);
-			assert.equal(
-				await subject.locator("#scheme-switch svg:visible").count(),
-				1,
-			);
-			release();
-			await ready(subject);
-			assert.equal((await state(subject)).buttonMode, "dark");
-		});
+		await scenario(
+			"pre-initialization",
+			{ stored: "dark" },
+			async (subject) => {
+				let release;
+				const hydrationBlocked = new Promise((resolve) => {
+					release = resolve;
+				});
+				await subject.route("**/*LightDarkSwitch*.js", async (route) => {
+					await hydrationBlocked;
+					await route.continue();
+				});
+				await subject.reload({ waitUntil: "commit" });
+				await subject.locator("#scheme-switch[disabled]").waitFor();
+				assert.equal((await state(subject)).mode, "dark");
+				assert.equal((await state(subject)).dark, true);
+				assert.equal(
+					await subject.locator("#scheme-switch svg:visible").count(),
+					1,
+				);
+				release();
+				await ready(subject);
+				assert.equal((await state(subject)).buttonMode, "dark");
+			},
+		);
 		assert.deepEqual(report.errors, []);
 		assert.deepEqual(report.failures, []);
 		return report;

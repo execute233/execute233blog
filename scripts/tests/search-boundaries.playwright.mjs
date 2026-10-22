@@ -6,7 +6,7 @@ import { join } from "node:path";
 export default async function testSearchBoundaries(
 	browser,
 	origin,
-	artifactDir = "tmp/vue-search/playwright",
+	artifactDir = "tmp/astro-components/search",
 ) {
 	const report = { checks: [], errors: [], consoleErrors: [] };
 	await mkdir(artifactDir, { recursive: true });
@@ -53,9 +53,7 @@ export default async function testSearchBoundaries(
 			await setup?.(page);
 			await page.goto(origin, { waitUntil: "domcontentloaded" });
 			await page.waitForFunction(() =>
-				document.querySelector(
-					'astro-island[component-url*="Search"]:not([ssr])',
-				),
+				document.querySelector("site-search:defined"),
 			);
 			await verify(page);
 			report.checks.push(name);
@@ -255,9 +253,7 @@ export default async function testSearchBoundaries(
 			const before = await counts();
 			await page.evaluate(() => {
 				window.__sameDocument = true;
-				window.__sameSearch = document.querySelector(
-					'astro-island[component-url*="Search"]',
-				);
+				window.__sameSearch = document.querySelector("site-search");
 			});
 			for (let index = 0; index < 10; index++) {
 				const route = index % 2 ? "/about/" : "/archive/?tag=Example";
@@ -273,18 +269,13 @@ export default async function testSearchBoundaries(
 					await page.evaluate(
 						() =>
 							window.__sameDocument &&
-							window.__sameSearch ===
-								document.querySelector('astro-island[component-url*="Search"]'),
+							window.__sameSearch === document.querySelector("site-search"),
 					),
 					true,
 				);
 				assert.deepEqual(await counts(), before);
 			}
-			await page.evaluate(() =>
-				document
-					.querySelector('astro-island[component-url*="Search"]')
-					.dispatchEvent(new CustomEvent("astro:unmount")),
-			);
+			await page.evaluate(() => document.querySelector("site-search").remove());
 			const after = await counts();
 			assert.equal(after.keydown, before.keydown - 1);
 			assert.equal(after.pagefindready ?? 0, 0);
@@ -294,11 +285,7 @@ export default async function testSearchBoundaries(
 		await scenario("unmount-invalidates-pending-search", async (page) => {
 			await mock(page);
 			await query(page, "pending", 1);
-			await page.evaluate(() =>
-				document
-					.querySelector('astro-island[component-url*="Search"]')
-					.dispatchEvent(new CustomEvent("astro:unmount")),
-			);
+			await page.evaluate(() => document.querySelector("site-search").remove());
 			await respond(page, 0, "pending");
 			assert.equal(await page.locator("#search-panel").count(), 0);
 		});
@@ -310,10 +297,9 @@ export default async function testSearchBoundaries(
 			"late-pagefind-load-replays-latest-input",
 			async (page) => {
 				await open(page);
-				await page.locator("#search-panel input").fill("Markdown");
+				await page.locator("#search-panel input").fill("API");
 				await page.waitForFunction(
-					() =>
-						document.querySelector("#search-panel input").value === "Markdown",
+					() => document.querySelector("#search-panel input").value === "API",
 				);
 				releasePagefind();
 				await page
@@ -333,7 +319,7 @@ export default async function testSearchBoundaries(
 			async (page) => {
 				await page.waitForFunction(() => window.pagefind);
 				await open(page);
-				await page.locator("#search-panel input").fill("Markdown");
+				await page.locator("#search-panel input").fill("API");
 				await page.waitForFunction(
 					() =>
 						document

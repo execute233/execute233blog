@@ -45,7 +45,7 @@
 	},
 	"overrides": [
 		{
-			"includes": ["**/*.astro", "**/*.vue"],
+			"includes": ["**/*.astro"],
 			"linter": {
 				"rules": {
 					"style": {
