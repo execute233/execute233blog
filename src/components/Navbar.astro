@@ -5,9 +5,9 @@ import { i18n } from "@i18n/translation";
 import { pathsEqual, url } from "@utils/url-utils";
 import { Icon } from "astro-icon/components";
 import { navBarConfig, siteConfig } from "@/config";
-import BackgroundSettings from "./BackgroundSettings.astro";
 import LightDarkSwitch from "./LightDarkSwitch.astro";
 import Search from "./Search.astro";
+import SiteSettings from "./SiteSettings.astro";
 import NavMenuPanel from "./widget/NavMenuPanel.astro";
 
 const logoTitle = "execute233";
@@ -76,7 +76,7 @@ const links = navBarConfig.links.map((link) =>
 			<Icon slot="dark" name="material-symbols:dark-mode-outline-rounded" />
 			<Icon slot="auto" name="material-symbols:desktop-windows-outline-rounded" />
 		</LightDarkSwitch>
-		<BackgroundSettings />
+		<SiteSettings />
 		<button
 			type="button"
 			id="nav-menu-switch"

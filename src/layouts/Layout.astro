@@ -3,8 +3,8 @@ import "@/styles/global";
 
 import ConfigCarrier from "@components/ConfigCarrier.astro";
 import FontFaces from "@components/FontFaces.astro";
-import GalaxyBackground from "@components/GalaxyBackground.astro";
 import MusicIsland from "@components/MusicIsland.astro";
+import SakuraBackground from "@components/SakuraBackground.astro";
 import { profileConfig, siteConfig } from "@/config";
 import {
 	APPEARANCE_STORAGE_KEY,
@@ -221,7 +221,7 @@ const bannerOffset =
 <body class=" min-h-screen transition " class:list={[{"lg:is-home": isHomePage, "enable-banner": enableBanner}]}
       data-overlayscrollbars-initialize
 >
-<GalaxyBackground/>
+<SakuraBackground/>
 <MusicIsland/>
 <ConfigCarrier></ConfigCarrier>
 <slot/>

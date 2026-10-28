@@ -10,15 +10,6 @@
 :root.rose-theme:not(.dark) :is(.text-50, .text-30, .text-25) {
 	color: var(--subtle);
 }
-.rose-theme #universe {
-	opacity: var(--star-opacity);
-}
-.rose-theme:has([data-post-section]) #universe {
-	opacity: var(--star-reading-opacity);
-}
-.rose-theme #galaxy-veil {
-	background: transparent;
-}
 .rose-ambient {
 	position: fixed;
 	inset: 0;
@@ -35,13 +26,6 @@
 			oklch(0.4 0.08 calc(var(--hue) + 40) / 11%),
 			transparent 55%
 		);
-}
-.rose-theme.stars-only #universe {
-	opacity: 1;
-}
-.stars-only .rose-ambient,
-.stars-only .rose-footer {
-	visibility: hidden;
 }
 .eyebrow {
 	display: block;

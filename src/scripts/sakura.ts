@@ -73,9 +73,7 @@ function createBlossomSprite(hue: number, dark: boolean): HTMLCanvasElement {
 	return sprite;
 }
 
-export function initSakura(
-	initiallyPaused: boolean,
-): { setPaused: (paused: boolean) => void } | undefined {
+export function initSakura(): void {
 	const element = document.querySelector<HTMLCanvasElement>("#sakura-canvas");
 	if (!element || element.dataset.initialized === "true") return;
 	const canvas = element;
@@ -87,7 +85,8 @@ export function initSakura(
 	const context: CanvasRenderingContext2D = drawingContext;
 	canvas.dataset.initialized = "true";
 	const mobile = matchMedia("(max-width: 767px)");
-	let paused = initiallyPaused;
+	const reducedMotion = matchMedia("(prefers-reduced-motion: reduce)");
+	let paused = reducedMotion.matches;
 	let width = 0;
 	let height = 0;
 	let hue = readHue();
@@ -267,14 +266,13 @@ export function initSakura(
 		if (!paused) requestDraw();
 	}
 
-	function setPaused(next: boolean): void {
-		if (paused === next) return;
-		paused = next;
+	reducedMotion.addEventListener("change", () => {
+		paused = reducedMotion.matches;
 		lastFrame = 0;
 		cancelAnimationFrame(frame);
 		frame = 0;
 		requestDraw();
-	}
+	});
 
 	new MutationObserver(() => {
 		const nextHue = readHue();
@@ -316,5 +314,4 @@ export function initSakura(
 	});
 	resize();
 	requestDraw();
-	return { setPaused };
 }

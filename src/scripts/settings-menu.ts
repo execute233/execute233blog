@@ -23,4 +23,20 @@ if (menu) {
 			setOpen(details.dataset.expanded !== "true");
 		});
 	}
+	document.addEventListener("pointerdown", (event) => {
+		if (event.target instanceof Node && !menu.contains(event.target)) {
+			setDetailsOpen(menu, false);
+		}
+	});
+	document.addEventListener("keydown", (event) => {
+		if (event.key === "Escape" && menu.open) {
+			setDetailsOpen(menu, false);
+			menu.querySelector("summary")?.focus();
+		}
+	});
+	document.addEventListener("click", (event) => {
+		if (event.target instanceof Element && event.target.closest("a[href]")) {
+			setDetailsOpen(menu, false);
+		}
+	});
 }

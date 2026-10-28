@@ -365,7 +365,6 @@ export default async function testThemeSwitch(
 					};
 				});
 				const otherSettings = await subject.evaluate(() => ({
-					background: localStorage.getItem("execute233.background.v1"),
 					cursor: localStorage.getItem("execute233.cursor.v1"),
 				}));
 				await choose(subject, "light");
@@ -391,7 +390,6 @@ export default async function testThemeSwitch(
 				);
 				assert.deepEqual(
 					await subject.evaluate(() => ({
-						background: localStorage.getItem("execute233.background.v1"),
 						cursor: localStorage.getItem("execute233.cursor.v1"),
 					})),
 					otherSettings,
@@ -480,32 +478,62 @@ export default async function testThemeSwitch(
 			},
 		);
 
-		await scenario(
-			"paused-background",
-			{ context: { reducedMotion: "no-preference" } },
-			async (subject) => {
-				await subject.locator("#site-settings > summary").click();
-				await subject.locator("#background-settings > summary").click();
-				await subject.locator("#background-pause").click();
-				const saved = await subject.evaluate(() =>
-					localStorage.getItem("execute233.background.v1"),
-				);
-				assert.equal(JSON.parse(saved).paused, true);
-				await choose(subject, "dark");
-				assert.equal(
-					await subject.evaluate(() =>
-						localStorage.getItem("execute233.background.v1"),
-					),
-					saved,
-				);
-				assert.equal(
-					await subject
-						.locator("#background-pause")
-						.getAttribute("aria-pressed"),
-					"true",
-				);
-			},
-		);
+		await scenario("sakura-without-star-controls", {}, async (subject) => {
+			assert.equal(
+				await subject
+					.locator("#universe, #galaxy-veil, #background-settings")
+					.count(),
+				0,
+			);
+			await subject
+				.locator('#sakura-canvas[data-initialized="true"]')
+				.waitFor();
+			await subject.evaluate(() => document.fonts.ready);
+			await subject.evaluate(
+				() =>
+					new Promise((resolve) => {
+						requestAnimationFrame(() => requestAnimationFrame(resolve));
+					}),
+			);
+			const image = () =>
+				subject
+					.locator("#sakura-canvas")
+					.evaluate((canvas) => canvas.toDataURL());
+			const still = await image();
+			await subject.evaluate(
+				() =>
+					new Promise((resolve) => {
+						requestAnimationFrame(() => requestAnimationFrame(resolve));
+					}),
+			);
+			assert.equal(await image(), still, "Reduced motion keeps petals still");
+			await choose(subject, "dark");
+			await subject.waitForFunction(
+				(previous) =>
+					document.querySelector("#sakura-canvas").toDataURL() !== previous,
+				still,
+			);
+			await subject.emulateMedia({ reducedMotion: "no-preference" });
+			const moving = await image();
+			await subject.waitForFunction(
+				(previous) =>
+					document.querySelector("#sakura-canvas").toDataURL() !== previous,
+				moving,
+			);
+			await subject.locator("#site-settings > summary").click();
+			await subject.locator("#appearance-settings > summary").waitFor();
+			await subject.locator("#cursor-settings > summary").waitFor();
+			await subject.keyboard.press("Escape");
+			await subject.waitForFunction(
+				() => !document.querySelector("#site-settings").open,
+			);
+			assert.equal(
+				await subject
+					.locator("#site-settings > summary")
+					.evaluate((element) => element === document.activeElement),
+				true,
+			);
+		});
 
 		await scenario(
 			"pre-initialization",

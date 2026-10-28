@@ -13,8 +13,6 @@
 	--accent-content: #fff8fa;
 	--accent-hover: color-mix(in srgb, var(--accent), black 12%);
 	--terminal-bg: var(--codeblock-bg);
-	--star-opacity: 0.08;
-	--star-reading-opacity: 0.025;
 	--sakura-opacity: 0.24;
 	--sakura-reading-opacity: 0.14;
 	--line: color-mix(in srgb, var(--ink) 14%, transparent);
@@ -56,8 +54,6 @@
 	--accent-content: #100d14;
 	--accent-hover: color-mix(in srgb, var(--accent), white 15%);
 	--terminal-bg: color-mix(in srgb, var(--surface) 70%, #000);
-	--star-opacity: 0.12;
-	--star-reading-opacity: 0.04;
 	--sakura-opacity: 0.34;
 	--sakura-reading-opacity: 0.2;
 	--line: color-mix(in srgb, var(--accent) 16%, transparent);

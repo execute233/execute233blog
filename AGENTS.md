@@ -107,9 +107,9 @@
 - `Layout.astro`：负责页面外壳、head、SEO、主题初始化、滚动条和灯箱。
 - `MainGridLayout.astro`：负责导航栏、横幅、响应式网格、侧栏、页脚和目录。
 
-### 银河背景与设置
+### 樱花背景与设置
 
-`GalaxyBackground.astro` 在 `Layout.astro` 中挂载 Canvas 和遮罩；`BackgroundSettings.astro` 在顶栏提供下拉面板。二者均位于 Swup 替换容器之外，`src/scripts/galaxy.ts` 只初始化一次。设置写入 `localStorage` 的 `execute233.background.v1`，只看星空为临时状态。首页分栏由 `MainGridLayout.astro` 根据 `[data-landing]` 内容标记调整。
+`SakuraBackground.astro` 在 `Layout.astro` 中挂载樱花 Canvas 和两侧遮罩，`src/scripts/sakura.ts` 独立初始化并响应系统的减少动态效果设置；`SiteSettings.astro` 在顶栏提供外观和光标设置，`src/scripts/settings-menu.ts` 负责菜单展开、互斥及关闭交互。背景和顶栏均位于 Swup 替换容器之外，只初始化一次。
 
 ### Swup 页面导航
 

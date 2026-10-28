@@ -36,7 +36,7 @@ export default defineConfig({
 		}),
 		swup({
 			theme: false,
-			// 星空动画可能持续占用帧预算；立即启用导航，避免播放时整页刷新。
+			// 立即启用站内导航，保持播放器在页面切换时持续播放。
 			loadOnIdle: false,
 			animationClass: "transition-swup-", // see https://swup.js.org/options/#animationselector
 			// the default value `transition-` cause transition delay

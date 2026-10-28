@@ -111,4 +111,4 @@ public/media/island/Mili - world.execute (me) ;/
 | `src/utils/music-utils.ts` | LRC 解析与时间格式 |
 | `src/layouts/Layout.astro` | 挂载在 Swup 的 `main`、`#toc` 替换区域之外 |
 
-`astro.config.mjs` 将 Swup 的 `loadOnIdle` 设为 `false`，确保星空动画持续运行时也能及时启用站内导航。播放器通过 DOM 标记防止重复绑定事件。
+`astro.config.mjs` 将 Swup 的 `loadOnIdle` 设为 `false`，及时启用站内导航。播放器通过 DOM 标记防止重复绑定事件。
